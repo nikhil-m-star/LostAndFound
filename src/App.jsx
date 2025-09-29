@@ -1,6 +1,3 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from './pages/Home';
@@ -8,10 +5,9 @@ import Reportfound from './pages/Reportfound';
 import Reportlost from './pages/Reportlost';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-      <Router>
+    <Router>
+      <div className="app">
         <nav className="navbar">
           <h2>Lost and Found</h2>
           <ul>
@@ -20,12 +16,16 @@ function App() {
             <li><Link to="/report-lost">Report Lost</Link></li>
           </ul>
         </nav>
-        <Routes>
-          <Route path = "/" element = {<Home/>}/>
-          <Route path = "/report-found" element = {<Reportfound/>}/>
-          <Route path = "/report-lost" element={<Reportlost/>}/>
-        </Routes>
-      </Router>
+
+        <main className="content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/report-found" element={<Reportfound />} />
+            <Route path="/report-lost" element={<Reportlost />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   )
 }
 
