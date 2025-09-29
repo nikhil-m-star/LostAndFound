@@ -2,7 +2,7 @@ function Reportfound(){
     return(
         <div className="page report-found">
             <div className="glass">
-                <h1>Report Found</h1>
+                <h1>Found</h1>
                 <form>
                     <input type="text" placeholder="Item name" />
                     <textarea name="" id="" placeholder="Description" />
