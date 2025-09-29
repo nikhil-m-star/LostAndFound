@@ -42,18 +42,19 @@ body {
   text-decoration: none;
 }
 
-/* Glassmorphism card */
 .glass {
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  padding: 1.5rem;
+  padding: 1rem 1rem 1rem 1rem;
   background-color: rgba(255, 255, 255, 0.101);
   backdrop-filter: blur(100px) saturate(120%);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
   border: 1px solid rgba(255, 255, 255, 0.503);
-  
+  margin-right: 40px;
+  margin-left: 15px;
+  margin-top: 70px;
 }
 
 .content {
@@ -78,4 +79,6 @@ form input, form textarea {
 }
 form input::placeholder,form textarea::placeholder{
   color:rgba(255, 255, 255, 0.719);
+  text-align: center;
 }
+
