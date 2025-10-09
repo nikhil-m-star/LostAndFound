@@ -2,8 +2,7 @@ function Home() {
     return (
         <div className="page home">
             <div className="glass">
-                <h1>Welcome to Lost and Found</h1>
-                <p>Use the navigation to report found or lost items.</p>
+            <h1>Welcome to lost and found BMSCE</h1>     
             </div>
         </div>
     );
