@@ -293,7 +293,6 @@ form input::placeholder,form textarea::placeholder{
   }
 }
 
-/* Make laptop layout behave like mobile: stack columns and use compact sizing up to 1200px */
 @media (max-width: 1200px) {
   body { padding: 0.5rem; }
 
