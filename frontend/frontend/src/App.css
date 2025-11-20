@@ -4,311 +4,225 @@ html, body, #root {
 }
 
 :root {
-  /* single source of truth for content width used by .glass and .navbar */
   --content-max-width: 980px;
 }
-
 body {
-  font-family: josefin sans,century gothic, Arial, sans-serif;
-  margin: 0;
-  /* small safe padding so content never touches viewport edges */
-  padding: 1rem;
-  min-height: 100%;
-  /* pure black base so colored blurs stand out */
-  background-color: #000;
-  position: relative;
-  color: var(--text-color);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* keep content from being vertically centered (avoids clipping on small screens) */
-}
-
-/* two strong radial blurs: purple top-left and blue bottom-right */
-body::before {
-  content: "";
-  position: fixed;
-  inset: -25%; /* extend beyond viewport so edges are soft */
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(50% 50% at 6% 6%, rgba(200,2,255,0.95) 0%, rgba(200,2,255,0.65) 45%, transparent 75%),
-    radial-gradient(55% 55% at 94% 94%, rgba(3,28,255,0.95) 0%, rgba(3,28,255,0.6) 48%, transparent 78%);
-  /* very large, soft blur for an atmospheric look */
-  filter: blur(160px) saturate(160%);
-  transform: translateZ(0);
-}
-
-/* ensure app content sits above the blurred background */
-.app {
-  position: relative;
-  z-index: 1;
-}
-
-.navbar {
-  /* make navbar a single glassy box with centered contents */
-  display: flex;
-  align-items: center;
-  justify-content: center; /* center links horizontally */
-  gap: 1rem;
-  /* reduced horizontal padding so navbar sits closer to edges */
-  padding: 0.4rem 0.6rem;
-  color: var(--text-color);
-  background-color: rgba(255,255,255,0.04);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.355);
-  backdrop-filter: blur(8px) saturate(120%);
-  -webkit-backdrop-filter: blur(8px) saturate(120%);
-  /* center the navbar and keep small vertical spacing */
-  margin: 0.5rem auto;
-  /* use the same content width as .glass so both line up */
-  max-width: var(--content-max-width);
-}
-
-/* brand parts should be simple text with spacing; no visual effects */
-.brand { margin: 0; font-weight: 700; }
-.brand-lost, .brand-found { letter-spacing: 0.4px; }
-.brand-and { opacity: 0.9; margin: 0 6px; }
-
-/* make the brand row plain (no glass effects) and center it */
-.brand-row {
-  text-align: center;
-  margin: 0.5rem 0 0.25rem 0;
-}
-.brand-row .brand { background: transparent; box-shadow: none; }
-
-/* Logo styling */
-.logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  text-decoration: none;
-  color: var(--text-color);
-}
-.logo-svg {
-  width: 52px;
-  height: 52px;
-  flex: 0 0 auto;
-  color: #ffffffcc; /* default icon color */
-}
-.brand-text {
-  font-weight: 800;
-  letter-spacing: 0.2px;
-  font-size: 1.05rem;
-  color: var(--text-color);
-  display: inline-block;
-  margin-left: 0.25rem;
-}
-
-/* single-icon header variant */
-.single-icon .logo-svg {
-  width: 60px;
-  height: 60px;
-}
-.single-icon .brand-text {
-  display: none; /* hide label when using single-icon */
-}
-.logo:hover .logo-svg,
-.logo:focus .logo-svg {
-  transform: scale(1.05);
-}
-
-.navbar ul {
-  list-style: none;
-  display: flex;
-  gap: 1.25rem; /* consistent horizontal gap between items */
-  margin: 0; /* ensure no left offset */
-  padding: 0; /* remove browser default padding */
-  justify-content: center; /* center items inside the ul */
-  /* let the parent .navbar center this whole ul; do not use auto margins that expand the ul */
-}
-
-/* Fallback spacing: ensure each list item has horizontal margin in case gap isn't applied */
-.navbar li {
-  margin: 0 0.35rem; /* tighter horizontal margin between items */
-}
-
-.navbar a {
-  color: var(--text-color);
-  text-decoration: none;
-}
-
-/* Icon styling for navbar */
-.nav-icon {
-  width: 22px;
-  height: 22px;
-  display: inline-block;
-  vertical-align: middle;
-  color: inherit; /* ensure stroke uses currentColor */
-}
-
-/* Fallback: encourage thicker strokes for icons */
-.nav-icon path,
-.nav-icon circle,
-.nav-icon rect {
-  stroke-width: 2 !important;
-}
-
-.navbar a:hover .nav-icon,
-.navbar a:focus .nav-icon {
-  transform: scale(1.08);
-  opacity: 0.95;
-}
-
-.navbar a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.25rem;
-  border-radius: 6px;
-}
-
-.glass {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 14px;
-  /* consistent inner gap on all four sides */
-  padding: 1.25rem;
-  background-color: rgba(255, 255, 255, 0.101);
-  backdrop-filter: blur(10px) saturate(120%);
-  -webkit-backdrop-filter: blur(10px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, 0.322);
-  /* center and keep some vertical spacing */
-  margin: 1.25rem auto;
-  max-width: var(--content-max-width);
-  box-sizing: border-box;
-  text-align: center;
-}
-
-/* inner grid to split heading and form into two equal columns */
-.glass-inner {
-  display: grid;
-  grid-template-columns: 1fr; /* stacked single column layout globally */
-  gap: 0.75rem 1rem;
-  align-items: start;
-  width: 100%;
-}
-
-.glass-inner .col {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-/* On small screens stack columns */
-@media (max-width: 720px) {
-  .glass-inner {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+  font-family: century gothic, Arial, sans-serif;
+  html, body, #root {
+    height: 100%;
   }
-}
 
-/* page wrapper to ensure consistent inner spacing */
-.page {
-  width: 100%;
-  padding: 0.5rem;
-  box-sizing: border-box;
-}
+  :root {
+    --content-max-width: 980px;
+  }
 
-/* Ensure headings inside the glass card are centered and don't inherit global left padding */
-.glass h1 {
-  padding-left: 0;
-  padding-right: 0;
-  margin: 0 0 0.5rem 0;
-  text-align: center;
-}
+  body {
+    font-family: century gothic, Arial, sans-serif;
+    margin: 0;
+    padding: 1rem;
+    min-height: 100%;
+    background-color: #000;
+    position: relative;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
 
-.content {
-  margin-top: 1rem;
-}
+  body::before {
+    content: "";
+    position: fixed;
+    inset: -25%;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(50% 50% at 6% 6%, rgba(200,2,255,0.95) 0%, rgba(200,2,255,0.65) 45%, transparent 75%),
+      radial-gradient(55% 55% at 94% 94%, rgba(3,28,255,0.95) 0%, rgba(3,28,255,0.6) 48%, transparent 78%);
+    filter: blur(160px) saturate(160%);
+    transform: translateZ(0);
+  }
 
-form {
-  display: flex;
-  flex-direction: column;
-  max-width: 400px;
-  margin: 20px auto;
-  gap: 10px;
-}
+  .app {
+    position: relative;
+    z-index: 1;
+  }
 
-form input, form textarea {
-  padding: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.53);
-  font-family: century gothic;
-  background-color: rgba(255, 255, 255, 0);
-  border-radius:10px;
-  
-}
-form input::placeholder,form textarea::placeholder{
-  color:rgba(255, 255, 255, 0.719);
-  text-align: center;
-}
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.4rem 0.6rem;
+    color: var(--text-color);
+    background-color: rgba(255,255,255,0.04);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.355);
+    backdrop-filter: blur(8px) saturate(120%);
+    -webkit-backdrop-filter: blur(8px) saturate(120%);
+    margin: 0.5rem auto;
+    max-width: var(--content-max-width);
+  }
 
-/* keep mobile navbar spacing reasonable */
-@media (max-width: 720px) {
-  .navbar { padding: 0.4rem 0.75rem; max-width: calc(100% - 1rem); }
-  .navbar ul { gap: 0.9rem; }
-  .nav-icon { width: 26px; height: 26px; }
-}
+  .brand { margin: 0; font-weight: 700; }
+  .brand-lost, .brand-found { letter-spacing: 0.4px; }
+  .brand-and { opacity: 0.9; margin: 0 6px; }
 
-/* Minimal mobile responsive tweaks (phones) */
-@media (max-width: 720px) {
-  body { padding: 0.5rem; }
+  .brand-row {
+    text-align: center;
+    margin: 0.5rem 0 0.25rem 0;
+  }
+  .brand-row .brand { background: transparent; box-shadow: none; }
 
-  /* Slightly reduce logo size on phones */
-  .logo-svg { width: 44px; height: 44px; }
-  .single-icon .logo-svg { width: 48px; height: 48px; }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--text-color);
+  }
+  .logo-svg {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 auto;
+    color: #ffffffcc;
+  }
+  .brand-text {
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    font-size: 1.05rem;
+    color: var(--text-color);
+    display: inline-block;
+    margin-left: 0.25rem;
+  }
 
-  /* Make navbar more compact and touch-friendly */
-  .navbar { padding: 0.35rem 0.6rem; max-width: calc(100% - 1rem); }
-  .navbar ul { gap: 0.9rem; }
+  .single-icon .logo-svg {
+    width: 60px;
+    height: 60px;
+  }
+  .single-icon .brand-text { display: none; }
+  .logo:hover .logo-svg,
+  .logo:focus .logo-svg { transform: scale(1.05); }
+
+  .navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+  }
+
   .navbar li { margin: 0 0.35rem; }
-  .nav-icon { width: 26px; height: 26px; }
-  .navbar a { padding: 0.45rem; }
 
-  /* Stack glass inner grid into one column for readability */
-  .glass-inner { grid-template-columns: 1fr; gap: 0.75rem 1rem; }
-  .glass { padding: 0.9rem; max-width: calc(100% - 1rem); }
-  form { max-width: 100%; margin: 12px auto; }
-}
+  .navbar a { color: var(--text-color); text-decoration: none; }
 
-@media (max-width: 420px) {
-  body { padding: 0.4rem; }
-  .logo-svg { width: 40px; height: 40px; }
-  .single-icon .logo-svg { width: 44px; height: 44px; }
-  .nav-icon { width: 30px; height: 30px; }
-  .navbar ul { gap: 0.8rem; }
-  .navbar { padding: 0.3rem 0.5rem; }
-}
+  .nav-icon { width: 22px; height: 22px; display: inline-block; vertical-align: middle; color: inherit; }
 
-/* Laptop breakpoint: reduce horizontal gap between the left text and the form */
-@media (min-width: 721px) and (max-width: 1200px) {
-  .glass-inner {
-    /* keep vertical gap but reduce column gap to bring columns closer */
-    gap: 1rem 1rem; /* row-gap 1rem, column-gap 1rem (was 2rem) */
+  .nav-icon path,
+  .nav-icon circle,
+  .nav-icon rect { stroke-width: 2 !important; }
+
+  .navbar a:hover .nav-icon,
+  .navbar a:focus .nav-icon { transform: scale(1.08); opacity: 0.95; }
+
+  .navbar a { display: inline-flex; align-items: center; justify-content: center; padding: 0.25rem; border-radius: 6px; }
+
+  .glass {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    padding: 1.25rem;
+    background-color: rgba(255, 255, 255, 0.101);
+    backdrop-filter: blur(10px) saturate(120%);
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.322);
+    margin: 1.25rem auto;
+    max-width: var(--content-max-width);
+    box-sizing: border-box;
+    text-align: center;
   }
 
-  /* slightly constrain form width so it lines up better next to text */
-  form {
-    max-width: 360px;
-  }
-}
+  .glass-inner { display: grid; grid-template-columns: 1fr; gap: 0.75rem 1rem; align-items: start; width: 100%; }
 
+  .glass-inner .col { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  @media (max-width: 720px) {
+    .glass-inner { grid-template-columns: 1fr; gap: 0.75rem; }
+  }
+
+<<<<<<< HEAD
 @media (max-width: 1200px) {
   body { padding: 0.5rem; }
 
  
   .logo-svg { width: 44px; height: 44px; }
   .single-icon .logo-svg { width: 48px; height: 48px; }
+=======
+  .page { width: 100%; padding: 0.5rem; box-sizing: border-box; }
 
-  /* Compact navbar and touch-friendly icons */
-  .navbar { padding: 0.35rem 0.6rem; max-width: calc(100% - 1rem); }
-  .navbar ul { gap: 0.9rem; }
-  .navbar li { margin: 0 0.35rem; }
-  .nav-icon { width: 26px; height: 26px; }
-  .navbar a { padding: 0.45rem; }
+  .glass h1 { padding-left: 0; padding-right: 0; margin: 0 0 0.5rem 0; text-align: center; }
+>>>>>>> a733017bff126a0338537de9fa39812f55b2b609
 
+  .content { margin-top: 1rem; }
+
+<<<<<<< HEAD
   .glass-inner { grid-template-columns: 1fr; gap: 0.75rem 1rem; }
   .glass { padding: 0.9rem; max-width: calc(100% - 1rem); }
   form { max-width: 100%; margin: 12px auto; }
 }
+=======
+  form { display: flex; flex-direction: column; max-width: 400px; margin: 20px auto; gap: 10px; }
+
+  form input, form textarea { padding: 8px; border: 1px solid rgba(255, 255, 255, 0.53); font-family: century gothic; background-color: rgba(255, 255, 255, 0); border-radius:10px; }
+  form input::placeholder,form textarea::placeholder{ color:rgba(255, 255, 255, 0.719); text-align: center; }
+
+  @media (max-width: 720px) {
+    .navbar { padding: 0.4rem 0.75rem; max-width: calc(100% - 1rem); }
+    .navbar ul { gap: 0.9rem; }
+    .nav-icon { width: 26px; height: 26px; }
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 0.5rem; }
+    .logo-svg { width: 44px; height: 44px; }
+    .single-icon .logo-svg { width: 48px; height: 48px; }
+    .navbar { padding: 0.35rem 0.6rem; max-width: calc(100% - 1rem); }
+    .navbar ul { gap: 0.9rem; }
+    .navbar li { margin: 0 0.35rem; }
+    .nav-icon { width: 26px; height: 26px; }
+    .navbar a { padding: 0.45rem; }
+    .glass-inner { grid-template-columns: 1fr; gap: 0.75rem 1rem; }
+    .glass { padding: 0.9rem; max-width: calc(100% - 1rem); }
+    form { max-width: 100%; margin: 12px auto; }
+  }
+
+  @media (max-width: 420px) {
+    body { padding: 0.4rem; }
+    .logo-svg { width: 40px; height: 40px; }
+    .single-icon .logo-svg { width: 44px; height: 44px; }
+    .nav-icon { width: 30px; height: 30px; }
+    .navbar ul { gap: 0.8rem; }
+    .navbar { padding: 0.3rem 0.5rem; }
+  }
+
+  @media (min-width: 721px) and (max-width: 1200px) {
+    .glass-inner { gap: 1rem 1rem; }
+    form { max-width: 360px; }
+  }
+
+  @media (max-width: 1200px) {
+    body { padding: 0.5rem; }
+    .logo-svg { width: 44px; height: 44px; }
+    .single-icon .logo-svg { width: 48px; height: 48px; }
+    .navbar { padding: 0.35rem 0.6rem; max-width: calc(100% - 1rem); }
+    .navbar ul { gap: 0.9rem; }
+    .navbar li { margin: 0 0.35rem; }
+    .nav-icon { width: 26px; height: 26px; }
+    .navbar a { padding: 0.45rem; }
+    .glass-inner { grid-template-columns: 1fr; gap: 0.75rem 1rem; }
+    .glass { padding: 0.9rem; max-width: calc(100% - 1rem); }
+    form { max-width: 100%; margin: 12px auto; }
+  }
+>>>>>>> a733017bff126a0338537de9fa39812f55b2b609
 
