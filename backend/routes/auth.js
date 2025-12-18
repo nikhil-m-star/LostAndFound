@@ -7,6 +7,7 @@ const auth = require('../middleware/auth');
 
 const { body, validationResult } = require('express-validator');
 const { OAuth2Client } = require('google-auth-library');
+const axios = require('axios');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 
@@ -74,16 +75,34 @@ router.post(
 
 // Google Login
 router.post('/google', async (req, res) => {
-  const { credential } = req.body;
+  const { credential, access_token } = req.body;
 
   try {
-    // 1. Verify Google Token
-    const ticket = await client.verifyIdToken({
-      idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-    const payload = ticket.getPayload();
-    const { email, name, sub: googleId, hd } = payload; // sub is google unique id, hd is hosted domain
+    let email, name, googleId, hd;
+
+    if (credential) {
+      // 1a. Verify ID Token (Old Component Method)
+      const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      email = payload.email;
+      name = payload.name;
+      googleId = payload.sub;
+      hd = payload.hd;
+    } else if (access_token) {
+      // 1b. Verify Access Token (New Hook Method)
+      const userInfo = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${access_token}` }
+      });
+      email = userInfo.data.email;
+      name = userInfo.data.name;
+      googleId = userInfo.data.sub;
+      hd = userInfo.data.hd;
+    } else {
+      return res.status(400).json({ message: 'Missing token' });
+    }
 
     // 2. Domain Check
     if (hd !== 'bmsce.ac.in') {

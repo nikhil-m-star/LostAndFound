@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+import { useGoogleLogin } from '@react-oauth/google'
+import { isAuthenticated, setToken } from '../utils/auth'
 import Card from '../components/Card'
 import ThreeDCube from '../components/ThreeDCube'
 import ThreeDPyramid from '../components/ThreeDPyramid'
@@ -40,6 +43,13 @@ export default function Home() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  // Auth State for Home Page Sign Up
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [authLoading, setAuthLoading] = useState(false)
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -77,6 +87,59 @@ export default function Home() {
     }
   }
 
+  const login = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const base = import.meta.env.VITE_API_BASE || '/api'
+        const res = await fetch(`${base}/auth/google`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ access_token: tokenResponse.access_token }),
+        })
+        if (!res.ok) {
+          const data = await res.json()
+          alert('Google Login failed: ' + (data.message || 'Unknown error'))
+          return
+        }
+        const data = await res.json()
+        setToken(data.token)
+        window.location.reload()
+      } catch (err) {
+        console.error(err)
+        alert('Google Login failed')
+      }
+    },
+    onError: () => alert('Login Failed'),
+    flow: 'implicit' // default, but explicit for clarity
+  });
+
+  const handleRegister = async (e) => {
+    e.preventDefault()
+    setAuthLoading(true)
+    try {
+      const base = import.meta.env.VITE_API_BASE || '/api'
+      const res = await fetch(`${base}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      })
+      if (!res.ok) {
+        const txt = await res.text()
+        alert('Registration failed: ' + txt)
+        setAuthLoading(false)
+        return
+      }
+      const data = await res.json()
+      setToken(data.token)
+      window.location.reload()
+    } catch (err) {
+      console.error(err)
+      alert('Registration failed')
+    } finally {
+      setAuthLoading(false)
+    }
+  }
+
   const handleCardClick = (itemId) => {
     navigate(`/items/${itemId}`)
   }
@@ -89,6 +152,38 @@ export default function Home() {
         <div>
           <div className="page-title">Welcome to Lost & Found</div>
           <div style={{ color: 'var(--muted)', marginTop: 20, fontSize: '32px' }}>Browse reports or add a new one</div>
+
+          {!isAuthenticated() && (
+            <div style={{ marginTop: 30, padding: 20, background: 'rgba(255,255,255,0.8)', borderRadius: 12, border: '1px solid #eee', backdropFilter: 'blur(10px)' }}>
+              <h4 style={{ marginBottom: 15 }}>Join the Community</h4>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+                <button
+                  onClick={() => login()}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '10px',
+                    padding: '10px 20px',
+                    backgroundColor: '#fff',
+                    color: '#333',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    fontWeight: '500',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                  }}
+                >
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="G" style={{ width: 18, height: 18 }} />
+                  Sign up with Google
+                </button>
+              </div>
+              <div style={{ textAlign: 'center', margin: '10px 0', color: '#999' }}>- OR -</div>
+              <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 300, margin: '0 auto' }}>
+                <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" required style={{ padding: 8, borderRadius: 4, border: '1px solid #ccc' }} />
+                <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required style={{ padding: 8, borderRadius: 4, border: '1px solid #ccc' }} />
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required style={{ padding: 8, borderRadius: 4, border: '1px solid #ccc' }} />
+                <button type="submit" disabled={authLoading} style={{ padding: 8, marginTop: 5 }}>{authLoading ? 'Joining...' : 'Sign Up with Email'}</button>
+              </form>
+            </div>
+          )}
         </div>
         <ThreeDCube />
         <ThreeDRing />
