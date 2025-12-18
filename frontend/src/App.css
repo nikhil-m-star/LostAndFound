@@ -1,0 +1,6 @@
+body { font-family: system-ui, Arial, sans-serif; margin: 0; padding: 0; background: #f5f7fb; color: #111; }
+.navbar { background: #fff; padding: 12px 20px; display: flex; gap: 16px; border-bottom: 1px solid #e6e9ef; }
+.content { max-width: 900px; margin: 24px auto; padding: 0 16px; }
+.report-form { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 6px 18px rgba(20,30,60,0.06); }
+.report-form input, .report-form textarea { width: 100%; padding: 8px 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; }
+.report-form button { padding: 10px 14px; background: linear-gradient(90deg,#0070f3,#00b4ff); color: white; border: none; border-radius: 8px; cursor: pointer; }
