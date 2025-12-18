@@ -81,7 +81,10 @@ export default function AIChat() {
                 body: JSON.stringify({ message: userText })
             })
 
-            if (!res.ok) throw new Error('AI request failed')
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.message || `AI request failed: ${res.status}`);
+            }
 
             const data = await res.json()
 
@@ -96,7 +99,7 @@ export default function AIChat() {
             console.error(err)
             setMessages(prev => prev.map(msg =>
                 msg.id === loadingId
-                    ? { id: loadingId, text: "I'm having trouble reaching the server right now. Please try again later.", isBot: true }
+                    ? { id: loadingId, text: `Error: ${err.message}. Please check if the backend is running and API keys are set.`, isBot: true }
                     : msg
             ))
         }
