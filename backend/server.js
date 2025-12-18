@@ -8,6 +8,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Log requests for debugging Vercel
+app.use((req, res, next) => {
+	console.log(`${req.method} ${req.path}`);
+	next();
+});
+
 // connect to DB
 connectDB(process.env.MONGO_URI);
 
