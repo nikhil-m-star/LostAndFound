@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import UploadField from '../components/UploadField'
 
 export default function ReportLost() {
+  const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [location, setLocation] = useState('')
@@ -42,12 +44,8 @@ export default function ReportLost() {
       }
 
       const item = await res.json()
-      alert('Item created: ' + item._id)
-      // Reset
-      setTitle('')
-      setDescription('')
-      setLocation('')
-      setFiles([])
+      // Redirect to item detail page
+      navigate(`/items/${item._id}`)
     } catch (err) {
       console.error(err)
       alert('Upload failed')

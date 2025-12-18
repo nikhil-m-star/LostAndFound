@@ -1,10 +1,12 @@
 import React from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate, Link } from 'react-router-dom'
 import Home from './pages/Home'
 import ReportFound from './pages/ReportFound'
 import ReportLost from './pages/ReportLost'
+import ItemDetail from './pages/ItemDetail'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import AIChat from './pages/AIChat'
 import { isAuthenticated, removeToken } from './utils/auth'
 import Sidebar from './components/Sidebar'
 
@@ -44,8 +46,10 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/report/found" element={<ReportFound />} />
           <Route path="/report/lost" element={<ReportLost />} />
+          <Route path="/items/:id" element={<ItemDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/ai-chat" element={<AIChat />} />
         </Routes>
       </main>
       {/* Player removed — not needed for Lost & Found app */}

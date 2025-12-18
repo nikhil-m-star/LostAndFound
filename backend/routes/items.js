@@ -60,14 +60,15 @@ router.get('/', async (req, res) => {
     if (status) filter.status = status;
 
     const items = await Item.find(filter)
+      .populate('reportedBy', 'name email')
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
 
     res.json(items);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+    console.error('Error fetching items:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
@@ -77,6 +78,65 @@ router.get('/:id', async (req, res) => {
     const item = await Item.findById(req.params.id).populate('reportedBy', '-password');
     if (!item) return res.status(404).json({ message: 'Item not found' });
     res.json(item);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// Update item (only owner can update)
+router.patch('/:id', auth, async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) return res.status(404).json({ message: 'Item not found' });
+
+    // Check ownership
+    if (item.reportedBy.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to update this item' });
+    }
+
+    // Update allowed fields
+    const { title, description, location } = req.body;
+    if (title !== undefined) item.title = title;
+    if (description !== undefined) item.description = description;
+    if (location !== undefined) item.location = location;
+
+    await item.save();
+    const updatedItem = await Item.findById(item._id).populate('reportedBy', '-password');
+    res.json(updatedItem);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// Delete item (only owner can delete)
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) return res.status(404).json({ message: 'Item not found' });
+
+    // Check ownership
+    if (item.reportedBy.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to delete this item' });
+    }
+
+    // Delete images from Cloudinary if they exist
+    if (item.images && item.images.length > 0) {
+      for (const img of item.images) {
+        if (img.public_id) {
+          try {
+            await cloudinary.uploader.destroy(img.public_id);
+          } catch (err) {
+            console.error('Error deleting image from Cloudinary:', err);
+            // Continue even if Cloudinary deletion fails
+          }
+        }
+      }
+    }
+
+    await Item.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Item deleted successfully' });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
