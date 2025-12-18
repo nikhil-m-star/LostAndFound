@@ -1,11 +1,13 @@
 import React from 'react'
-import { Routes, Route, Link, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import Home from './pages/Home'
 import ReportFound from './pages/ReportFound'
 import ReportLost from './pages/ReportLost'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import { isAuthenticated, removeToken } from './utils/auth'
+import Sidebar from './components/Sidebar'
+import Player from './components/Player'
 
 function Nav() {
   const navigate = useNavigate()
@@ -37,8 +39,8 @@ function Nav() {
 export default function App() {
   return (
     <div className="app">
-      <Nav />
-      <main className="content">
+      <Sidebar />
+      <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/report/found" element={<ReportFound />} />
@@ -47,6 +49,7 @@ export default function App() {
           <Route path="/register" element={<Register />} />
         </Routes>
       </main>
+      <Player />
     </div>
   )
 }

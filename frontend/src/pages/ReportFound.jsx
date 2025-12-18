@@ -56,15 +56,22 @@ export default function ReportFound() {
   }
 
   return (
-    <div className="report-form">
-      <h2>Report Found Item</h2>
-      <form onSubmit={handleSubmit}>
-        <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
-        <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Location" />
-        <input type="file" multiple accept="image/*" onChange={handleFiles} />
-        <button type="submit" disabled={loading}>{loading ? 'Uploading…' : 'Submit'}</button>
-      </form>
+    <div>
+      <div className="top-hero">
+        <div>
+          <div className="page-title">Report Found Item</div>
+          <div style={{color:'var(--muted)',marginTop:6}}>Add details and photos</div>
+        </div>
+      </div>
+      <div className="report-form">
+        <form onSubmit={handleSubmit}>
+          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
+          <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Location" />
+          <input type="file" multiple accept="image/*" onChange={handleFiles} />
+          <button type="submit" disabled={loading}>{loading ? 'Uploading…' : 'Submit'}</button>
+        </form>
+      </div>
     </div>
   )
 }
