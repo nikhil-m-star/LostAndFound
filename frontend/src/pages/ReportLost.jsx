@@ -5,9 +5,21 @@ export default function ReportLost() {
   const [description, setDescription] = useState('')
   const [location, setLocation] = useState('')
   const [files, setFiles] = useState([])
+  const [previews, setPreviews] = useState([])
   const [loading, setLoading] = useState(false)
 
-  const handleFiles = (e) => setFiles(Array.from(e.target.files))
+  const handleFiles = (e) => {
+    const arr = Array.from(e.target.files)
+    setFiles(arr)
+    const urls = arr.map(f => ({ name: f.name, url: URL.createObjectURL(f) }))
+    setPreviews(urls)
+  }
+
+  React.useEffect(() => {
+    return () => {
+      previews.forEach(p => URL.revokeObjectURL(p.url))
+    }
+  }, [previews])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -69,6 +81,13 @@ export default function ReportLost() {
           <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
           <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Location" />
           <input type="file" multiple accept="image/*" onChange={handleFiles} />
+          <div style={{display:'flex',gap:8,marginTop:8,flexWrap:'wrap'}}>
+            {previews.map((p, i) => (
+              <div key={i} style={{width:84,height:84,background:'#111',borderRadius:8,overflow:'hidden'}}>
+                <img src={p.url} alt={p.name} style={{width:'100%',height:'100%',objectFit:'cover'}} />
+              </div>
+            ))}
+          </div>
           <button type="submit" disabled={loading}>{loading ? 'Uploading…' : 'Submit'}</button>
         </form>
       </div>
