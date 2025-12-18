@@ -6,6 +6,9 @@ const User = require('../models/User');
 const auth = require('../middleware/auth');
 
 const { body, validationResult } = require('express-validator');
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 
 // Register
 router.post(
@@ -68,6 +71,55 @@ router.post(
     }
   }
 );
+
+// Google Login
+router.post('/google', async (req, res) => {
+  const { credential } = req.body;
+
+  try {
+    // 1. Verify Google Token
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { email, name, sub: googleId, hd } = payload; // sub is google unique id, hd is hosted domain
+
+    // 2. Domain Check
+    if (hd !== 'bmsce.ac.in') {
+      return res.status(403).json({ message: 'Access restricted to bmsce.ac.in users only.' });
+    }
+
+    // 3. User Lookup / Creation
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // New user
+      user = new User({
+        name,
+        email,
+        googleId,
+        // password not required due to model update
+      });
+      await user.save();
+    } else if (!user.googleId) {
+      // Existing user (email matched), link googleId
+      user.googleId = googleId;
+      await user.save();
+    }
+
+    // 4. Issue App Token
+    const appPayload = { user: { id: user.id } };
+    jwt.sign(appPayload, process.env.JWT_SECRET, { expiresIn: '7d' }, (err, token) => {
+      if (err) throw err;
+      res.json({ token });
+    });
+
+  } catch (err) {
+    console.error('Google Auth Error:', err.message);
+    res.status(400).json({ message: 'Google Auth Failed' });
+  }
+});
 
 // Get current user
 router.get('/me', auth, async (req, res) => {

@@ -10,7 +10,7 @@ export default function ItemDetail() {
   const [error, setError] = useState(null)
   const [isOwner, setIsOwner] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  const [editForm, setEditForm] = useState({ title: '', description: '', location: '' })
+  const [editForm, setEditForm] = useState({ title: '', description: '', location: '', category: '', dateEvent: '', contactMethod: '', contactPhone: '' })
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
@@ -31,9 +31,13 @@ export default function ItemDetail() {
       setEditForm({
         title: data.title || '',
         description: data.description || '',
-        location: data.location || ''
+        location: data.location || '',
+        category: data.category || 'Others',
+        dateEvent: data.dateEvent ? data.dateEvent.split('T')[0] : '',
+        contactMethod: data.contactMethod || 'email',
+        contactPhone: data.contactPhone || ''
       })
-      
+
       // Check if current user is the owner
       const token = getToken()
       if (token && data.reportedBy) {
@@ -68,7 +72,11 @@ export default function ItemDetail() {
       setEditForm({
         title: item.title || '',
         description: item.description || '',
-        location: item.location || ''
+        location: item.location || '',
+        category: item.category || 'Others',
+        dateEvent: item.dateEvent ? item.dateEvent.split('T')[0] : '',
+        contactMethod: item.contactMethod || 'email',
+        contactPhone: item.contactPhone || ''
       })
     }
   }
@@ -171,19 +179,22 @@ export default function ItemDetail() {
       <div className="top-hero">
         <div>
           <div className="page-title">{item.title}</div>
-          <div style={{ color: 'var(--muted)', marginTop: 6 }}>
-            {item.status === 'lost' ? 'Lost Item' : 'Found Item'}
-            {item.location && ` • ${item.location}`}
+          <div style={{ color: 'var(--muted)', marginTop: 6, display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <span style={{ padding: '4px 8px', backgroundColor: '#e9ecef', borderRadius: 4, fontSize: '0.9em' }}>{item.category || 'Item'}</span>
+            <span>{item.status === 'lost' ? 'Lost Item' : 'Found Item'}</span>
+            {item.location && <span>• {item.location}</span>}
           </div>
         </div>
-        {isOwner && !isEditing && (
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button onClick={handleEdit}>Edit</button>
-            <button onClick={handleDelete} disabled={deleting} style={{ backgroundColor: '#dc3545' }}>
-              {deleting ? 'Deleting...' : 'Delete'}
-            </button>
-          </div>
-        )}
+        <div>
+          {isOwner && !isEditing && (
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button onClick={handleEdit}>Edit</button>
+              <button onClick={handleDelete} disabled={deleting} style={{ backgroundColor: '#dc3545' }}>
+                {deleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginTop: '24px' }}>
@@ -240,6 +251,49 @@ export default function ItemDetail() {
                 />
               </div>
               <div>
+                <label className="field-label">Category</label>
+                <select
+                  value={editForm.category}
+                  onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                >
+                  {['Electronics', 'Clothing', 'Accessories', 'Documents', 'Others'].map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="field-label">Date Event</label>
+                <input
+                  type="date"
+                  value={editForm.dateEvent}
+                  onChange={(e) => setEditForm({ ...editForm, dateEvent: e.target.value })}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                />
+              </div>
+              <div>
+                <label className="field-label">Contact Method</label>
+                <select
+                  value={editForm.contactMethod}
+                  onChange={(e) => setEditForm({ ...editForm, contactMethod: e.target.value })}
+                  style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                >
+                  <option value="email">Email</option>
+                  <option value="phone">Phone</option>
+                </select>
+              </div>
+              {editForm.contactMethod === 'phone' && (
+                <div>
+                  <label className="field-label">Phone</label>
+                  <input
+                    value={editForm.contactPhone}
+                    onChange={(e) => setEditForm({ ...editForm, contactPhone: e.target.value })}
+                    placeholder="Phone Number"
+                    style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+                  />
+                </div>
+              )}
+              <div>
                 <label className="field-label">Location</label>
                 <input
                   value={editForm.location}
@@ -287,6 +341,22 @@ export default function ItemDetail() {
                   {new Date(item.createdAt).toLocaleDateString()}
                 </div>
               </div>
+              {item.dateEvent && (
+                <div>
+                  <div className="field-label">{item.status === 'lost' ? 'Lost On' : 'Found On'}</div>
+                  <div style={{ marginTop: '4px', padding: '12px', backgroundColor: '#f9f9f9', borderRadius: '6px' }}>
+                    {new Date(item.dateEvent).toLocaleDateString()}
+                  </div>
+                </div>
+              )}
+              {(item.contactMethod === 'phone' || item.contactPhone) && (
+                <div>
+                  <div className="field-label">Contact Phone</div>
+                  <div style={{ marginTop: '4px', padding: '12px', backgroundColor: '#f9f9f9', borderRadius: '6px' }}>
+                    {item.contactPhone || 'No phone provided'}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -298,4 +368,3 @@ export default function ItemDetail() {
     </div>
   )
 }
-

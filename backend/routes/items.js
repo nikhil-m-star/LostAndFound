@@ -9,7 +9,12 @@ const cloudinary = require('../utils/cloudinary');
 // Accept multipart/form-data with files in `images` field (max 6)
 router.post('/', auth, upload.array('images', 6), async (req, res) => {
   try {
-    const { title, description, location, status } = req.body;
+    const { title, description, location, status, category, dateEvent, contactMethod, contactPhone } = req.body;
+
+    // Basic Validation
+    if (!category || !dateEvent) {
+      return res.status(400).json({ message: 'Category and Date of Event are required' });
+    }
 
     const images = [];
 
@@ -42,7 +47,18 @@ router.post('/', auth, upload.array('images', 6), async (req, res) => {
       }
     }
 
-    const item = new Item({ title, description, location, status, images, reportedBy: req.user.id });
+    const item = new Item({
+      title,
+      description,
+      location,
+      status,
+      category,
+      dateEvent,
+      contactMethod,
+      contactPhone,
+      images,
+      reportedBy: req.user.id
+    });
     await item.save();
     res.json(item);
   } catch (err) {
@@ -96,10 +112,14 @@ router.patch('/:id', auth, async (req, res) => {
     }
 
     // Update allowed fields
-    const { title, description, location } = req.body;
+    const { title, description, location, category, dateEvent, contactMethod, contactPhone } = req.body;
     if (title !== undefined) item.title = title;
     if (description !== undefined) item.description = description;
     if (location !== undefined) item.location = location;
+    if (category !== undefined) item.category = category;
+    if (dateEvent !== undefined) item.dateEvent = dateEvent;
+    if (contactMethod !== undefined) item.contactMethod = contactMethod;
+    if (contactPhone !== undefined) item.contactPhone = contactPhone;
 
     await item.save();
     const updatedItem = await Item.findById(item._id).populate('reportedBy', '-password');
