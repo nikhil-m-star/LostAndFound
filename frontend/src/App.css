@@ -48,8 +48,7 @@ body { font-family: 'Poppins', Inter, system-ui, Arial, sans-serif; margin: 0; p
 
 .card:hover { box-shadow: 0 12px 36px rgba(29,185,84,0.08); }
 
-.player { position: fixed; left: 220px; right: 0; bottom: 0; height: 72px; background: #0f0f0f; border-top: 1px solid rgba(255,255,255,0.04); display:flex; align-items:center; padding: 10px 20px; gap: 16px; }
-.player .meta { color: var(--muted); }
+/* Player styles removed (not applicable to this app) */
 
 @media (max-width: 720px) {
 	.sidebar { display:none; }

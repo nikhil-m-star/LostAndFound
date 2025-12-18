@@ -7,7 +7,6 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import { isAuthenticated, removeToken } from './utils/auth'
 import Sidebar from './components/Sidebar'
-import Player from './components/Player'
 
 function Nav() {
   const navigate = useNavigate()
@@ -49,7 +48,7 @@ export default function App() {
           <Route path="/register" element={<Register />} />
         </Routes>
       </main>
-      <Player />
+      {/* Player removed — not needed for Lost & Found app */}
     </div>
   )
 }
