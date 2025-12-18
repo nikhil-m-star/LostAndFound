@@ -21,6 +21,11 @@ export default function ReportFound() {
       files.forEach((f) => fd.append('images', f))
 
       const token = localStorage.getItem('token')
+      if (!token) {
+        alert('You must be logged in to report items')
+        setLoading(false)
+        return
+      }
       const base = import.meta.env.VITE_API_BASE || '/api'
       const res = await fetch(`${base}/items`, {
         method: 'POST',
