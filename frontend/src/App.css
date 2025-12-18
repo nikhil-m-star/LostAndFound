@@ -835,3 +835,271 @@ select option {
 		transform: translateY(0);
 	}
 }
+
+/* --- RESPONSIVE LAYOUT & HOME REFACTOR --- */
+
+.home-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	max-width: 1200px;
+	/* Reverted to original 1200px */
+	margin: 0 auto;
+	padding-bottom: 60px;
+}
+
+.hero-layout {
+	margin-top: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 40px;
+	gap: 40px;
+	width: 100%;
+	flex-wrap: nowrap;
+	/* Prevent wrapping on laptops/desktop */
+}
+
+/* Typography Enhancements */
+.intro-subtitle {
+	color: var(--muted);
+	margin-top: 20px;
+	font-size: 24px;
+	/* Slightly smaller base */
+}
+
+/* Authentication Card */
+.auth-card {
+	margin-top: 30px;
+	padding: 30px;
+	background: rgba(20, 20, 20, 0.6);
+	border-radius: 16px;
+	border: 1px solid rgba(29, 185, 84, 0.1);
+	backdrop-filter: blur(10px);
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	max-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.auth-title {
+	margin-bottom: 20px;
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.auth-buttons {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 10px;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+/* Primary Action Button */
+.primary-action-btn {
+	padding: 12px 32px;
+	margin-top: 10px;
+	background: #1db954;
+	color: white;
+	border: none;
+	border-radius: 50px;
+	cursor: pointer;
+	font-size: 18px;
+	font-family: inherit;
+	font-weight: 600;
+	transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.primary-action-btn:hover {
+	transform: scale(1.05);
+	box-shadow: 0 0 20px rgba(29, 185, 84, 0.4);
+}
+
+.welcome-section {
+	margin-top: 30px;
+}
+
+/* --- MEDIA QUERIES --- */
+
+/* Tablet & Mobile (< 1000px) */
+@media (max-width: 1000px) {
+	.page-title.intro-title {
+		font-size: 48px;
+		/* Reduce from 72px */
+	}
+
+	.hero-layout {
+		gap: 20px;
+		flex-wrap: wrap;
+		/* Allow wrapping only on smaller screens */
+	}
+
+	.desktop-only {
+		display: none !important;
+	}
+}
+
+/* Mobile (< 768px) */
+@media (max-width: 768px) {
+	.home-container {
+		padding: 16px;
+		padding-bottom: 80px;
+		/* Space for potential bottom nav/footer */
+	}
+
+	.hero-layout {
+		flex-direction: column;
+		/* Stack hero elements */
+		margin-top: 20px;
+		text-align: center;
+	}
+
+	.page-title.intro-title {
+		font-size: 36px;
+	}
+
+	.intro-subtitle {
+		font-size: 18px;
+	}
+
+	.hero-3d {
+		transform: scale(0.7);
+		/* Shrink 3D elements */
+		margin: 0 auto;
+		/* Center them */
+	}
+
+	.mobile-hide {
+		display: none !important;
+		/* Hide extra 3D elements to save space */
+	}
+
+	.grid {
+		gap: 16px;
+		/* Tighten grid gap */
+	}
+
+	.card {
+		width: 100%;
+		/* Full width cards on mobile */
+		max-width: 360px;
+		margin: 0 auto;
+	}
+
+	.auth-buttons {
+		flex-direction: column;
+		width: 100%;
+	}
+
+	.auth-btn {
+		width: 100%;
+	}
+
+	/* Adjust Input Fields for touch targets */
+	.report-form input,
+	.report-form select,
+	.report-form textarea {
+		font-size: 16px;
+		/* Prevents auto-zoom on iOS */
+		padding: 14px;
+	}
+}
+
+/* --- MOBILE NAVBAR --- */
+.mobile-navbar {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	background: transparent;
+	/* Removed backdrop-filter to be fully transparent, or keep if glass is desired? User said "background be transparent". */
+}
+
+.mobile-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 15px 20px;
+	height: 60px;
+}
+
+.hamburger-btn {
+	background: transparent;
+	border: none;
+	color: white;
+	padding: 5px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.mobile-menu {
+	position: fixed;
+	top: 60px;
+	/* Below header */
+	left: 0;
+	right: 0;
+	background: #000;
+	height: 0;
+	overflow: hidden;
+	transition: height 0.3s ease-in-out;
+	border-bottom: 1px solid rgba(29, 185, 84, 0.1);
+}
+
+.mobile-menu.open {
+	height: auto;
+	padding-bottom: 20px;
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.mobile-menu nav {
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+}
+
+.mobile-menu a {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 15px 20px;
+	color: var(--muted);
+	text-decoration: none;
+	font-size: 18px;
+	font-weight: 500;
+	border-radius: 8px;
+	transition: all 0.2s;
+}
+
+.mobile-menu a:hover,
+.mobile-menu a.active {
+	background: rgba(29, 185, 84, 0.1);
+	color: var(--accent);
+}
+
+.mobile-menu a svg {
+	color: currentColor;
+}
+
+/* --- MEDIA QUERIES UPDATE --- */
+@media (max-width: 768px) {
+	.mobile-navbar {
+		display: block;
+		/* Show on mobile */
+	}
+
+	/* Hide the desktop user menu on mobile */
+	.user-menu-container {
+		display: none !important;
+	}
+
+	/* Push content down so it's not hidden behind fixed navbar */
+	.main-content {
+		padding-top: 10px !important;
+	}
+}

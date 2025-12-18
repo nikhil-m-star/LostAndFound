@@ -10,17 +10,13 @@ import Register from './pages/Register'
 import AIChat from './pages/AIChat'
 import Sidebar from './components/Sidebar'
 import UserMenu from './components/UserMenu'
-
-function Nav() {
-  // ... existing unused Nav code ...
-  const { signOut } = useClerk()
-  // ...
-}
+import MobileNavbar from './components/MobileNavbar'
 
 export default function App() {
   return (
     <div className="app">
       <Sidebar />
+      <MobileNavbar />
       <main className="main-content" style={{ position: 'relative' }}>
         <UserMenu />
         <Routes>

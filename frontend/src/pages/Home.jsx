@@ -85,26 +85,18 @@ export default function Home() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '1200px', margin: '0 auto', paddingBottom: '60px' }}>
-      <div className="top-hero" style={{ marginTop: '60px', marginBottom: '40px', gap: '40px' }}>
-        <ThreeDPyramid />
-        <ThreeDCube />
-        <div>
-          <div className="page-title">Welcome to Lost & Found</div>
-          <div style={{ color: 'var(--muted)', marginTop: 20, fontSize: '32px' }}>Browse reports or add a new one</div>
+    <div className="home-container">
+      <div className="top-hero hero-layout">
+        <div className="hero-3d desktop-only"><ThreeDPyramid /></div>
+        <div className="hero-3d mobile-scale"><ThreeDCube /></div>
+        <div className="hero-content">
+          <div className="page-title intro-title">Welcome to Lost & Found</div>
+          <div className="intro-subtitle">Browse reports or add a new one</div>
 
           {!isSignedIn && (
-            <div style={{
-              marginTop: 30,
-              padding: '30px',
-              background: 'rgba(20, 20, 20, 0.6)',
-              borderRadius: 16,
-              border: '1px solid rgba(29, 185, 84, 0.1)',
-              backdropFilter: 'blur(10px)',
-              boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)'
-            }}>
-              <h4 style={{ marginBottom: 20, fontSize: '20px', fontWeight: 700 }}>Join the Community</h4>
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10, gap: '16px' }}>
+            <div className="auth-card">
+              <h4 className="auth-title">Join the Community</h4>
+              <div className="auth-buttons">
                 <SignUpButton mode="modal">
                   <button className="auth-btn auth-btn-signup">
                     Sign Up
@@ -119,27 +111,16 @@ export default function Home() {
             </div>
           )}
           {isSignedIn && (
-            <div style={{ marginTop: 30 }}>
+            <div className="welcome-section">
               <h3>Welcome back, {user.firstName}!</h3>
-              <button onClick={() => navigate('/report/lost')} style={{
-                padding: '12px 24px',
-                marginTop: '10px',
-                backgroundColor: '#1db954',
-                color: 'white',
-                border: 'none',
-                borderRadius: '25px',
-                cursor: 'pointer',
-                fontSize: '16px',
-                fontFamily: 'inherit',
-                fontWeight: '600'
-              }}>
+              <button onClick={() => navigate('/report/lost')} className="primary-action-btn">
                 Report an Item
               </button>
             </div>
           )}
         </div>
-        <ThreeDCube />
-        <ThreeDRing />
+        <div className="hero-3d mobile-hide"><ThreeDCube /></div>
+        <div className="hero-3d desktop-only"><ThreeDRing /></div>
       </div>
 
       <h3 style={{ width: '100%', textAlign: 'center' }}>Recent reports {loading && '(Loading...)'}</h3>
