@@ -13,7 +13,7 @@ export default function Sidebar() {
       <div className="brand">Lost & Found</div>
       <nav>
         <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}><FiHome style={{ width: 18, height: 18 }} /> <span>Home</span></NavLink>
-        <NavLink to="/search" className={({ isActive }) => isActive ? 'active' : ''}><FiSearch style={{ width: 18, height: 18 }} /> <span>Search</span></NavLink>
+
         <NavLink to="/ai-chat" className={({ isActive }) => isActive ? 'active' : ''}><FiCpu style={{ width: 18, height: 18 }} /> <span>AI Assistant</span></NavLink>
         <NavLink to="/report/found" className={({ isActive }) => isActive ? 'active' : ''}><MdOutlineReport style={{ width: 18, height: 18 }} /> <span>Report Found</span></NavLink>
         <NavLink to="/report/lost" className={({ isActive }) => isActive ? 'active' : ''}><MdOutlineReport style={{ width: 18, height: 18 }} /> <span>Report Lost</span></NavLink>

@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@clerk/clerk-react'
 import UploadField from '../components/UploadField'
 
 export default function ReportFound() {
   const navigate = useNavigate()
+  const { getToken } = useAuth()
+
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [location, setLocation] = useState('')
@@ -31,7 +34,7 @@ export default function ReportFound() {
       fd.append('status', 'found')
       files.forEach((f) => fd.append('images', f))
 
-      const token = localStorage.getItem('token')
+      const token = await getToken()
       if (!token) {
         alert('You must be logged in to report items')
         setLoading(false)
@@ -89,14 +92,14 @@ export default function ReportFound() {
             <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Location" />
 
             <label className="field-label">Category</label>
-            <select value={category} onChange={(e) => setCategory(e.target.value)} style={{ width: '100%', padding: '8px', marginBottom: '12px' }}>
+            <select value={category} onChange={(e) => setCategory(e.target.value)}>
               {['Electronics', 'Clothing', 'Accessories', 'Documents', 'Others'].map(c => (
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>
 
             <label className="field-label">Date Found</label>
-            <input type="date" value={dateEvent} onChange={(e) => setDateEvent(e.target.value)} required style={{ width: '100%', padding: '8px', marginBottom: '12px' }} />
+            <input type="date" value={dateEvent} onChange={(e) => setDateEvent(e.target.value)} required />
 
             <label className="field-label">Contact Method</label>
             <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>

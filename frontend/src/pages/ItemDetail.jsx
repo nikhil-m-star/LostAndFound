@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { isAuthenticated, getToken } from '../utils/auth'
+import { useAuth } from '@clerk/clerk-react'
 
 export default function ItemDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { getToken, userId } = useAuth()
+
   const [item, setItem] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -39,9 +41,9 @@ export default function ItemDetail() {
       })
 
       // Check if current user is the owner
-      const token = getToken()
-      if (token && data.reportedBy) {
+      if (userId && data.reportedBy) {
         try {
+          const token = await getToken();
           const userRes = await fetch(`${base}/auth/me`, {
             headers: { Authorization: `Bearer ${token}` }
           })
@@ -85,7 +87,7 @@ export default function ItemDetail() {
     try {
       setSaving(true)
       const base = import.meta.env.VITE_API_BASE || '/api'
-      const token = getToken()
+      const token = await getToken()
       if (!token) {
         alert('You must be logged in to edit items')
         return
@@ -126,7 +128,7 @@ export default function ItemDetail() {
     try {
       setDeleting(true)
       const base = import.meta.env.VITE_API_BASE || '/api'
-      const token = getToken()
+      const token = await getToken()
       if (!token) {
         alert('You must be logged in to delete items')
         return

@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Routes, Route, useNavigate, Link } from 'react-router-dom'
+import { useClerk, useUser } from '@clerk/clerk-react'
 import Home from './pages/Home'
 import ReportFound from './pages/ReportFound'
 import ReportLost from './pages/ReportLost'
@@ -7,41 +8,21 @@ import ItemDetail from './pages/ItemDetail'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import AIChat from './pages/AIChat'
-import { isAuthenticated, removeToken } from './utils/auth'
 import Sidebar from './components/Sidebar'
+import UserMenu from './components/UserMenu'
 
 function Nav() {
-  const navigate = useNavigate()
-  return (
-    <nav className="navbar">
-      <Link to="/">Home</Link>
-      <Link to="/report/found">Report Found</Link>
-      <Link to="/report/lost">Report Lost</Link>
-      {!isAuthenticated() ? (
-        <>
-          <Link to="/login">Login</Link>
-          <Link to="/register">Register</Link>
-        </>
-      ) : (
-        <button
-          style={{ marginLeft: 12 }}
-          onClick={() => {
-            removeToken()
-            navigate('/')
-          }}
-        >
-          Logout
-        </button>
-      )}
-    </nav>
-  )
+  // ... existing unused Nav code ...
+  const { signOut } = useClerk()
+  // ...
 }
 
 export default function App() {
   return (
     <div className="app">
       <Sidebar />
-      <main className="main-content">
+      <main className="main-content" style={{ position: 'relative' }}>
+        <UserMenu />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/report/found" element={<ReportFound />} />

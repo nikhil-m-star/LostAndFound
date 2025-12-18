@@ -5,9 +5,10 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: {
     type: String,
-    required: function () { return !this.googleId; } // Pwd only required if not Google login
+    required: function () { return !this.googleId && !this.clerkId; }
   },
   googleId: { type: String },
+  clerkId: { type: String, unique: true, sparse: true },
   createdAt: { type: Date, default: Date.now }
 });
 

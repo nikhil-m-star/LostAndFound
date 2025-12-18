@@ -1,5 +1,5 @@
-require('dotenv').config();
 require('dotenv').config({ path: '.env.local' });
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
@@ -14,6 +14,7 @@ connectDB(process.env.MONGO_URI);
 // routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/items', require('./routes/items'));
+app.use('/api/ai', require('./routes/ai')); // New AI route
 
 // health
 app.get('/api/ping', (req, res) => res.json({ ok: true }));
