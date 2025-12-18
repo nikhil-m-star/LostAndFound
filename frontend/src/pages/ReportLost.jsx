@@ -1,25 +1,14 @@
 import React, { useState } from 'react'
+import UploadField from '../components/UploadField'
 
 export default function ReportLost() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [location, setLocation] = useState('')
   const [files, setFiles] = useState([])
-  const [previews, setPreviews] = useState([])
   const [loading, setLoading] = useState(false)
 
-  const handleFiles = (e) => {
-    const arr = Array.from(e.target.files)
-    setFiles(arr)
-    const urls = arr.map(f => ({ name: f.name, url: URL.createObjectURL(f) }))
-    setPreviews(urls)
-  }
-
-  React.useEffect(() => {
-    return () => {
-      previews.forEach(p => URL.revokeObjectURL(p.url))
-    }
-  }, [previews])
+  // files managed by UploadField (previews shown there)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -75,21 +64,27 @@ export default function ReportLost() {
           <div style={{color:'var(--muted)',marginTop:6}}>Describe it and add photos</div>
         </div>
       </div>
-      <div className="report-form">
-        <form onSubmit={handleSubmit}>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
-          <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Location" />
-          <input type="file" multiple accept="image/*" onChange={handleFiles} />
-          <div style={{display:'flex',gap:8,marginTop:8,flexWrap:'wrap'}}>
-            {previews.map((p, i) => (
-              <div key={i} style={{width:84,height:84,background:'#111',borderRadius:8,overflow:'hidden'}}>
-                <img src={p.url} alt={p.name} style={{width:'100%',height:'100%',objectFit:'cover'}} />
-              </div>
-            ))}
-          </div>
-          <button type="submit" disabled={loading}>{loading ? 'Uploading…' : 'Submit'}</button>
-        </form>
+      <div className="report-panel">
+        <div className="form-left">
+          <div className="field-label">Photos</div>
+          <UploadField files={files} setFiles={setFiles} />
+          <div className="small-muted" style={{marginTop:8}}>Tip: Include any identifying marks or labels.</div>
+        </div>
+
+        <div className="form-right report-form">
+          <form onSubmit={handleSubmit}>
+            <label className="field-label">Title</label>
+            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
+
+            <label className="field-label">Description</label>
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
+
+            <label className="field-label">Location</label>
+            <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Location" />
+
+            <button type="submit" disabled={loading}>{loading ? 'Uploading…' : 'Submit'}</button>
+          </form>
+        </div>
       </div>
     </div>
   )
