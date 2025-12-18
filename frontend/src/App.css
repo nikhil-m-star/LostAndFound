@@ -14,13 +14,30 @@
 	--glass: rgba(255,255,255,0.03);
 
 	/* background gradient combining spotify green accents with black */
-	--bg-gradient: radial-gradient(600px 400px at 10% 10%, rgba(29,185,84,0.06), transparent 12%),
-							 radial-gradient(500px 300px at 85% 80%, rgba(29,185,84,0.04), transparent 18%),
-							 linear-gradient(180deg, #000000 0%, #07140a 40%, #0b0f0b 100%);
+	--neon-green: rgba(30,255,103,0.18);
+	--neon-green-strong: rgba(30,255,103,0.28);
+	--bg-gradient: radial-gradient(800px 520px at 8% 12%, var(--neon-green-strong), transparent 18%),
+							 radial-gradient(700px 420px at 88% 78%, var(--neon-green), transparent 20%),
+							 radial-gradient(420px 300px at 50% 40%, rgba(29,185,84,0.06), transparent 24%),
+							 linear-gradient(180deg, #000000 0%, #06110a 35%, #07140a 55%, #0b0f0b 100%);
 }
 
 * { box-sizing: border-box; }
-body { font-family: 'Poppins', Inter, system-ui, Arial, sans-serif; margin: 0; padding: 0; background: var(--bg-gradient); color: var(--text); }
+body { font-family: 'Poppins', Inter, system-ui, Arial, sans-serif; margin: 0; padding: 0; background: var(--bg-gradient); color: var(--text); background-attachment: fixed; background-repeat: no-repeat; }
+
+/* stronger neon glow overlay to make the gradient pop */
+body::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	background: radial-gradient(900px 520px at 12% 14%, var(--neon-green-strong), transparent 18%),
+							radial-gradient(760px 440px at 86% 80%, var(--neon-green), transparent 22%);
+	filter: blur(60px) saturate(1.6) contrast(1.02);
+	opacity: 0.95;
+	pointer-events: none;
+	mix-blend-mode: screen;
+}
 
 .app { display: flex; min-height: 100vh; }
 
