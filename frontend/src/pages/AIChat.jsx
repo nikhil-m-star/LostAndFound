@@ -69,7 +69,10 @@ export default function AIChat() {
         setMessages(prev => [...prev, { id: loadingId, text: "Thinking...", isBot: true, isThinking: true }])
 
         try {
-            const base = import.meta.env.VITE_API_BASE || '/api'
+            // In production (Vercel), we must use relative /api
+            // In local development, we use localhost:5000
+            const isLocal = window.location.hostname === 'localhost';
+            const base = isLocal ? (import.meta.env.VITE_API_BASE || 'http://localhost:5000/api') : '/api';
             const token = await window.Clerk?.session?.getToken()
 
             const res = await fetch(`${base}/ai/chat`, {
