@@ -23,15 +23,6 @@ export default function MobileNavbar() {
 
     return (
         <>
-            {/* Floating Hamburger Button */}
-            <button
-                className={`floating-menu-btn ${isOpen ? 'open' : ''}`}
-                onClick={toggleOpen}
-                aria-label="Toggle Menu"
-            >
-                {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-            </button>
-
             {/* Mobile Menu Overlay */}
             <div className={`mobile-menu-overlay ${isOpen ? 'open' : ''}`} onClick={closeMenu}></div>
 
@@ -82,6 +73,15 @@ export default function MobileNavbar() {
                     )}
                 </div>
             </div>
+
+            {/* Floating Hamburger Button (Placed last to be on top) */}
+            <button
+                className={`floating-menu-btn ${isOpen ? 'open' : ''}`}
+                onClick={toggleOpen}
+                aria-label="Toggle Menu"
+            >
+                {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+            </button>
         </>
     )
 }
