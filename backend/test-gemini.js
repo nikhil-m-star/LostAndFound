@@ -8,7 +8,7 @@ const aiService = require('./services/geminiService'); // We will mock this or u
 
 async function run() {
   try {
-    const modelName = "gemini-1.5-flash";
+    const modelName = "gemini-2.0-flash";
     console.log(`Testing Prompt with ${modelName}...`);
     const model = genAI.getGenerativeModel({ model: modelName });
 

@@ -11,9 +11,9 @@ exports.processQuery = async (userText) => {
         }
 
         console.log(`[Gemini] Using Key: ${process.env.GEMINI_API_KEY.substring(0, 10)}...`);
-        console.log(`[Gemini] Using Model: gemini-1.5-flash`);
+        console.log(`[Gemini] Using Model: gemini-2.0-flash`);
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
         // 1. Extract intent and entities using Gemini
         const prompt = `
