@@ -79,7 +79,8 @@ router.get('/', async (req, res) => {
       .populate('reportedBy', 'name email')
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
-      .limit(parseInt(limit));
+      .limit(parseInt(limit))
+      .lean();
 
     res.json(items);
   } catch (err) {

@@ -15,7 +15,7 @@ const ItemSchema = new mongoose.Schema({
   status: { type: String, enum: ['lost', 'found'], default: 'lost' },
   images: [{ url: String, public_id: String }],
   reportedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now, index: true }
 });
 
 module.exports = mongoose.model('Item', ItemSchema);
