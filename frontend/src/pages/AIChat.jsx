@@ -212,7 +212,7 @@ export default function AIChat() {
                         <div ref={bottomRef} />
                     </div>
 
-                    <form onSubmit={handleSend} style={{ padding: '20px', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '12px' }}>
+                    <form onSubmit={handleSend} className="chat-input-form" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '12px' }}>
                         <input
                             type="text"
                             value={chatInput}
@@ -220,24 +220,26 @@ export default function AIChat() {
                             placeholder="Describe what you're looking for..."
                             style={{
                                 flex: 1,
-                                padding: '16px',
+                                padding: '14px',
                                 borderRadius: '12px',
                                 border: 'none',
                                 background: '#1a1a1a',
                                 color: '#fff',
                                 fontSize: '16px',
-                                fontFamily: 'inherit'
+                                fontFamily: 'inherit',
+                                width: '100%' /* Ensure it doesn't overflow flex parent */
                             }}
                         />
                         <button type="submit" style={{
                             background: 'var(--accent)',
                             border: 'none',
-                            width: '56px',
+                            width: '48px', /* Slightly smaller width for mobile */
                             borderRadius: '12px',
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            flexShrink: 0 /* Prevent button squishing */
                         }}>
                             <FiSend size={20} color="#000" />
                         </button>

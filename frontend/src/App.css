@@ -36,9 +36,11 @@
 
 html {
 	background: #000;
+	overflow-x: hidden;
 }
 
 body {
+	overflow-x: hidden;
 	font-family: 'Poppins', Inter, system-ui, Arial, sans-serif;
 	margin: 0;
 	padding: 0;
@@ -1453,42 +1455,36 @@ select option {
 	.main-content {
 		margin-left: 0;
 		width: 100%;
-		padding: 20px 20px 80px 20px;
-		/* Adjusted padding */
-	}
-
-
-	/* AI Chat Container - Desktop Default */
-	.ai-chat-container {
-		max-width: 1000px;
-		margin: 0 auto;
-		height: calc(100vh - 100px);
-		display: flex;
-		flex-direction: column;
-		background: linear-gradient(180deg, rgba(29, 185, 84, 0.02), rgba(0, 0, 0, 0));
-		border-radius: 20px;
-		border: 1px solid rgba(29, 185, 84, 0.1);
-		overflow: hidden;
-		position: relative;
+		padding: 16px;
+		/* Reduced padding */
+		overflow-x: hidden;
+		/* Prevent horizontal scroll */
 	}
 
 	/* AI Chat Mobile Adjustments */
 	.ai-chat-container {
-		height: 80vh !important;
-		/* Fallback */
-		height: 80dvh !important;
-		/* Dynamic Viewport Height */
+		height: 75vh !important;
+		height: 75dvh !important;
+		/* dynamic viewport height */
 		margin: 0 !important;
 		border-radius: 16px !important;
-		border-color: rgba(29, 185, 84, 0.15) !important;
+		border: 1px solid rgba(29, 185, 84, 0.15) !important;
+		width: 100% !important;
+		max-width: 100% !important;
 	}
 
 	.chat-header {
-		padding: 16px !important;
+		padding: 12px 16px !important;
+		/* Reduced padding */
 	}
 
 	.messages {
 		padding: 16px !important;
+	}
+
+	.chat-input-form {
+		padding: 12px 16px !important;
+		/* Reduced padding */
 	}
 
 	.chat-header h1 {
@@ -1513,8 +1509,7 @@ select option {
 
 	/* Titles */
 	.page-title {
-		font-size: 32px;
-		line-height: 1.2;
+		font-size: 28px;
 	}
 
 	.top-hero {
