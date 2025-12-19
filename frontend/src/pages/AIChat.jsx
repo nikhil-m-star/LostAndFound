@@ -117,34 +117,25 @@ export default function AIChat() {
     return (
         <div className="ai-chat-container">
             {/* Header with Mode Toggles */}
-            <div className="chat-header" style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: 40, height: 40, background: 'var(--neon-green-strong)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {/* Header with Mode Toggles */}
+            <div className="chat-header">
+                <div className="chat-title-group">
+                    <div className="chat-icon-circle">
                         {mode === 'chat' ? <FiCpu size={24} color="#000" /> : <FiSearch size={24} color="#000" />}
                     </div>
                     <div>
-                        <div style={{ fontWeight: 800, fontSize: '18px' }}>{mode === 'chat' ? 'AI Assistant' : 'Search Items'}</div>
-                        <div style={{ fontSize: '13px', color: 'var(--muted)' }}>{mode === 'chat' ? 'Ask me anything' : 'Find quickly'}</div>
+                        <div className="chat-title-text">{mode === 'chat' ? 'AI Assistant' : 'Search Items'}</div>
+                        <div className="chat-subtitle-text">{mode === 'chat' ? 'Ask me anything' : 'Find quickly'}</div>
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', background: '#1a1a1a', padding: '4px', borderRadius: '12px', border: '1px solid rgba(29, 185, 84, 0.1)' }}>
+                <div className="chat-toggles">
                     <button
                         className="mode-toggle"
                         onClick={() => setMode('chat')}
                         style={{
                             background: mode === 'chat' ? 'var(--accent-muted)' : 'transparent',
                             color: mode === 'chat' ? '#fff' : 'var(--muted)',
-                            border: 'none',
-                            padding: '8px 16px',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                            fontWeight: 600,
-                            display: 'flex',
-                            gap: '8px',
-                            alignItems: 'center',
-                            transition: 'all 0.2s',
-                            boxShadow: 'none'
                         }}
                     >
                         <FiMessageSquare /> Chat
@@ -155,16 +146,6 @@ export default function AIChat() {
                         style={{
                             background: mode === 'search' ? 'var(--accent-muted)' : 'transparent',
                             color: mode === 'search' ? '#fff' : 'var(--muted)',
-                            border: 'none',
-                            padding: '8px 16px',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                            fontWeight: 600,
-                            display: 'flex',
-                            gap: '8px',
-                            alignItems: 'center',
-                            transition: 'all 0.2s',
-                            boxShadow: 'none'
                         }}
                     >
                         <FiSearch /> Search

@@ -1438,6 +1438,65 @@ select option {
 
 /* --- MOBILE RESPONSIVENESS AND TWEAKS --- */
 
+
+/* Layout niceties */
+.chat-header {
+	padding: 20px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.chat-title-group {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.chat-icon-circle {
+	width: 40px;
+	height: 40px;
+	background: var(--neon-green-strong);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.chat-title-text {
+	font-weight: 800;
+	font-size: 18px;
+}
+
+.chat-subtitle-text {
+	font-size: 13px;
+	color: var(--muted);
+}
+
+.chat-toggles {
+	display: flex;
+	background: #1a1a1a;
+	padding: 4px;
+	border-radius: 12px;
+	border: 1px solid rgba(29, 185, 84, 0.1);
+}
+
+.mode-toggle {
+	border: none;
+	padding: 8px 16px;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: 600;
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	transition: all 0.2s;
+	box-shadow: none;
+	font-family: inherit;
+	font-size: 14px;
+}
+
 @media (max-width: 850px) {
 
 	/* Show Floating Button */
@@ -1463,9 +1522,9 @@ select option {
 
 	/* AI Chat Mobile Adjustments */
 	.ai-chat-container {
-		height: 75vh !important;
-		height: 75dvh !important;
-		/* dynamic viewport height */
+		height: 92vh !important;
+		height: 92dvh !important;
+		/* Push input lower */
 		margin: 0 !important;
 		border-radius: 16px !important;
 		border: 1px solid rgba(29, 185, 84, 0.15) !important;
@@ -1473,7 +1532,30 @@ select option {
 		max-width: 100% !important;
 	}
 
+	/* Stack Header on Mobile */
 	.chat-header {
+		flex-direction: column !important;
+		align-items: flex-start !important;
+		gap: 16px;
+		padding: 16px !important;
+	}
+
+	.chat-toggles {
+		width: 100%;
+		justify-content: space-between;
+		/* Spread toggles */
+	}
+
+	.mode-toggle {
+		flex: 1;
+		justify-content: center;
+	}
+
+	.messages {
+		padding: 16px !important;
+	}
+
+	.chat-input-form {
 		padding: 12px 16px !important;
 		/* Reduced padding */
 	}
