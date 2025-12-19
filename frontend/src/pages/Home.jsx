@@ -6,37 +6,6 @@ import ThreeDCube from '../components/ThreeDCube'
 import ThreeDPyramid from '../components/ThreeDPyramid'
 import ThreeDRing from '../components/ThreeDRing'
 
-const DUMMY_ITEMS = [
-  {
-    _id: 'dummy_1',
-    title: 'Blue Backpack',
-    status: 'lost',
-    location: 'Central Library',
-    images: [{ url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=400&q=80' }]
-  },
-  {
-    _id: 'dummy_2',
-    title: 'iPhone 13 Pro',
-    status: 'found',
-    location: 'Cafeteria',
-    images: [{ url: 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=400&q=80' }]
-  },
-  {
-    _id: 'dummy_3',
-    title: 'Golden Retriever',
-    status: 'lost',
-    location: 'Park Lane',
-    images: [{ url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=400&q=80' }]
-  },
-  {
-    _id: 'dummy_4',
-    title: 'Car Keys',
-    status: 'found',
-    location: 'Parking Lot B',
-    images: []
-  }
-]
-
 export default function Home() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
@@ -64,17 +33,12 @@ export default function Home() {
       }
 
       const data = await res.json()
-
-      if (data.length === 0) {
-        setItems(DUMMY_ITEMS)
-      } else {
-        setItems(data)
-      }
+      setItems(data)
 
     } catch (err) {
-      console.warn('Backend error or unreachable, showing dummy data:', err)
-      // Fallback to dummy data
-      setItems(DUMMY_ITEMS)
+      console.error('Error fetching items:', err)
+      setError('Could not load items. Please try again later.')
+      setItems([])
     } finally {
       setLoading(false)
     }
