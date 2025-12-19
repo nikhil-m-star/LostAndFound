@@ -1227,99 +1227,244 @@ select option {
 	}
 }
 
-/* --- MOBILE NAVBAR --- */
-.mobile-navbar {
-	display: none;
+/* --- NEW MOBILE EXPERIENCE --- */
+
+/* Floating Hamburger Button */
+.floating-menu-btn {
 	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	z-index: 1000;
-	background: transparent;
-	/* Removed backdrop-filter to be fully transparent, or keep if glass is desired? User said "background be transparent". */
-}
-
-.mobile-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 15px 20px;
-	height: 60px;
-}
-
-.hamburger-btn {
-	background: transparent;
-	border: none;
-	color: white;
-	padding: 5px;
-	cursor: pointer;
-	display: flex;
+	top: 20px;
+	right: 20px;
+	/* Or left, adhering to "top-left or top-right" */
+	z-index: 2000;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	display: none;
+	/* Hidden by default, shown in media query */
 	align-items: center;
 	justify-content: center;
+	color: white;
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
+.floating-menu-btn:hover {
+	background: rgba(29, 185, 84, 0.2);
+	box-shadow: 0 0 15px rgba(29, 185, 84, 0.4);
+	transform: scale(1.1);
+}
+
+.floating-menu-btn.open {
+	background: rgba(200, 50, 50, 0.2);
+	border-color: rgba(200, 50, 50, 0.3);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.6);
+	backdrop-filter: blur(5px);
+	z-index: 1500;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.3s ease;
+}
+
+.mobile-menu-overlay.open {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+/* Mobile Menu Container */
 .mobile-menu {
 	position: fixed;
-	top: 60px;
-	/* Below header */
-	left: 0;
+	top: 0;
+	bottom: 0;
 	right: 0;
-	background: #000;
-	height: 0;
-	overflow: hidden;
-	transition: height 0.3s ease-in-out;
-	border-bottom: 1px solid rgba(29, 185, 84, 0.1);
+	/* Slide from right */
+	width: 280px;
+	background: rgba(10, 10, 10, 0.95);
+	border-left: 1px solid rgba(255, 255, 255, 0.1);
+	z-index: 1600;
+	transform: translateX(100%);
+	transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+	display: flex;
+	flex-direction: column;
+	box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
 }
 
 .mobile-menu.open {
-	height: auto;
-	padding-bottom: 20px;
-	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+	transform: translateX(0);
 }
 
-.mobile-menu nav {
+.mobile-menu-content {
+	padding: 24px;
 	display: flex;
 	flex-direction: column;
-	padding: 10px;
+	height: 100%;
 }
 
-.mobile-menu a {
+/* User Profile Inside Menu */
+.mobile-user-profile {
 	display: flex;
 	align-items: center;
-	gap: 12px;
-	padding: 15px 20px;
+	gap: 16px;
+	padding-bottom: 24px;
+	margin-bottom: 24px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-user-avatar {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	overflow: hidden;
+	border: 2px solid var(--accent);
+}
+
+.mobile-user-avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.mobile-user-info {
+	display: flex;
+	flex-direction: column;
+}
+
+.mobile-user-name {
+	font-weight: 700;
+	color: white;
+	font-size: 16px;
+}
+
+.mobile-user-email {
+	font-size: 12px;
 	color: var(--muted);
+	word-break: break-all;
+}
+
+.mobile-brand-header {
+	font-size: 24px;
+	font-weight: 800;
+	color: var(--accent);
+	margin-bottom: 30px;
+	padding-top: 10px;
+}
+
+/* Nav Link Styles */
+.mobile-nav-links {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.mobile-nav-links a {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 12px 16px;
+	border-radius: 12px;
+	color: var(--text);
 	text-decoration: none;
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: 500;
-	border-radius: 8px;
 	transition: all 0.2s;
 }
 
-.mobile-menu a:hover,
-.mobile-menu a.active {
-	background: rgba(29, 185, 84, 0.1);
+.mobile-nav-links a:hover,
+.mobile-nav-links a.active {
+	background: rgba(29, 185, 84, 0.15);
 	color: var(--accent);
 }
 
-.mobile-menu a svg {
-	color: currentColor;
+.mobile-menu-footer {
+	margin-top: auto;
+	padding-top: 20px;
+	border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* --- MEDIA QUERIES UPDATE --- */
-@media (max-width: 768px) {
-	.mobile-navbar {
-		display: block;
-		/* Show on mobile */
+.mobile-logout-btn {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	padding: 12px;
+	background: rgba(200, 50, 50, 0.1);
+	color: #ff5555;
+	border: 1px solid rgba(200, 50, 50, 0.2);
+	border-radius: 12px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+/* --- MOBILE RESPONSIVENESS AND TWEAKS --- */
+
+@media (max-width: 850px) {
+
+	/* Show Floating Button */
+	.floating-menu-btn {
+		display: flex;
 	}
 
-	/* Hide the desktop user menu on mobile */
+	/* Hide Sidebar & Desktop User Menu */
+	.sidebar,
 	.user-menu-container {
 		display: none !important;
 	}
 
-	/* Push content down so it's not hidden behind fixed navbar */
+	/* Reset Main Content Margins */
 	.main-content {
-		padding-top: 10px !important;
+		margin-left: 0;
+		width: 100%;
+		padding: 16px 16px 80px 16px;
+		/* Bottom padding for safe area */
+	}
+
+	/* AI Chat Mobile Adjustments */
+	.ai-chat-container {
+		height: calc(100vh - 40px) !important;
+		/* Full height minus margins */
+		margin: 0 !important;
+		border-radius: 12px !important;
+	}
+
+	/* Report Form Stacking */
+	.report-panel {
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.form-left,
+	.form-right {
+		width: 100%;
+		min-width: 0;
+	}
+
+	/* Titles */
+	.page-title {
+		font-size: 32px;
+		/* Smaller title on mobile */
+	}
+
+	.top-hero div:last-child {
+		font-size: 14px;
+	}
+
+	/* Detail Page Grid */
+	.detail-grid {
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+
+	.detail-container {
+		padding-bottom: 80px;
 	}
 }

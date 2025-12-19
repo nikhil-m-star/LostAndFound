@@ -22,51 +22,66 @@ export default function MobileNavbar() {
     }
 
     return (
-        <div className="mobile-navbar">
-            <div className="mobile-header">
-                <div className="brand" style={{ fontSize: '20px', fontWeight: 'bold', color: 'white' }}>Lost & Found</div>
-                <button className="hamburger-btn" onClick={toggleOpen}>
-                    {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-                </button>
-            </div>
+        <>
+            {/* Floating Hamburger Button */}
+            <button
+                className={`floating-menu-btn ${isOpen ? 'open' : ''}`}
+                onClick={toggleOpen}
+                aria-label="Toggle Menu"
+            >
+                {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+            </button>
 
+            {/* Mobile Menu Overlay */}
+            <div className={`mobile-menu-overlay ${isOpen ? 'open' : ''}`} onClick={closeMenu}></div>
+
+            {/* Mobile Menu Sidebar */}
             <div className={`mobile-menu ${isOpen ? 'open' : ''}`}>
-                {isSignedIn && user && (
-                    <div className="mobile-user-profile">
-                        <div className="mobile-user-avatar">
-                            <img src={user.imageUrl} alt={user.firstName} />
+                <div className="mobile-menu-content">
+                    {/* User Profile Section (Inside Menu) */}
+                    {isSignedIn && user ? (
+                        <div className="mobile-user-profile">
+                            <div className="mobile-user-avatar">
+                                <img src={user.imageUrl} alt={user.firstName} />
+                            </div>
+                            <div className="mobile-user-info">
+                                <span className="mobile-user-name">{user.fullName}</span>
+                                <span className="mobile-user-email">{user.primaryEmailAddress?.emailAddress}</span>
+                            </div>
                         </div>
-                        <div className="mobile-user-info">
-                            <span className="mobile-user-name">{user.fullName}</span>
-                            <span className="mobile-user-email">{user.primaryEmailAddress?.emailAddress}</span>
+                    ) : (
+                        <div className="mobile-brand-header">
+                            Lost & Found
                         </div>
-                    </div>
-                )}
+                    )}
 
-                <nav>
-                    <NavLink to="/" end onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
-                        <FiHome /> <span>Home</span>
-                    </NavLink>
+                    <nav className="mobile-nav-links">
+                        <NavLink to="/" end onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
+                            <FiHome /> <span>Home</span>
+                        </NavLink>
 
-                    <NavLink to="/ai-chat" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
-                        <FiCpu /> <span>AI Assistant</span>
-                    </NavLink>
+                        <NavLink to="/ai-chat" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
+                            <FiCpu /> <span>AI Assistant</span>
+                        </NavLink>
 
-                    <NavLink to="/report/found" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
-                        <MdOutlineReport /> <span>Report Found</span>
-                    </NavLink>
+                        <NavLink to="/report/found" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
+                            <MdOutlineReport /> <span>Report Found</span>
+                        </NavLink>
 
-                    <NavLink to="/report/lost" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
-                        <MdOutlineReport /> <span>Report Lost</span>
-                    </NavLink>
-                </nav>
+                        <NavLink to="/report/lost" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
+                            <MdOutlineReport /> <span>Report Lost</span>
+                        </NavLink>
+                    </nav>
 
-                {isSignedIn && (
-                    <button onClick={handleLogout} className="mobile-logout-btn">
-                        <FiLogOut /> Log Out
-                    </button>
-                )}
+                    {isSignedIn && (
+                        <div className="mobile-menu-footer">
+                            <button onClick={handleLogout} className="mobile-logout-btn">
+                                <FiLogOut /> Log Out
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     )
 }
