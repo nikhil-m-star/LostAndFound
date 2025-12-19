@@ -798,11 +798,228 @@ select option {
 .auth-btn {
 	padding: 12px 24px;
 	border-radius: 50px;
+}
+
+/* Item Detail Page Styles */
+.detail-container {
+	padding-bottom: 40px;
+	margin-top: 20px;
+}
+
+.detail-header {
+	margin-bottom: 32px;
+}
+
+.detail-meta-row {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	margin-top: 12px;
+	flex-wrap: wrap;
+}
+
+.detail-meta-tag {
+	padding: 6px 14px;
+	border-radius: 20px;
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: 0.3px;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.tag-category {
+	background: rgba(255, 255, 255, 0.1);
+	color: var(--text);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tag-status {
+	background: rgba(29, 185, 84, 0.15);
+	color: var(--accent-light);
+	border: 1px solid rgba(29, 185, 84, 0.2);
+	box-shadow: 0 0 10px rgba(29, 185, 84, 0.1);
+}
+
+.tag-location {
+	color: var(--muted);
+	font-size: 15px;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.detail-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 40px;
+}
+
+@media (max-width: 800px) {
+	.detail-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+.detail-image-grid {
+	display: grid;
+	gap: 16px;
+}
+
+.detail-main-image {
+	width: 100%;
+	aspect-ratio: 4/3;
+	object-fit: cover;
+	border-radius: 16px;
+	background: #000;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
 	cursor: pointer;
-	font-size: 16px;
+	transition: transform 0.3s ease;
+}
+
+.detail-main-image:hover {
+	transform: scale(1.02);
+}
+
+.detail-thumbnails {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+	gap: 12px;
+}
+
+.detail-thumb {
+	width: 100%;
+	aspect-ratio: 1;
+	object-fit: cover;
+	border-radius: 8px;
+	cursor: pointer;
+	border: 2px solid transparent;
+	transition: all 0.2s;
+	background: #111;
+}
+
+.detail-thumb:hover,
+.detail-thumb.active {
+	border-color: var(--accent);
+	opacity: 1;
+}
+
+.detail-info-box {
+	background: rgba(20, 20, 20, 0.6);
+	backdrop-filter: blur(10px);
+	border-radius: 16px;
+	padding: 24px;
+	border: 1px solid rgba(255, 255, 255, 0.05);
+	height: fit-content;
+}
+
+.info-group {
+	margin-bottom: 24px;
+}
+
+.info-group:last-child {
+	margin-bottom: 0;
+}
+
+.detail-label {
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	color: var(--muted);
 	font-weight: 700;
-	font-family: inherit;
-	transition: all 0.3s ease;
+	margin-bottom: 8px;
+}
+
+.detail-description {
+	font-size: 16px;
+	line-height: 1.6;
+	color: var(--text);
+	white-space: pre-wrap;
+}
+
+.detail-value {
+	font-size: 16px;
+	color: var(--text);
+	font-weight: 500;
+}
+
+.owner-actions {
+	display: flex;
+	gap: 12px;
+	margin-top: 12px;
+}
+
+.btn-edit {
+	background: rgba(255, 255, 255, 0.1);
+	color: white;
+	padding: 8px 16px;
+	border-radius: 8px;
+	border: none;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.btn-edit:hover {
+	background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-delete {
+	background: rgba(255, 50, 50, 0.1);
+	color: #ff5555;
+	padding: 8px 16px;
+	border-radius: 8px;
+	border: 1px solid rgba(255, 50, 50, 0.2);
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.btn-delete:hover {
+	background: rgba(255, 50, 50, 0.2);
+	box-shadow: 0 0 15px rgba(255, 50, 50, 0.2);
+}
+
+.back-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--muted);
+	text-decoration: none;
+	font-weight: 600;
+	margin-bottom: 20px;
+	transition: color 0.2s;
+	background: none;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	font-size: 15px;
+}
+
+.back-link:hover {
+	color: var(--accent);
+}
+
+.no-images-placeholder {
+	width: 100%;
+	aspect-ratio: 16/9;
+	background: rgba(255, 255, 255, 0.05);
+	border-radius: 16px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: var(--muted);
+	border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+cursor: pointer;
+font-size: 16px;
+font-weight: 700;
+font-family: inherit;
+transition: all 0.3s ease;
 }
 
 .auth-btn-signup {
