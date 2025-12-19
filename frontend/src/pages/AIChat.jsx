@@ -69,10 +69,7 @@ export default function AIChat() {
         setMessages(prev => [...prev, { id: loadingId, text: "Thinking...", isBot: true, isThinking: true }])
 
         try {
-            // In production (Vercel), we must use relative /api
-            // In local development, we use localhost:5000
-            const isLocal = window.location.hostname === 'localhost';
-            const base = isLocal ? (import.meta.env.VITE_API_BASE || 'http://localhost:5000/api') : '/api';
+            const base = import.meta.env.VITE_API_BASE || '/api'
             const token = await window.Clerk?.session?.getToken()
 
             const res = await fetch(`${base}/ai/chat`, {
@@ -84,10 +81,7 @@ export default function AIChat() {
                 body: JSON.stringify({ message: userText })
             })
 
-            if (!res.ok) {
-                const errData = await res.json().catch(() => ({}));
-                throw new Error(errData.message || `AI request failed: ${res.status}`);
-            }
+            if (!res.ok) throw new Error('AI request failed')
 
             const data = await res.json()
 
@@ -102,7 +96,7 @@ export default function AIChat() {
             console.error(err)
             setMessages(prev => prev.map(msg =>
                 msg.id === loadingId
-                    ? { id: loadingId, text: `Error: ${err.message}. Please check if the backend is running and API keys are set.`, isBot: true }
+                    ? { id: loadingId, text: "I'm having trouble reaching the server right now. Please try again later.", isBot: true }
                     : msg
             ))
         }

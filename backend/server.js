@@ -8,12 +8,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Log requests for debugging Vercel
-app.use((req, res, next) => {
-	console.log(`${req.method} ${req.path}`);
-	next();
-});
-
 // connect to DB
 connectDB(process.env.MONGO_URI);
 
@@ -35,7 +29,9 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-if (process.env.NODE_ENV !== 'production') {
+
+// Only listen if the file is run directly (not imported as a module)
+if (require.main === module) {
 	app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 
