@@ -1015,11 +1015,14 @@ select option {
 	border: 1px dashed rgba(255, 255, 255, 0.1);
 }
 
-cursor: pointer;
-font-size: 16px;
-font-weight: 700;
-font-family: inherit;
-transition: all 0.3s ease;
+
+.auth-btn {
+	cursor: pointer;
+
+	font-size: 16px;
+	font-weight: 700;
+	font-family: inherit;
+	transition: all 0.3s ease;
 }
 
 .auth-btn-signup {
