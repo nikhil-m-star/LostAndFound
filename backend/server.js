@@ -17,6 +17,7 @@ app.use('/api/items', require('./routes/items'));
 app.use('/api/ai', require('./routes/ai')); // New AI route
 
 // health
+app.get('/', (req, res) => res.send('Lost and Found Backend is Running'));
 app.get('/api/ping', (req, res) => res.json({ ok: true }));
 
 // Simple error handler (catches multer and other errors)
