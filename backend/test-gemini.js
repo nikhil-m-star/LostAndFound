@@ -3,18 +3,18 @@ require('dotenv').config({ path: '.env.local' });
 
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
-const aiService = require('./services/aiService'); // We will mock this or use parts of it, but better to test the service file directly if possible, but it requires DB connection.
+const aiService = require('./services/geminiService'); // We will mock this or use parts of it, but better to test the service file directly if possible, but it requires DB connection.
 // Instead, let's just test the prompt concept via raw SDK call to see if model respects the instruction
 
 async function run() {
-    try {
-        const modelName = "gemini-2.5-flash";
-        console.log(`Testing Prompt with ${modelName}...`);
-        const model = genAI.getGenerativeModel({ model: modelName });
+  try {
+    const modelName = "gemini-1.5-flash";
+    console.log(`Testing Prompt with ${modelName}...`);
+    const model = genAI.getGenerativeModel({ model: modelName });
 
-        const userText = "What is the boiling point of water?";
+    const userText = "What is the boiling point of water?";
 
-        const prompt = `
+    const prompt = `
       You are a smart AI assistant for a university 'Lost and Found' system, but you are also a helpful general assistant.
       
       Analyze this user query: "${userText}"
@@ -38,10 +38,10 @@ async function run() {
       Do not include markdown code blocks. Return ONLY the raw JSON string.
     `;
 
-        const result = await model.generateContent(prompt);
-        console.log("Response:", result.response.text());
-    } catch (err) {
-        console.error("Failed:", err.message);
-    }
+    const result = await model.generateContent(prompt);
+    console.log("Response:", result.response.text());
+  } catch (err) {
+    console.error("Failed:", err.message);
+  }
 }
 run();

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const aiService = require('../services/aiService');
+const aiService = require('../services/geminiService');
 const auth = require('../middleware/auth');
 
 // POST /api/ai/chat
