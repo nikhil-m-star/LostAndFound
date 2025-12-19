@@ -115,17 +115,7 @@ export default function AIChat() {
     })
 
     return (
-        <div className="ai-chat-container" style={{
-            maxWidth: '1000px',
-            margin: '0 auto',
-            height: 'calc(100vh - 100px)',
-            display: 'flex',
-            flexDirection: 'column',
-            background: 'linear-gradient(180deg, rgba(29, 185, 84, 0.02), rgba(0,0,0,0))',
-            borderRadius: '20px',
-            border: '1px solid rgba(29, 185, 84, 0.1)',
-            overflow: 'hidden'
-        }}>
+        <div className="ai-chat-container">
             {/* Header with Mode Toggles */}
             <div className="chat-header" style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
