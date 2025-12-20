@@ -115,10 +115,14 @@ export default function AIChat() {
     })
 
     return (
-        <div className="ai-chat-container">
+        <div className="ai-chat-container" style={{
+            height: 'calc(100vh - 110px)', /* Fixed height to fit in viewport */
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative'
+        }}>
             {/* Header with Mode Toggles */}
-            {/* Header with Mode Toggles */}
-            <div className="chat-header">
+            <div className="chat-header" style={{ flexShrink: 0 }}>
                 <div className="chat-title-group">
                     <div className="chat-icon-circle">
                         {mode === 'chat' ? <FiCpu size={24} color="#000" /> : <FiSearch size={24} color="#000" />}
@@ -156,19 +160,34 @@ export default function AIChat() {
             {/* CHAT MODE CONTENT */}
             {mode === 'chat' && (
                 <>
-                    <div className="messages" style={{ flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                    <div className="messages" style={{
+                        flex: 1,
+                        overflowY: 'auto',
+                        padding: '16px',
+                        paddingBottom: '20px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '24px',
+                        maskImage: 'linear-gradient(to bottom, transparent 0%, black 2%, black 100%)'
+                    }}>
                         {messages.map(msg => (
-                            <div key={msg.id} style={{ alignSelf: msg.isBot ? 'flex-start' : 'flex-end', maxWidth: '85%' }}>
+                            <div key={msg.id} style={{
+                                alignSelf: msg.isBot ? 'flex-start' : 'flex-end',
+                                maxWidth: '85%',
+                                animation: 'fadeIn 0.3s ease-out'
+                            }}>
                                 <div style={{
                                     padding: '16px 20px',
-                                    borderRadius: '16px',
-                                    borderTopLeftRadius: msg.isBot ? '4px' : '16px',
-                                    borderTopRightRadius: msg.isBot ? '16px' : '4px',
-                                    background: msg.isBot ? '#1a1a1a' : 'var(--accent-700)',
-                                    color: msg.isBot ? '#fff' : '#000',
-                                    lineHeight: '1.5',
-                                    border: msg.isBot ? '1px solid rgba(255,255,255,0.05)' : 'none',
-                                    fontSize: '16px'
+                                    borderRadius: '18px',
+                                    borderTopLeftRadius: msg.isBot ? '4px' : '18px',
+                                    borderTopRightRadius: msg.isBot ? '18px' : '4px',
+                                    background: msg.isBot ? 'rgba(30, 30, 30, 0.8)' : 'var(--accent-700)',
+                                    color: msg.isBot ? '#e0e0e0' : '#000',
+                                    lineHeight: '1.6',
+                                    border: msg.isBot ? '1px solid rgba(255,255,255,0.08)' : 'none',
+                                    fontSize: '16px',
+                                    boxShadow: msg.isBot ? '0 4px 12px rgba(0,0,0,0.1)' : '0 4px 15px rgba(23, 159, 70, 0.3)',
+                                    whiteSpace: 'pre-wrap'
                                 }}>
                                     {msg.text}
                                 </div>
@@ -190,47 +209,69 @@ export default function AIChat() {
                                 )}
                             </div>
                         ))}
-                        <div ref={bottomRef} />
+                        <div ref={bottomRef} style={{ height: '10px' }} />
                     </div>
 
-                    <form onSubmit={handleSend} className="chat-input-form" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '12px' }}>
-                        <input
-                            type="text"
-                            value={chatInput}
-                            onChange={e => setChatInput(e.target.value)}
-                            placeholder="Describe what you're looking for..."
-                            style={{
-                                flex: 1,
-                                padding: '14px',
-                                borderRadius: '12px',
-                                border: 'none',
-                                background: '#1a1a1a',
-                                color: '#fff',
-                                fontSize: '16px',
-                                fontFamily: 'inherit',
-                                width: '100%' /* Ensure it doesn't overflow flex parent */
-                            }}
-                        />
-                        <button type="submit" style={{
-                            background: 'var(--accent)',
-                            border: 'none',
-                            width: '48px', /* Slightly smaller width for mobile */
-                            borderRadius: '12px',
-                            cursor: 'pointer',
+                    <form onSubmit={handleSend} className="chat-input-form" style={{
+                        flexShrink: 0,
+                        padding: '16px 0',
+                        borderTop: '1px solid rgba(255,255,255,0.05)',
+                        display: 'flex',
+                        gap: '12px',
+                        background: 'transparent'
+                    }}>
+                        <div style={{
+                            position: 'relative',
                             display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexShrink: 0 /* Prevent button squishing */
+                            width: '100%',
+                            gap: '12px',
+                            background: '#121212',
+                            padding: '8px',
+                            borderRadius: '16px',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            boxShadow: '0 -10px 40px rgba(0,0,0,0.5)'
                         }}>
-                            <FiSend size={20} color="#000" />
-                        </button>
+                            <input
+                                type="text"
+                                value={chatInput}
+                                onChange={e => setChatInput(e.target.value)}
+                                placeholder="Describe lost items or ask general questions..."
+                                style={{
+                                    flex: 1,
+                                    padding: '12px 16px',
+                                    borderRadius: '12px',
+                                    border: 'none',
+                                    background: 'transparent',
+                                    color: '#fff',
+                                    fontSize: '16px',
+                                    fontFamily: 'inherit',
+                                    outline: 'none'
+                                }}
+                            />
+                            <button type="submit" style={{
+                                background: chatInput.trim() ? 'var(--accent)' : 'rgba(255,255,255,0.1)',
+                                color: chatInput.trim() ? '#000' : 'rgba(255,255,255,0.3)',
+                                border: 'none',
+                                width: '48px',
+                                height: '48px',
+                                borderRadius: '12px',
+                                cursor: chatInput.trim() ? 'pointer' : 'default',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'all 0.2s ease',
+                                transform: chatInput.trim() ? 'scale(1)' : 'scale(0.95)'
+                            }} disabled={!chatInput.trim()}>
+                                <FiSend size={20} />
+                            </button>
+                        </div>
                     </form>
                 </>
             )}
 
             {/* SEARCH MODE CONTENT */}
             {mode === 'search' && (
-                <div style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>
+                <div style={{ flex: 1, padding: '16px', overflowY: 'auto' }}>
                     <div style={{ marginBottom: '24px', position: 'relative' }}>
                         <FiSearch style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', width: 20, height: 20 }} />
                         <input
