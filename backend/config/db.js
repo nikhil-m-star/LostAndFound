@@ -15,6 +15,9 @@ const connectDB = async (mongoUri) => {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false, // Disable buffering to fail fast if no connection
+      maxPoolSize: 1, // Start with 1 connection for serverless
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      socketTimeoutMS: 45000, // Close sockets after 45s
     };
 
     cached.promise = mongoose.connect(mongoUri, opts).then((mongoose) => {
@@ -22,6 +25,7 @@ const connectDB = async (mongoUri) => {
       return mongoose;
     }).catch(err => {
       console.error('MongoDB connection error:', err.message);
+      // Do not throw here, let the await catch it
       throw err;
     });
   }
