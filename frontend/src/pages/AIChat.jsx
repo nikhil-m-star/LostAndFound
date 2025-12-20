@@ -116,10 +116,12 @@ export default function AIChat() {
 
     return (
         <div className="ai-chat-container" style={{
-            height: 'calc(100vh - 110px)', /* Fixed height to fit in viewport */
+            /* Use dvh for mobile browsers, fallback to vh */
+            height: 'calc(100dvh - 50px)',
             display: 'flex',
             flexDirection: 'column',
-            position: 'relative'
+            position: 'relative',
+            maxHeight: '90vh' /* Safety cap */
         }}>
             {/* Header with Mode Toggles */}
             <div className="chat-header" style={{ flexShrink: 0 }}>
@@ -218,7 +220,9 @@ export default function AIChat() {
                         borderTop: '1px solid rgba(255,255,255,0.05)',
                         display: 'flex',
                         gap: '12px',
-                        background: 'transparent'
+                        background: 'transparent',
+                        maxWidth: '100%',
+                        boxSizing: 'border-box'
                     }}>
                         <div style={{
                             position: 'relative',
@@ -229,7 +233,8 @@ export default function AIChat() {
                             padding: '8px',
                             borderRadius: '16px',
                             border: '1px solid rgba(255,255,255,0.1)',
-                            boxShadow: '0 -10px 40px rgba(0,0,0,0.5)'
+                            boxShadow: '0 -10px 40px rgba(0,0,0,0.5)',
+                            boxSizing: 'border-box'
                         }}>
                             <input
                                 type="text"
@@ -238,6 +243,7 @@ export default function AIChat() {
                                 placeholder="Describe lost items or ask general questions..."
                                 style={{
                                     flex: 1,
+                                    minWidth: 0, /* Critical for preventing overflow */
                                     padding: '12px 16px',
                                     borderRadius: '12px',
                                     border: 'none',
@@ -260,7 +266,8 @@ export default function AIChat() {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 transition: 'all 0.2s ease',
-                                transform: chatInput.trim() ? 'scale(1)' : 'scale(0.95)'
+                                transform: chatInput.trim() ? 'scale(1)' : 'scale(0.95)',
+                                flexShrink: 0
                             }} disabled={!chatInput.trim()}>
                                 <FiSend size={20} />
                             </button>
