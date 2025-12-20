@@ -2,6 +2,9 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const Item = require('../models/Item');
 
 // Initialize Gemini
+// Using the latest preview model as requested
+const MODEL_NAME = "gemini-3-flash-preview";
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 exports.processQuery = async (userText) => {
@@ -10,162 +13,126 @@ exports.processQuery = async (userText) => {
             throw new Error("GEMINI_API_KEY is missing");
         }
 
-        console.log(`[Gemini] Using Key: ${process.env.GEMINI_API_KEY.substring(0, 10)}...`);
-        console.log(`[Gemini] Using Model: gemini-2.0-flash`);
+        console.log(`[Gemini] Using Model: ${MODEL_NAME}`);
+        const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
-        // 1. Extract intent and entities using Gemini
-        const prompt = `
-      You are a smart assistant for a 'Lost and Found' system.
-      Analyze this user query: "${userText}"
+        // --- STEP 1: UNDERSTAND INTENT (Extraction) ---
+        const extractionPrompt = `
+      You are an engine for a Lost and Found system. Analyze this query: "${userText}"
       
-      Extract the following information in strict JSON format:
+      Return a STRICT JSON object (no markdown) with:
       {
-        "intent": "lost" or "found" or "general", 
-        "keywords": ["array", "of", "important", "nouns", "colors"],
-        "location": "string or null"
+        "isGeneralChat": boolean, // true if user is just saying hi, asking general questions, or asking about the app. False if looking for items.
+        "intent": "lost" | "found" | "chat", // "lost" if they lost something (so we search FOUND items), "found" if they found something (so we search LOST items)
+        "keywords": string[], // Important nouns/adjectives to search for (e.g. "black", "wallet", "iphone")
+        "location": string | null,
+        "date": string | null
       }
-      
-      Example: "I lost my black wallet in the canteen"
-      Output: {"intent": "lost", "keywords": ["black", "wallet"], "location": "canteen"}
-      
-      Do not include markdown code blocks. Return ONLY the raw JSON string.
     `;
 
-        // Log before calling
-        console.log('[Gemini] Sending request...');
+        const extractionResult = await model.generateContent(extractionPrompt);
+        const extractionText = extractionResult.response.text().replace(/```json/g, '').replace(/```/g, '').trim();
+        let analysis;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        let text = response.text();
-
-        // Cleanup markdown if present
-        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
-
-        const analysis = JSON.parse(text);
-        console.log('Gemini Analysis:', analysis);
-
-        // 2. Build MongoDB Query
-        let query = {};
-
-        // Filter by status if intent is clear
-        if (analysis.intent === 'lost') {
-            // If user lost something, they are looking for 'found' items
-            query.status = 'found';
-        } else if (analysis.intent === 'found') {
-            // If user found something, they are looking for 'lost' reports
-            query.status = 'lost';
+        try {
+            analysis = JSON.parse(extractionText);
+        } catch (e) {
+            console.error("Failed to parse Gemini extraction:", extractionText);
+            analysis = { isGeneralChat: true, intent: 'chat', keywords: [] }; // Fallback
         }
 
-        const conditions = [];
+        console.log('[Gemini] Analysis:', analysis);
 
-        // Keyword matching (Title or Description)
-        if (analysis.keywords && analysis.keywords.length > 0) {
-            // Create a regex for each keyword
-            const keywordConditions = analysis.keywords.map(kw => ({
-                $or: [
-                    { title: { $regex: kw, $options: 'i' } },
-                    { description: { $regex: kw, $options: 'i' } },
-                    { category: { $regex: kw, $options: 'i' } }
-                ]
-            }));
-            conditions.push(...keywordConditions);
-        }
+        // --- STEP 2: SEARCH DATABASE (Retrieval) ---
+        let items = [];
+        let searchPerformed = false;
 
-        // Location matching
-        if (analysis.location) {
-            conditions.push({
-                location: { $regex: analysis.location, $options: 'i' }
-            });
-        }
+        if (!analysis.isGeneralChat) {
+            let query = {};
 
-        // Combine conditions
-        if (conditions.length > 0) {
-            query.$and = conditions;
-        }
+            // Logic: If user "lost" a phone, they want to see items with status 'found'
+            if (analysis.intent === 'lost') query.status = 'found';
+            else if (analysis.intent === 'found') query.status = 'lost';
 
-        console.log('Mongo Query:', JSON.stringify(query, null, 2));
+            // If intent is ambiguous but they differ from chat keyowrds, just search everything or default to one
+            // But usually 'lost' vs 'found' is key. If unknown, we might search both? 
+            // Let's stick to the mapped logic.
 
-        // 3. Execute Search
-        // Use $and if we have specific conditions, otherwise just return recent items relative to status
-        const items = await Item.find(query).limit(10).sort({ date: -1 });
+            const conditions = [];
 
-        // 4. Formulate Response Message
-        let botMessage = "";
-        if (items.length > 0) {
-            botMessage = `I found ${items.length} items that match your description.`;
-        } else {
-            botMessage = "I couldn't find any items matching that description in our database yet.";
-        }
+            // Keyword Search
+            if (analysis.keywords && analysis.keywords.length > 0) {
+                const keywordConditions = analysis.keywords.map(kw => ({
+                    $or: [
+                        { title: { $regex: kw, $options: 'i' } },
+                        { description: { $regex: kw, $options: 'i' } },
+                        { category: { $regex: kw, $options: 'i' } }
+                    ]
+                }));
+                conditions.push(...keywordConditions);
+            }
 
-        if (analysis.intent === 'general') {
-            botMessage = "Here are the most recent items reported in the system.";
-        }
+            // Location Search
+            if (analysis.location) {
+                conditions.push({ location: { $regex: analysis.location, $options: 'i' } });
+            }
 
-        return {
-            message: botMessage,
-            results: items,
-            debug: analysis
-        };
+            if (conditions.length > 0) {
+                query.$and = conditions;
+            }
 
-    } catch (error) {
-        console.error("Gemini Service Error - Switching to Fallback Mode:", error.message);
-
-        // --- FALLBACK: REGEX BASED PARSING ---
-        console.log("Using Fallback Regex Parser");
-
-        const text = userText.toLowerCase();
-        let intent = 'general';
-        let location = null;
-        let keywords = [];
-
-        // 1. Detect Intent
-        if (text.includes('lost') || text.includes('missing') || text.includes('dropped')) {
-            intent = 'lost';
-        } else if (text.includes('found') || text.includes('saw') || text.includes('spotted')) {
-            intent = 'found';
-        }
-
-        // 2. Detect Common Locations (Expand as needed)
-        const locations = ['canteen', 'library', 'lab', 'class', 'hall', 'park', 'parking', 'office', 'corridor', 'gym'];
-        for (const loc of locations) {
-            if (text.includes(loc)) {
-                location = loc;
-                break;
+            // Perform Search
+            if (analysis.intent !== 'chat') {
+                searchPerformed = true;
+                items = await Item.find(query)
+                    .limit(5)
+                    .sort({ dateEvent: -1, createdAt: -1 })
+                    .lean(); // Faster
             }
         }
 
-        // 3. Extract Keywords (remove stop words)
-        const stopWords = ['i', 'my', 'a', 'an', 'the', 'in', 'at', 'near', 'lost', 'found', 'missing', 'saw', 'please', 'help', 'find', 'me', 'some', 'is'];
-        const words = text.split(/\s+/).map(w => w.replace(/[.,?!]/g, ''));
-        keywords = words.filter(w => !stopWords.includes(w) && w.length > 2);
+        // --- STEP 3: GENERATE ANSWER (Augmented Generation) ---
+        // We feed the search results (or lack thereof) back to Gemini to form a natural sentence.
 
-        // Build Query for Fallback
-        let query = {};
-        if (intent === 'lost') query.status = 'found';
-        if (intent === 'found') query.status = 'lost';
+        const generationPrompt = `
+      You are "FoundIt AI", a helpful assistant for a university Lost & Found portal.
+      
+      User Query: "${userText}"
+      User Intent Analysis: ${JSON.stringify(analysis)}
+      
+      Database Search Results (${items.length} items found):
+      ${JSON.stringify(items.map(i => ({
+            title: i.title,
+            desc: i.description,
+            loc: i.location,
+            date: i.dateEvent,
+            contact: i.contactMethod
+        })))}
 
-        const conditions = [];
-        if (location) conditions.push({ location: { $regex: location, $options: 'i' } });
+      INSTRUCTIONS:
+      1. If the user asked a general question (e.g., "how are you?", "what is this app?"), answer it conversationally. You are a Lost & Found bot.
+      2. If the user is looking for an item:
+         - If text matches are found, summarize them naturally (e.g., "I found a few matches! There is a black wallet found in the canteen...").
+         - If NO matches, apologize and suggest they file a report or check back later.
+      3. Keep the tone helpful, empathetic, and concise.
+      4. Do NOT output JSON. Output plain text (or markdown).
+    `;
 
-        if (keywords.length > 0) {
-            conditions.push({
-                $or: keywords.map(kw => ({ title: { $regex: kw, $options: 'i' } }))
-            });
-        }
-
-        if (conditions.length > 0) query.$and = conditions;
-
-        // Search
-        const items = await Item.find(query).limit(5).sort({ date: -1 });
+        const finalResult = await model.generateContent(generationPrompt);
+        const botMessage = finalResult.response.text();
 
         return {
-            message: items.length > 0
-                ? `(Offline Mode) I found ${items.length} items that might match.`
-                : "(Offline Mode) I couldn't find any matches in the database right now.",
-            results: items,
-            debug: { intent, keywords, location, fallback: true }
+            message: botMessage,
+            results: items, // Frontend might still want these to render cards
+            debug: { analysis, searchPerformed }
+        };
+
+    } catch (error) {
+        console.error("Gemini Service Error:", error);
+        return {
+            message: "I'm having trouble connecting to my brain right now. Please try again later.",
+            results: [],
+            error: error.message
         };
     }
 };
