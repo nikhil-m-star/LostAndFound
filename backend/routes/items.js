@@ -8,6 +8,7 @@ const cloudinary = require('../utils/cloudinary');
 // Create item (report lost/found)
 router.post('/', auth, upload.array('images', 6), async (req, res) => {
   try {
+    console.log('[DEBUG] POST /items Body:', req.body); // Check if reporterName is here
     const { title, description, location, status, category, dateEvent, contactMethod, contactPhone } = req.body;
 
     // Basic Validation

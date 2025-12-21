@@ -73,6 +73,27 @@ const syncUser = async (req, res, next) => {
         return res.status(500).json({ message: 'Error creating user record' });
       }
       user = createdUser;
+    } else {
+      // User exists: Sync name from Clerk if available to ensure it's up to date
+      // content of sessionClaims: { name, first_name, last_name, ... }
+      let latestName = sessionClaims?.name;
+      if (!latestName && sessionClaims?.first_name) {
+        latestName = sessionClaims.first_name + (sessionClaims.last_name ? ' ' + sessionClaims.last_name : '');
+      }
+
+      // Only update if we have a valid name and it differs (loose check)
+      if (latestName && user.name !== latestName) {
+        const { data: updated, error: upErr } = await supabase
+          .from('users')
+          .update({ name: latestName })
+          .eq('id', user.id)
+          .select()
+          .single();
+
+        if (!upErr && updated) {
+          user = updated; // Use fresh data
+        }
+      }
     }
 
     req.user = user; // Attach Supabase User object to req.user (has .id, .email etc)
