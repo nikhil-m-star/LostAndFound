@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Analytics } from "@vercel/analytics/react"
 import { Routes, Route, useNavigate, Link } from 'react-router-dom'
 import { useClerk, useUser } from '@clerk/clerk-react'
 import Home from './pages/Home'
@@ -30,6 +31,7 @@ export default function App() {
         </Routes>
       </main>
       {/* Player removed — not needed for Lost & Found app */}
+      <Analytics />
     </div>
   )
 }
