@@ -337,7 +337,7 @@ export default function ItemDetail() {
                 </div>
 
                 {/* Key Details Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '32px' }}>
+                <div className="detail-stats-grid">
                   <div>
                     <div className="detail-label">Location</div>
                     <div className="detail-value">{item.location || 'Unknown'}</div>
@@ -365,28 +365,18 @@ export default function ItemDetail() {
                 </div>
 
                 {/* Reporter / Contact Card */}
-                <div style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  borderRadius: '12px',
-                  padding: '20px',
-                  border: '1px solid rgba(255,255,255,0.08)'
-                }}>
+                <div className="detail-reporter-card">
                   <div className="detail-label" style={{ marginBottom: '16px' }}>Reported By</div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-                    <div style={{
-                      width: '48px', height: '48px', borderRadius: '50%',
-                      background: 'var(--accent)', color: '#000',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '20px', fontWeight: 'bold'
-                    }}>
+                  <div className="reporter-header">
+                    <div className="reporter-avatar">
                       {item.reportedBy?.name ? item.reportedBy.name.charAt(0).toUpperCase() : '?'}
                     </div>
-                    <div>
-                      <div style={{ fontWeight: '700', fontSize: '1.1em', color: 'white' }}>
+                    <div className="reporter-info">
+                      <div className="reporter-name">
                         {item.reportedBy?.name || 'Unknown User'}
                       </div>
-                      <div style={{ fontSize: '0.9em', color: 'var(--muted)' }}>
+                      <div className="reporter-email">
                         {item.reportedBy?.email || 'No Email'}
                       </div>
                     </div>
@@ -396,7 +386,7 @@ export default function ItemDetail() {
                     <div className="detail-label">Contact Information</div>
 
                     {item.contactMethod === 'email' && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '8px' }}>
+                      <div className="contact-row">
                         <span style={{ fontSize: '1.2em' }}>✉️</span>
                         <span style={{ color: 'var(--accent-light)' }}>
                           {item.reportedBy?.email || 'Email not available'}
@@ -405,7 +395,7 @@ export default function ItemDetail() {
                     )}
 
                     {item.contactPhone && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '8px' }}>
+                      <div className="contact-row">
                         <span style={{ fontSize: '1.2em' }}>📞</span>
                         <span style={{ fontFamily: 'monospace', fontSize: '1.1em', color: 'white' }}>
                           {item.contactPhone}
