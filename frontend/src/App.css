@@ -854,9 +854,11 @@ select option {
 
 /* Fix grid overflow */
 /* Fix grid overflow - Switch to Flexbox */
+/* Fix grid overflow - Force Single Column Default (Mobile First) */
 .detail-grid {
 	display: flex;
-	flex-wrap: wrap;
+	flex-direction: column;
+	/* Stack by default */
 	gap: 40px;
 	width: 100%;
 	max-width: 100%;
@@ -864,18 +866,28 @@ select option {
 	z-index: 1;
 }
 
-/* Ensure items wrap if they get too narrow (< 480px) */
 .detail-image-grid,
 .detail-info-box {
+	width: 100%;
+	/* Full width */
 	min-width: 0;
-	flex: 1 1 480px;
 }
 
-@media (max-width: 950px) {
+/* Only go side-by-side on very large screens */
+@media (min-width: 1200px) {
 	.detail-grid {
-		grid-template-columns: 1fr;
+		flex-direction: row;
+		align-items: flex-start;
+	}
+
+	.detail-image-grid,
+	.detail-info-box {
+		flex: 1;
+		/* Equal width */
 	}
 }
+
+/* Old grid query removed */
 
 .detail-image-grid {
 	display: grid;
