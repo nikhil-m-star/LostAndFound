@@ -123,6 +123,7 @@ router.get('/', async (req, res) => {
     const items = data.map(item => ({
       ...item,
       _id: item.id, // Frontend compatibility
+      createdAt: item.created_at, // Map created_at to createdAt
       dateEvent: item.date_event,
       contactMethod: item.contact_method,
       contactPhone: item.contact_phone,
@@ -157,6 +158,7 @@ router.get('/:id', async (req, res) => {
     const mappedItem = {
       ...item,
       _id: item.id, // Frontend compatibility
+      createdAt: item.created_at, // Map created_at to createdAt
       dateEvent: item.date_event,
       contactMethod: item.contact_method,
       contactPhone: item.contact_phone,
