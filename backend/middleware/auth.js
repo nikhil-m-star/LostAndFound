@@ -1,4 +1,4 @@
-const { ClerkExpressWithAuth } = require('@clerk/clerk-sdk-node');
+const { ClerkExpressWithAuth, clerkClient } = require('@clerk/clerk-sdk-node');
 // const User = require('../models/User');
 
 // 1. Verify Clerk Token
@@ -15,9 +15,41 @@ const syncUser = async (req, res, next) => {
 
   try {
     const { userId, sessionClaims } = req.auth;
-    const email = sessionClaims?.email || (sessionClaims?.email_addresses && sessionClaims?.email_addresses[0]?.email_address);
+
+    // Try to get details from claims first
+    let email = sessionClaims?.email || (sessionClaims?.email_addresses && sessionClaims?.email_addresses[0]?.email_address);
+    let fullName = sessionClaims?.name;
+
+    if (!fullName && sessionClaims?.first_name) {
+      fullName = sessionClaims.first_name + (sessionClaims.last_name ? ' ' + sessionClaims.last_name : '');
+    }
+
+    // If details are missing or it's a "User" placeholder scenario, fetch from Clerk API
+    // We check !email, or !fullName, or corresponding placeholders just in case
+    if (!email || !fullName || fullName === 'User' || !email.includes('@')) {
+      try {
+        const clerkUser = await clerkClient.users.getUser(userId);
+        if (clerkUser) {
+          // Get primary email
+          const primaryEmailObj = clerkUser.emailAddresses.find(e => e.id === clerkUser.primaryEmailAddressId) || clerkUser.emailAddresses[0];
+          if (primaryEmailObj) {
+            email = primaryEmailObj.emailAddress;
+          }
+
+          // Construct full name
+          const first = clerkUser.firstName || '';
+          const last = clerkUser.lastName || '';
+          fullName = `${first} ${last}`.trim();
+        }
+      } catch (clerkErr) {
+        console.error('Failed to fetch user details from Clerk API:', clerkErr);
+        // Continue with whatever data we have to avoid blocking complete auth failure if possible,
+        // but note that email is required for the BMSCE check below.
+      }
+    }
 
     // Enforce BMSCE Domain
+    // Check if we have an email now
     if (email && !email.endsWith('@bmsce.ac.in')) {
       return res.status(403).json({ message: 'Access restricted to bmsce.ac.in' });
     }
@@ -52,10 +84,6 @@ const syncUser = async (req, res, next) => {
 
     if (!user) {
       // Create new user
-      let fullName = sessionClaims?.name;
-      if (!fullName && sessionClaims?.first_name) {
-        fullName = sessionClaims.first_name + (sessionClaims.last_name ? ' ' + sessionClaims.last_name : '');
-      }
       const newUser = {
         clerk_id: userId,
         email: email || `unknown-${userId}@example.com`,
@@ -74,18 +102,22 @@ const syncUser = async (req, res, next) => {
       }
       user = createdUser;
     } else {
-      // User exists: Sync name from Clerk if available to ensure it's up to date
-      // content of sessionClaims: { name, first_name, last_name, ... }
-      let latestName = sessionClaims?.name;
-      if (!latestName && sessionClaims?.first_name) {
-        latestName = sessionClaims.first_name + (sessionClaims.last_name ? ' ' + sessionClaims.last_name : '');
+      // User exists: Sync name/email if changed
+      // We rely on the `fullName` and `email` variables which are now populated potentially from Clerk API
+
+      let updates = {};
+      if (fullName && user.name !== fullName) {
+        updates.name = fullName;
+      }
+      // Ideally we sync email too if it changed in Clerk (though rare to change email without ID change)
+      if (email && user.email !== email) {
+        updates.email = email;
       }
 
-      // Only update if we have a valid name and it differs (loose check)
-      if (latestName && user.name !== latestName) {
+      if (Object.keys(updates).length > 0) {
         const { data: updated, error: upErr } = await supabase
           .from('users')
-          .update({ name: latestName })
+          .update(updates)
           .eq('id', user.id)
           .select()
           .single();
