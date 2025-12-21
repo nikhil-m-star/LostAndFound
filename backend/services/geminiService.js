@@ -1,5 +1,5 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const Item = require('../models/Item');
+const supabase = require('../config/supabase');
 
 // Initialize Gemini
 // Using the latest preview model as requested
@@ -48,46 +48,62 @@ exports.processQuery = async (userText) => {
         let searchPerformed = false;
 
         if (!analysis.isGeneralChat) {
-            let query = {};
+            let query = supabase.from('items').select('*');
 
             // Logic: If user "lost" a phone, they want to see items with status 'found'
-            if (analysis.intent === 'lost') query.status = 'found';
-            else if (analysis.intent === 'found') query.status = 'lost';
-
-            // If intent is ambiguous but they differ from chat keyowrds, just search everything or default to one
-            // But usually 'lost' vs 'found' is key. If unknown, we might search both? 
-            // Let's stick to the mapped logic.
+            if (analysis.intent === 'lost') query = query.eq('status', 'found');
+            else if (analysis.intent === 'found') query = query.eq('status', 'lost');
 
             const conditions = [];
 
             // Keyword Search
             if (analysis.keywords && analysis.keywords.length > 0) {
-                const keywordConditions = analysis.keywords.map(kw => ({
-                    $or: [
-                        { title: { $regex: kw, $options: 'i' } },
-                        { description: { $regex: kw, $options: 'i' } },
-                        { category: { $regex: kw, $options: 'i' } }
-                    ]
-                }));
-                conditions.push(...keywordConditions);
+                // Construct OR filter for keywords
+                // For Supabase, we can use the .or() filter logic
+                // but combining multiple .or() calls can be tricky.
+                // Let's do a logic where we match ANY of the keywords in ANY of the fields (title, desc, category)
+                // This is complex in PostgREST. 
+                // Simplified approach: Search for the first/main keyword or use textSearch if column supported.
+                // Better approach: use ilike logic for each keyword on relevant columns.
+
+                // Let's try to verify if keywords exist.
+                // We will construct a single OR string for all keywords against title/desc/cat/loc 
+                // This might be too loose, but good for "Found It" logic.
+                const orClauses = [];
+                analysis.keywords.forEach(kw => {
+                    orClauses.push(`title.ilike.%${kw}%`);
+                    orClauses.push(`description.ilike.%${kw}%`);
+                    orClauses.push(`category.ilike.%${kw}%`);
+                });
+                if (orClauses.length > 0) {
+                    query = query.or(orClauses.join(','));
+                }
             }
 
             // Location Search
             if (analysis.location) {
-                conditions.push({ location: { $regex: analysis.location, $options: 'i' } });
-            }
-
-            if (conditions.length > 0) {
-                query.$and = conditions;
+                query = query.ilike('location', `%${analysis.location}%`);
             }
 
             // Perform Search
             if (analysis.intent !== 'chat') {
                 searchPerformed = true;
-                items = await Item.find(query)
-                    .limit(5)
-                    .sort({ dateEvent: -1, createdAt: -1 })
-                    .lean(); // Faster
+
+                // Add sorting and limit
+                query = query.order('date_event', { ascending: false }).limit(5);
+
+                const { data, error } = await query;
+
+                if (error) {
+                    console.error('Gemini Search Error:', error);
+                } else {
+                    // Map items to match what Gemini prompt expects (and what frontend might expect if returned directly)
+                    items = data.map(i => ({
+                        ...i,
+                        dateEvent: i.date_event,
+                        contactMethod: i.contact_method
+                    }));
+                }
             }
         }
 

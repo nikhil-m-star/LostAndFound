@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const Item = require('../models/Item');
+const supabase = require('../config/supabase'); // Supabase Client
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
 const cloudinary = require('../utils/cloudinary');
 
 // Create item (report lost/found)
-// Accept multipart/form-data with files in `images` field (max 6)
 router.post('/', auth, upload.array('images', 6), async (req, res) => {
   try {
     const { title, description, location, status, category, dateEvent, contactMethod, contactPhone } = req.body;
@@ -20,7 +19,6 @@ router.post('/', auth, upload.array('images', 6), async (req, res) => {
 
     // If files were uploaded, stream them to Cloudinary
     if (req.files && req.files.length) {
-      // helper to upload a buffer via upload_stream
       const uploadBuffer = (fileBuffer, filename) =>
         new Promise((resolve, reject) => {
           const stream = cloudinary.uploader.upload_stream({ folder: 'lost-and-found' }, (error, result) => {
@@ -31,13 +29,12 @@ router.post('/', auth, upload.array('images', 6), async (req, res) => {
         });
 
       for (const f of req.files) {
-        // f.buffer is available because we used memoryStorage
         const result = await uploadBuffer(f.buffer, f.originalname);
         images.push({ url: result.secure_url, public_id: result.public_id });
       }
     }
 
-    // Backwards compatible: if client sent images as JSON in body, include them
+    // Backwards compatible: if client sent images as JSON in body
     if (!images.length && req.body.images) {
       try {
         const parsed = typeof req.body.images === 'string' ? JSON.parse(req.body.images) : req.body.images;
@@ -47,20 +44,47 @@ router.post('/', auth, upload.array('images', 6), async (req, res) => {
       }
     }
 
-    const item = new Item({
-      title,
-      description,
-      location,
-      status,
-      category,
-      dateEvent,
-      contactMethod,
-      contactPhone,
-      images,
-      reportedBy: req.user.id
+    // Insert into Supabase
+    const { data, error } = await supabase
+      .from('items')
+      .insert({
+        title,
+        description,
+        location,
+        status,
+        category,
+        date_event: dateEvent, // Snake case mapping
+        contact_method: contactMethod,
+        contact_phone: contactPhone,
+        images,
+        reported_by: req.user.id // UUID from Supabase auth middleware
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Supabase Insert Error:', error);
+      throw error;
+    }
+
+    // Map snake_case back to camelCase for frontend compatibility if needed, 
+    // BUT frontend likely just needs properties. Let's try to return what Supabase returns.
+    // If frontend expects 'dateEvent', we might need to transform.
+    // For now, let's keep it simple and see if frontend breaks.
+    // Actually, better to map it to ensure compatibility.
+
+    // Helper to map DB snake_case to API camelCase
+    const mapItem = (item) => ({
+      ...item,
+      dateEvent: item.date_event,
+      contactMethod: item.contact_method,
+      contactPhone: item.contact_phone,
+      reportedBy: item.reported_by,
+      // _id: item.id // Alias for mongo compatibility if needed
     });
-    await item.save();
-    res.json(item);
+
+    res.json(mapItem(data));
+
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
@@ -71,16 +95,40 @@ router.post('/', auth, upload.array('images', 6), async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const { q, status, limit = 20, page = 1 } = req.query;
-    const filter = {};
-    if (q) filter.$or = [{ title: new RegExp(q, 'i') }, { description: new RegExp(q, 'i') }, { location: new RegExp(q, 'i') }];
-    if (status) filter.status = status;
 
-    const items = await Item.find(filter)
-      .populate('reportedBy', 'name email')
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(parseInt(limit))
-      .lean();
+    let query = supabase
+      .from('items')
+      .select('*, reported_by (name, email)'); // Join usage might differ in Supabase JSON response
+
+    // Filtering
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    if (q) {
+      // Simple OR search using ilike
+      // Supabase/Postgrest syntax for OR is a bit specific: .or(`title.ilike.%${q}%,description.ilike.%${q}%`)
+      query = query.or(`title.ilike.%${q}%,description.ilike.%${q}%,location.ilike.%${q}%`);
+    }
+
+    // Pagination
+    const from = (page - 1) * parseInt(limit);
+    const to = from + parseInt(limit) - 1;
+
+    query = query.range(from, to).order('created_at', { ascending: false });
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    // Map response
+    const items = data.map(item => ({
+      ...item,
+      dateEvent: item.date_event,
+      contactMethod: item.contact_method,
+      contactPhone: item.contact_phone,
+      reportedBy: item.reported_by // Supabase returns nested object if relation exists
+    }));
 
     res.json(items);
   } catch (err) {
@@ -92,9 +140,24 @@ router.get('/', async (req, res) => {
 // Get single item
 router.get('/:id', async (req, res) => {
   try {
-    const item = await Item.findById(req.params.id).populate('reportedBy', '-password');
-    if (!item) return res.status(404).json({ message: 'Item not found' });
-    res.json(item);
+    const { data: item, error } = await supabase
+      .from('items')
+      .select('*, reported_by (name, email)') // Join
+      .eq('id', req.params.id)
+      .single();
+
+    if (error || !item) return res.status(404).json({ message: 'Item not found' });
+
+    // Map response
+    const mappedItem = {
+      ...item,
+      dateEvent: item.date_event,
+      contactMethod: item.contact_method,
+      contactPhone: item.contact_phone,
+      reportedBy: item.reported_by
+    };
+
+    res.json(mappedItem);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -104,27 +167,47 @@ router.get('/:id', async (req, res) => {
 // Update item (only owner can update)
 router.patch('/:id', auth, async (req, res) => {
   try {
-    const item = await Item.findById(req.params.id);
-    if (!item) return res.status(404).json({ message: 'Item not found' });
+    // Check ownership first
+    const { data: existingItem, error: fetchError } = await supabase
+      .from('items')
+      .select('*')
+      .eq('id', req.params.id)
+      .single();
 
-    // Check ownership
-    if (item.reportedBy.toString() !== req.user.id) {
+    if (fetchError || !existingItem) return res.status(404).json({ message: 'Item not found' });
+
+    if (existingItem.reported_by !== req.user.id) {
       return res.status(403).json({ message: 'Not authorized to update this item' });
     }
 
     // Update allowed fields
     const { title, description, location, category, dateEvent, contactMethod, contactPhone } = req.body;
-    if (title !== undefined) item.title = title;
-    if (description !== undefined) item.description = description;
-    if (location !== undefined) item.location = location;
-    if (category !== undefined) item.category = category;
-    if (dateEvent !== undefined) item.dateEvent = dateEvent;
-    if (contactMethod !== undefined) item.contactMethod = contactMethod;
-    if (contactPhone !== undefined) item.contactPhone = contactPhone;
 
-    await item.save();
-    const updatedItem = await Item.findById(item._id).populate('reportedBy', '-password');
-    res.json(updatedItem);
+    const updates = {};
+    if (title !== undefined) updates.title = title;
+    if (description !== undefined) updates.description = description;
+    if (location !== undefined) updates.location = location;
+    if (category !== undefined) updates.category = category;
+    if (dateEvent !== undefined) updates.date_event = dateEvent;
+    if (contactMethod !== undefined) updates.contact_method = contactMethod;
+    if (contactPhone !== undefined) updates.contact_phone = contactPhone;
+
+    const { data: updatedItem, error: updateError } = await supabase
+      .from('items')
+      .update(updates)
+      .eq('id', req.params.id)
+      .select('*, reported_by (name, email)')
+      .single();
+
+    if (updateError) throw updateError;
+
+    res.json({
+      ...updatedItem,
+      dateEvent: updatedItem.date_event,
+      contactMethod: updatedItem.contact_method,
+      contactPhone: updatedItem.contact_phone,
+      reportedBy: updatedItem.reported_by
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -134,29 +217,43 @@ router.patch('/:id', auth, async (req, res) => {
 // Delete item (only owner can delete)
 router.delete('/:id', auth, async (req, res) => {
   try {
-    const item = await Item.findById(req.params.id);
-    if (!item) return res.status(404).json({ message: 'Item not found' });
-
     // Check ownership
-    if (item.reportedBy.toString() !== req.user.id) {
+    const { data: existingItem, error: fetchError } = await supabase
+      .from('items')
+      .select('*')
+      .eq('id', req.params.id)
+      .single();
+
+    if (fetchError || !existingItem) return res.status(404).json({ message: 'Item not found' });
+
+    if (existingItem.reported_by !== req.user.id) {
       return res.status(403).json({ message: 'Not authorized to delete this item' });
     }
 
     // Delete images from Cloudinary if they exist
-    if (item.images && item.images.length > 0) {
-      for (const img of item.images) {
+    // Note: 'images' is JSONB, so it's a parsed array already if Supabase typed it correctly,
+    // otherwise it returns array of objects.
+    const images = existingItem.images;
+    if (images && Array.isArray(images) && images.length > 0) {
+      for (const img of images) {
         if (img.public_id) {
           try {
             await cloudinary.uploader.destroy(img.public_id);
           } catch (err) {
             console.error('Error deleting image from Cloudinary:', err);
-            // Continue even if Cloudinary deletion fails
           }
         }
       }
     }
 
-    await Item.findByIdAndDelete(req.params.id);
+    // Delete from Supabase
+    const { error: deleteError } = await supabase
+      .from('items')
+      .delete()
+      .eq('id', req.params.id);
+
+    if (deleteError) throw deleteError;
+
     res.json({ message: 'Item deleted successfully' });
   } catch (err) {
     console.error(err.message);

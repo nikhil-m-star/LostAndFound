@@ -1,18 +1,14 @@
-const mongoose = require('mongoose');
+const supabase = require('../config/supabase');
 
 module.exports = async (req, res) => {
-    const uri = process.env.MONGO_URI;
-    if (!uri) return res.send("MONGO_URI is missing");
-
     try {
-        if (mongoose.connection.readyState === 1) {
-            return res.send("Already Connected");
+        const { data, error } = await supabase.from('items').select('count', { count: 'exact', head: true });
+
+        if (error) {
+            throw error;
         }
 
-        await mongoose.connect(uri, {
-            serverSelectionTimeoutMS: 5000 // Fail fast
-        });
-        res.send(`Connected Successfully to: ${mongoose.connection.host}`);
+        res.send(`Connected Successfully to Supabase! Configured URL: ${process.env.SUPABASE_URL}`);
     } catch (error) {
         res.status(500).send(`Connection Failed: ${error.message}`);
     }
