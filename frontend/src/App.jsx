@@ -9,6 +9,7 @@ import ItemDetail from './pages/ItemDetail'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import AIChat from './pages/AIChat'
+import Chat from './pages/Chat'
 import Sidebar from './components/Sidebar'
 import UserMenu from './components/UserMenu'
 import MobileNavbar from './components/MobileNavbar'
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/ai-chat" element={<AIChat />} />
+          <Route path="/chat" element={<Chat />} />
         </Routes>
       </main>
       {/* Player removed — not needed for Lost & Found app */}
