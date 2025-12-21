@@ -199,16 +199,7 @@ export default function ItemDetail() {
           )}
         </div>
 
-        <div className="owner-actions">
-          {isOwner && !isEditing && (
-            <>
-              <button className="btn-edit" onClick={handleEdit}>Edit Report</button>
-              <button className="btn-delete" onClick={handleDelete} disabled={deleting}>
-                {deleting ? 'Deleting...' : 'Delete Report'}
-              </button>
-            </>
-          )}
-        </div>
+
       </div>
 
       <div className="detail-grid">
@@ -327,94 +318,105 @@ export default function ItemDetail() {
             </div>
           ) : (
             <>
-              <>
-                {/* Description Section */}
-                <div className="info-group">
-                  <div className="detail-label">About this Item</div>
-                  <div className="detail-description">
-                    {item.description || 'No description provided.'}
+              {isOwner && !isEditing && (
+                <div className="owner-action-bar">
+                  <span className="owner-label">Your Report</span>
+                  <div className="action-buttons">
+                    <button className="btn-edit" onClick={handleEdit}>Edit</button>
+                    <button className="btn-delete" onClick={handleDelete} disabled={deleting}>
+                      {deleting ? '...' : 'Delete'}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Description Section */}
+              <div className="info-group">
+                <div className="detail-label">About this Item</div>
+                <div className="detail-description">
+                  {item.description || 'No description provided.'}
+                </div>
+              </div>
+
+              {/* Key Details Grid */}
+              <div className="detail-stats-grid">
+                <div>
+                  <div className="detail-label">Location</div>
+                  <div className="detail-value">{item.location || 'Unknown'}</div>
+                </div>
+                <div>
+                  <div className="detail-label">{item.status === 'lost' ? 'Lost Date' : 'Found Date'}</div>
+                  <div className="detail-value">
+                    {item.dateEvent ? new Date(item.dateEvent).toLocaleDateString(undefined, {
+                      weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
+                    }) : 'Unknown'}
+                  </div>
+                </div>
+                <div>
+                  <div className="detail-label">Reported On</div>
+                  <div className="detail-value">
+                    {new Date(item.createdAt).toLocaleDateString(undefined, {
+                      year: 'numeric', month: 'numeric', day: 'numeric'
+                    })}
+                  </div>
+                </div>
+                <div>
+                  <div className="detail-label">Category</div>
+                  <div className="detail-value">{item.category}</div>
+                </div>
+              </div>
+
+              {/* Reporter / Contact Card */}
+              <div className="detail-reporter-card">
+                <div className="detail-label" style={{ marginBottom: '16px' }}>Reported By</div>
+
+                <div className="reporter-header">
+                  <div className="reporter-avatar">
+                    {item.reportedBy?.name ? item.reportedBy.name.charAt(0).toUpperCase() : '?'}
+                  </div>
+                  <div className="reporter-info">
+                    <div className="reporter-name">
+                      {item.reportedBy?.name || 'Unknown User'}
+                    </div>
+                    <div className="reporter-email">
+                      {item.reportedBy?.email || 'No Email'}
+                    </div>
                   </div>
                 </div>
 
-                {/* Key Details Grid */}
-                <div className="detail-stats-grid">
-                  <div>
-                    <div className="detail-label">Location</div>
-                    <div className="detail-value">{item.location || 'Unknown'}</div>
-                  </div>
-                  <div>
-                    <div className="detail-label">{item.status === 'lost' ? 'Lost Date' : 'Found Date'}</div>
-                    <div className="detail-value">
-                      {item.dateEvent ? new Date(item.dateEvent).toLocaleDateString(undefined, {
-                        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
-                      }) : 'Unknown'}
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px' }}>
+                  <div className="detail-label">Contact Information</div>
+
+                  {item.contactMethod === 'email' && (
+                    <div className="contact-row">
+                      <span style={{ fontSize: '1.2em' }}>✉️</span>
+                      <span style={{ color: 'var(--accent-light)' }}>
+                        {item.reportedBy?.email || 'Email not available'}
+                      </span>
                     </div>
-                  </div>
-                  <div>
-                    <div className="detail-label">Reported On</div>
-                    <div className="detail-value">
-                      {new Date(item.createdAt).toLocaleDateString(undefined, {
-                        year: 'numeric', month: 'numeric', day: 'numeric'
-                      })}
+                  )}
+
+                  {item.contactPhone && (
+                    <div className="contact-row">
+                      <span style={{ fontSize: '1.2em' }}>📞</span>
+                      <span style={{ fontFamily: 'monospace', fontSize: '1.1em', color: 'white' }}>
+                        {item.contactPhone}
+                      </span>
                     </div>
-                  </div>
-                  <div>
-                    <div className="detail-label">Category</div>
-                    <div className="detail-value">{item.category}</div>
-                  </div>
+                  )}
+
+                  {!item.contactPhone && item.contactMethod !== 'email' && (
+                    <div style={{ color: 'var(--muted)', marginTop: '8px', fontStyle: 'italic' }}>
+                      No explicit contact details shared.
+                    </div>
+                  )}
                 </div>
-
-                {/* Reporter / Contact Card */}
-                <div className="detail-reporter-card">
-                  <div className="detail-label" style={{ marginBottom: '16px' }}>Reported By</div>
-
-                  <div className="reporter-header">
-                    <div className="reporter-avatar">
-                      {item.reportedBy?.name ? item.reportedBy.name.charAt(0).toUpperCase() : '?'}
-                    </div>
-                    <div className="reporter-info">
-                      <div className="reporter-name">
-                        {item.reportedBy?.name || 'Unknown User'}
-                      </div>
-                      <div className="reporter-email">
-                        {item.reportedBy?.email || 'No Email'}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px' }}>
-                    <div className="detail-label">Contact Information</div>
-
-                    {item.contactMethod === 'email' && (
-                      <div className="contact-row">
-                        <span style={{ fontSize: '1.2em' }}>✉️</span>
-                        <span style={{ color: 'var(--accent-light)' }}>
-                          {item.reportedBy?.email || 'Email not available'}
-                        </span>
-                      </div>
-                    )}
-
-                    {item.contactPhone && (
-                      <div className="contact-row">
-                        <span style={{ fontSize: '1.2em' }}>📞</span>
-                        <span style={{ fontFamily: 'monospace', fontSize: '1.1em', color: 'white' }}>
-                          {item.contactPhone}
-                        </span>
-                      </div>
-                    )}
-
-                    {!item.contactPhone && item.contactMethod !== 'email' && (
-                      <div style={{ color: 'var(--muted)', marginTop: '8px', fontStyle: 'italic' }}>
-                        No explicit contact details shared.
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </>
+              </div>
             </>
+
           )}
         </div>
       </div>
-    </div>
+    </div >
   )
 }

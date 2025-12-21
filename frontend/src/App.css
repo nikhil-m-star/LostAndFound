@@ -852,13 +852,23 @@ select option {
 	gap: 6px;
 }
 
+/* Fix grid overflow */
 .detail-grid {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 40px;
+	width: 100%;
+	/* Prevent blowout */
+	max-width: 100%;
 }
 
-@media (max-width: 800px) {
+/* Ensure grid items don't force width */
+.detail-image-grid,
+.detail-info-box {
+	min-width: 0;
+}
+
+@media (max-width: 950px) {
 	.detail-grid {
 		grid-template-columns: 1fr;
 	}
@@ -947,12 +957,6 @@ select option {
 	font-weight: 500;
 }
 
-.owner-actions {
-	display: flex;
-	gap: 12px;
-	margin-top: 12px;
-}
-
 .btn-edit {
 	background: rgba(255, 255, 255, 0.1);
 	color: white;
@@ -998,6 +1002,32 @@ select option {
 	padding: 0;
 	cursor: pointer;
 	font-size: 15px;
+}
+
+/* Owner Actions (Edit/Delete) */
+.owner-action-bar {
+	display: flex;
+	gap: 12px;
+	margin-bottom: 24px;
+	padding: 16px;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 12px;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.owner-label {
+	font-weight: 700;
+	color: var(--accent);
+	font-size: 0.9em;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.action-buttons {
+	display: flex;
+	gap: 10px;
 }
 
 /* NEW: Item Detail Responsive Components */
