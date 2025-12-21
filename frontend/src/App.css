@@ -1097,7 +1097,7 @@ select option {
 	word-break: break-all;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1150px) {
 	.detail-grid {
 		grid-template-columns: 1fr;
 	}

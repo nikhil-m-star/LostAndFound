@@ -45,6 +45,21 @@ router.post('/', auth, upload.array('images', 6), async (req, res) => {
     }
 
     // Insert into Supabase
+    // OPTIONAL: Update user name if provided from frontend
+    // This ensures that the user's latest name from Clerk is stored in our Users table
+    if (req.body.reporterName) {
+      try {
+        await supabase.from('users').update({
+          name: req.body.reporterName,
+          // Only update email if it's missing or valid? Actually email is key.
+          // email: req.body.reporterEmail // Don't blindly update email as it identifies user
+        }).eq('id', req.user.id);
+      } catch (e) {
+        console.error('Failed to update user name from report:', e);
+      }
+    }
+
+    // Insert into Supabase
     const { data, error } = await supabase
       .from('items')
       .insert({

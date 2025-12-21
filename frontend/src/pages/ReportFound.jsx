@@ -1,11 +1,13 @@
+
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@clerk/clerk-react'
+import { useAuth, useUser } from '@clerk/clerk-react'
 import UploadField from '../components/UploadField'
 
 export default function ReportFound() {
   const navigate = useNavigate()
   const { getToken } = useAuth()
+  const { user } = useUser()
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
