@@ -13,7 +13,8 @@ router.get('/me', auth, async (req, res) => {
     if (!req.user) {
       return res.status(404).json({ message: 'User not found in database' });
     }
-    res.json(req.user);
+    const user = { ...req.user, _id: req.user.id };
+    res.json(user);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

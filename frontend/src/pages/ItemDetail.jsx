@@ -335,6 +335,13 @@ export default function ItemDetail() {
               </div>
 
               <div className="info-group">
+                <div className="detail-label">Location</div>
+                <div className="detail-value">
+                  {item.location || 'Unknown Location'}
+                </div>
+              </div>
+
+              <div className="info-group">
                 <div className="detail-label">Reported On</div>
                 <div className="detail-value">
                   {new Date(item.createdAt).toLocaleDateString(undefined, {
@@ -357,18 +364,34 @@ export default function ItemDetail() {
               <div className="info-group">
                 <div className="detail-label">Reported By</div>
                 <div className="detail-value">
-                  {item.reportedBy ? (item.reportedBy.name || item.reportedBy.email || 'Unknown') : 'Unknown'}
+                  {item.reportedBy ? (
+                    <span>
+                      <span style={{ fontWeight: 'bold' }}>{item.reportedBy.name}</span>
+                      <br />
+                      <span style={{ fontSize: '0.9em', color: 'var(--muted)' }}>{item.reportedBy.email}</span>
+                    </span>
+                  ) : 'Unknown'}
                 </div>
               </div>
 
-              {(item.contactMethod === 'phone' || item.contactPhone) && (
-                <div className="info-group">
-                  <div className="detail-label">Contact Phone</div>
-                  <div className="detail-value" style={{ fontFamily: 'monospace', fontSize: '1.1em' }}>
-                    {item.contactPhone || 'No phone provided'}
-                  </div>
+              <div className="info-group">
+                <div className="detail-label">Contact Info</div>
+                <div className="detail-value">
+                  {item.contactMethod === 'email' && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      📧 <span>{item.reportedBy?.email || 'Email (Attached to Reporter)'}</span>
+                    </div>
+                  )}
+                  {item.contactPhone && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                      📞 <span style={{ fontFamily: 'monospace' }}>{item.contactPhone}</span>
+                    </div>
+                  )}
+                  {!item.contactPhone && item.contactMethod !== 'email' && (
+                    <span style={{ color: 'var(--muted)' }}>No explicit contact info provided.</span>
+                  )}
                 </div>
-              )}
+              </div>
             </>
           )}
         </div>
