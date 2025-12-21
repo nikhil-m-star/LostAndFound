@@ -52,10 +52,14 @@ const syncUser = async (req, res, next) => {
 
     if (!user) {
       // Create new user
+      let fullName = sessionClaims?.name;
+      if (!fullName && sessionClaims?.first_name) {
+        fullName = sessionClaims.first_name + (sessionClaims.last_name ? ' ' + sessionClaims.last_name : '');
+      }
       const newUser = {
         clerk_id: userId,
         email: email || `unknown-${userId}@example.com`,
-        name: sessionClaims?.name || email?.split('@')[0] || 'User',
+        name: fullName || email?.split('@')[0] || 'User',
       };
 
       const { data: createdUser, error: createError } = await supabase

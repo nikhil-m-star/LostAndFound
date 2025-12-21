@@ -327,71 +327,100 @@ export default function ItemDetail() {
             </div>
           ) : (
             <>
-              <div className="info-group">
-                <div className="detail-label">Description</div>
-                <div className="detail-description">
-                  {item.description || 'No description provided'}
-                </div>
-              </div>
-
-              <div className="info-group">
-                <div className="detail-label">Location</div>
-                <div className="detail-value">
-                  {item.location || 'Unknown Location'}
-                </div>
-              </div>
-
-              <div className="info-group">
-                <div className="detail-label">Reported On</div>
-                <div className="detail-value">
-                  {new Date(item.createdAt).toLocaleDateString(undefined, {
-                    year: 'numeric', month: 'long', day: 'numeric'
-                  })}
-                </div>
-              </div>
-
-              {item.dateEvent && (
+              <>
+                {/* Description Section */}
                 <div className="info-group">
-                  <div className="detail-label">{item.status === 'lost' ? 'Lost On' : 'Found On'}</div>
-                  <div className="detail-value">
-                    {new Date(item.dateEvent).toLocaleDateString(undefined, {
-                      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-                    })}
+                  <div className="detail-label">About this Item</div>
+                  <div className="detail-description">
+                    {item.description || 'No description provided.'}
                   </div>
                 </div>
-              )}
 
-              <div className="info-group">
-                <div className="detail-label">Reported By</div>
-                <div className="detail-value">
-                  {item.reportedBy ? (
-                    <span>
-                      <span style={{ fontWeight: 'bold' }}>{item.reportedBy.name}</span>
-                      <br />
-                      <span style={{ fontSize: '0.9em', color: 'var(--muted)' }}>{item.reportedBy.email}</span>
-                    </span>
-                  ) : 'Unknown'}
+                {/* Key Details Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '32px' }}>
+                  <div>
+                    <div className="detail-label">Location</div>
+                    <div className="detail-value">{item.location || 'Unknown'}</div>
+                  </div>
+                  <div>
+                    <div className="detail-label">{item.status === 'lost' ? 'Lost Date' : 'Found Date'}</div>
+                    <div className="detail-value">
+                      {item.dateEvent ? new Date(item.dateEvent).toLocaleDateString(undefined, {
+                        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
+                      }) : 'Unknown'}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="detail-label">Reported On</div>
+                    <div className="detail-value">
+                      {new Date(item.createdAt).toLocaleDateString(undefined, {
+                        year: 'numeric', month: 'numeric', day: 'numeric'
+                      })}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="detail-label">Category</div>
+                    <div className="detail-value">{item.category}</div>
+                  </div>
                 </div>
-              </div>
 
-              <div className="info-group">
-                <div className="detail-label">Contact Info</div>
-                <div className="detail-value">
-                  {item.contactMethod === 'email' && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      📧 <span>{item.reportedBy?.email || 'Email (Attached to Reporter)'}</span>
+                {/* Reporter / Contact Card */}
+                <div style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  border: '1px solid rgba(255,255,255,0.08)'
+                }}>
+                  <div className="detail-label" style={{ marginBottom: '16px' }}>Reported By</div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+                    <div style={{
+                      width: '48px', height: '48px', borderRadius: '50%',
+                      background: 'var(--accent)', color: '#000',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: '20px', fontWeight: 'bold'
+                    }}>
+                      {item.reportedBy?.name ? item.reportedBy.name.charAt(0).toUpperCase() : '?'}
                     </div>
-                  )}
-                  {item.contactPhone && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-                      📞 <span style={{ fontFamily: 'monospace' }}>{item.contactPhone}</span>
+                    <div>
+                      <div style={{ fontWeight: '700', fontSize: '1.1em', color: 'white' }}>
+                        {item.reportedBy?.name || 'Unknown User'}
+                      </div>
+                      <div style={{ fontSize: '0.9em', color: 'var(--muted)' }}>
+                        {item.reportedBy?.email || 'No Email'}
+                      </div>
                     </div>
-                  )}
-                  {!item.contactPhone && item.contactMethod !== 'email' && (
-                    <span style={{ color: 'var(--muted)' }}>No explicit contact info provided.</span>
-                  )}
+                  </div>
+
+                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px' }}>
+                    <div className="detail-label">Contact Information</div>
+
+                    {item.contactMethod === 'email' && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '8px' }}>
+                        <span style={{ fontSize: '1.2em' }}>✉️</span>
+                        <span style={{ color: 'var(--accent-light)' }}>
+                          {item.reportedBy?.email || 'Email not available'}
+                        </span>
+                      </div>
+                    )}
+
+                    {item.contactPhone && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '8px' }}>
+                        <span style={{ fontSize: '1.2em' }}>📞</span>
+                        <span style={{ fontFamily: 'monospace', fontSize: '1.1em', color: 'white' }}>
+                          {item.contactPhone}
+                        </span>
+                      </div>
+                    )}
+
+                    {!item.contactPhone && item.contactMethod !== 'email' && (
+                      <div style={{ color: 'var(--muted)', marginTop: '8px', fontStyle: 'italic' }}>
+                        No explicit contact details shared.
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </>
             </>
           )}
         </div>
