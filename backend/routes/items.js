@@ -114,7 +114,7 @@ router.get('/', async (req, res) => {
 
     let query = supabase
       .from('items')
-      .select('*, reported_by (id, name, email)'); // Join including ID
+      .select('*, reported_by:users (id, name, email)'); // Join including ID
 
     // Filtering
     if (status) {
@@ -164,7 +164,7 @@ router.get('/:id', async (req, res) => {
 
     const { data: item, error } = await supabase
       .from('items')
-      .select('*, reported_by (id, name, email)') // Join including ID
+      .select('*, reported_by:users (id, name, email)') // Join including ID
       .eq('id', req.params.id)
       .single();
 
@@ -220,7 +220,7 @@ router.patch('/:id', auth, async (req, res) => {
       .from('items')
       .update(updates)
       .eq('id', req.params.id)
-      .select('*, reported_by (name, email)')
+      .select('*, reported_by:users (name, email)')
       .single();
 
     if (updateError) throw updateError;
