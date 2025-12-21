@@ -98,7 +98,7 @@ router.get('/', async (req, res) => {
 
     let query = supabase
       .from('items')
-      .select('*, reported_by (name, email)'); // Join usage might differ in Supabase JSON response
+      .select('*, reported_by (id, name, email)'); // Join including ID
 
     // Filtering
     if (status) {
@@ -106,8 +106,6 @@ router.get('/', async (req, res) => {
     }
 
     if (q) {
-      // Simple OR search using ilike
-      // Supabase/Postgrest syntax for OR is a bit specific: .or(`title.ilike.%${q}%,description.ilike.%${q}%`)
       query = query.or(`title.ilike.%${q}%,description.ilike.%${q}%,location.ilike.%${q}%`);
     }
 
@@ -124,10 +122,11 @@ router.get('/', async (req, res) => {
     // Map response
     const items = data.map(item => ({
       ...item,
+      _id: item.id, // Frontend compatibility
       dateEvent: item.date_event,
       contactMethod: item.contact_method,
       contactPhone: item.contact_phone,
-      reportedBy: item.reported_by // Supabase returns nested object if relation exists
+      reportedBy: item.reported_by ? { ...item.reported_by, _id: item.reported_by.id } : null
     }));
 
     res.json(items);
@@ -140,9 +139,15 @@ router.get('/', async (req, res) => {
 // Get single item
 router.get('/:id', async (req, res) => {
   try {
+    // Validate UUID format to prevent 500 triggers
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(req.params.id)) {
+      return res.status(404).json({ message: 'Invalid Item ID' });
+    }
+
     const { data: item, error } = await supabase
       .from('items')
-      .select('*, reported_by (name, email)') // Join
+      .select('*, reported_by (id, name, email)') // Join including ID
       .eq('id', req.params.id)
       .single();
 
@@ -151,10 +156,11 @@ router.get('/:id', async (req, res) => {
     // Map response
     const mappedItem = {
       ...item,
+      _id: item.id, // Frontend compatibility
       dateEvent: item.date_event,
       contactMethod: item.contact_method,
       contactPhone: item.contact_phone,
-      reportedBy: item.reported_by
+      reportedBy: item.reported_by ? { ...item.reported_by, _id: item.reported_by.id } : null
     };
 
     res.json(mappedItem);
