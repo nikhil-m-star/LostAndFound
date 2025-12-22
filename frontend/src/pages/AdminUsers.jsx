@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@clerk/clerk-react'
+import { FiUser } from 'react-icons/fi'
 
 export default function AdminUsers() {
     const { getToken } = useAuth()
@@ -82,9 +83,9 @@ export default function AdminUsers() {
                             width: '40px', height: '40px', borderRadius: '50%',
                             background: 'var(--accent)', color: '#000',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: '18px', fontWeight: 'bold'
+                            fontSize: '20px'
                         }}>
-                            {user.name?.charAt(0).toUpperCase() || '?'}
+                            <FiUser />
                         </div>
                         <div style={{ flex: 1 }}>
                             <div style={{ fontWeight: '600', fontSize: '16px' }}>{user.name}</div>
