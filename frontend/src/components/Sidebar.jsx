@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { FiHome, FiSearch, FiCpu, FiMessageSquare } from 'react-icons/fi'
+import { FiHome, FiSearch, FiCpu, FiMessageSquare, FiUsers } from 'react-icons/fi'
 import { BiLibrary } from 'react-icons/bi'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { MdOutlineReport } from 'react-icons/md'
@@ -18,6 +18,7 @@ export default function Sidebar() {
         <NavLink to="/chat" className={({ isActive }) => isActive ? 'active' : ''}><FiMessageSquare style={{ width: 18, height: 18 }} /> <span>Messages</span></NavLink>
         <NavLink to="/report/found" className={({ isActive }) => isActive ? 'active' : ''}><MdOutlineReport style={{ width: 18, height: 18 }} /> <span>Report Found</span></NavLink>
         <NavLink to="/report/lost" className={({ isActive }) => isActive ? 'active' : ''}><MdOutlineReport style={{ width: 18, height: 18 }} /> <span>Report Lost</span></NavLink>
+        <NavLink to="/admin/users" className={({ isActive }) => isActive ? 'active' : ''}><FiUsers style={{ width: 18, height: 18 }} /> <span>All Users</span></NavLink>
       </nav>
     </aside>
   )

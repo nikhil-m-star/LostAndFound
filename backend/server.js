@@ -16,6 +16,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/items', require('./routes/items'));
 app.use('/api/ai', require('./routes/ai')); // New AI route
 app.use('/api/chat', require('./routes/chat')); // User Chat route
+app.use('/api/admin', require('./routes/admin')); // Admin routes
 
 // health
 app.get('/', (req, res) => res.send('Lost and Found Backend is Running'));
