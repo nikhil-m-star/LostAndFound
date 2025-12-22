@@ -43,7 +43,16 @@ export default function MyReports() {
             })
             if (!res.ok) throw new Error('Failed to fetch your reports')
             const data = await res.json()
-            setItems(data)
+            if (Array.isArray(data)) {
+                setItems(data)
+            } else if (data.items) {
+                setItems(data.items)
+                if (data.debug_req_user_id) {
+                    console.log('Server Debug User ID:', data.debug_req_user_id)
+                    // Optionally update debug user state if needed, but console is fine or appended to debugUser
+                    setDebugUser(prev => ({ ...prev, server_seen_id: data.debug_req_user_id }))
+                }
+            }
         } catch (err) {
             setError(err.message)
         } finally {
@@ -86,6 +95,7 @@ export default function MyReports() {
                 <div style={{ marginTop: 40, padding: 20, background: '#333', borderRadius: 8, fontSize: 12, fontFamily: 'monospace' }}>
                     <p style={{ color: '#aaa' }}>DEBUG INFO (Please report this ID):</p>
                     <p>Database User ID: <span style={{ color: 'var(--accent)' }}>{debugUser.id}</span></p>
+                    <p>Server Seen ID: <span style={{ color: 'red' }}>{debugUser.server_seen_id || 'Waiting...'}</span></p>
                     <p>Email: {debugUser.email}</p>
                     <p>Clerk ID: {debugUser.clerk_id}</p>
                 </div>
