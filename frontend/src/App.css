@@ -115,7 +115,7 @@ button:not(.navbar button):not(.mode-toggle):not(.user-btn):hover {
 	font-size: 72px;
 	font-weight: 800;
 	line-height: 1.1;
-	text-shadow: 0 0 20px var(--neon-green);
+	/* text-shadow: 0 0 20px var(--neon-green); REMOVED */
 }
 
 h3 {
@@ -123,7 +123,7 @@ h3 {
 	font-weight: 800;
 	margin-top: 50px !important;
 	margin-bottom: 50px !important;
-	text-shadow: 0 0 15px var(--neon-green);
+	/* text-shadow: 0 0 15px var(--neon-green); REMOVED */
 }
 
 .card .meta .title {
@@ -1328,8 +1328,8 @@ select option {
 	.hero-3d {
 		transform: scale(0.7);
 		/* Shrink 3D elements */
-		margin: 0 auto;
-		/* Center them */
+		margin: 40px auto;
+		/* Center them with vertical spacing to prevent overlap */
 	}
 
 	.mobile-hide {
@@ -1900,7 +1900,7 @@ select option {
 	font-size: 20px;
 	font-weight: 700;
 	color: #fff;
-	text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+	/* text-shadow: 0 0 20px rgba(255, 255, 255, 0.1); REMOVED */
 }
 
 .chat-messages {
