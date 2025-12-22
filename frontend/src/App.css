@@ -2053,3 +2053,41 @@ select option {
 		padding: 16px;
 	}
 }
+/* Chat Search Input */
+.chat-search-input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-top: 10px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.18));
+    border: 1px solid var(--accent-muted);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 15px;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.chat-search-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-muted);
+}
+
+/* Back Link Button */
+.back-link {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: var(--accent-light);
+    transform: translateX(-2px);
+}
+

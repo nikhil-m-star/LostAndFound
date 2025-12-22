@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useAuth, useUser } from '@clerk/clerk-react'
-import { useSearchParams } from 'react-router-dom'
-import { FiSend, FiMessageSquare } from 'react-icons/fi'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { FiSend, FiMessageSquare, FiArrowLeft } from 'react-icons/fi'
 
 export default function Chat() {
     const { getToken, userId } = useAuth()
     const { user } = useUser()
+    const navigate = useNavigate()
     const [searchParams] = useSearchParams()
     const targetUserId = searchParams.get('userId')
 
@@ -14,6 +15,11 @@ export default function Chat() {
     const [messages, setMessages] = useState([])
     const [newMessage, setNewMessage] = useState('')
     const [loading, setLoading] = useState(true)
+
+    // Search State
+    const [searchQuery, setSearchQuery] = useState('')
+    const [searchResults, setSearchResults] = useState([])
+    const [isSearching, setIsSearching] = useState(false)
 
     const messagesEndRef = useRef(null)
 
@@ -24,15 +30,21 @@ export default function Chat() {
 
     // If navigated with userId, try to start/open that conversation
     useEffect(() => {
-        if (targetUserId && conversations.length > 0) {
+        if (targetUserId) {
             const existing = conversations.find(c => c.user.id === targetUserId)
             if (existing) {
+                console.log('DEBUG Found existing:', existing);
                 setActiveConversation(existing)
             } else {
-                // Fetch user logic if not in conversation list could be added here
-                // For MVP, if they message a new person, it might be tricky without a "start new" endpoint
-                // But users likely navigate from ItemDetail, so we might need a "create placeholder" logic
-                // For now, let's assume we can fetch messages even if empty
+                // Determine if we are still loading conversations
+                // If we are loading, we might want to wait, BUT:
+                // If the list is truly empty, we need to fall into this block.
+                // The `conversations` dependency ensures this re-runs when they load.
+                // So it is safe to set a temporary placeholder here.
+
+                // Ideally we would fetch the user name here so it doesn't say "User"
+                // But for now enabling the chat is the priority.
+                console.log('DEBUG setting placeholder for:', targetUserId);
                 setActiveConversation({ user: { id: targetUserId, name: 'User' }, messages: [] })
             }
         }
@@ -148,39 +160,124 @@ export default function Chat() {
         }
     }
 
+    // Search Logic
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (searchQuery.trim().length >= 2) {
+                performSearch()
+            } else {
+                setSearchResults([])
+            }
+        }, 500) // Debounce
+
+        return () => clearTimeout(timer)
+    }, [searchQuery])
+
+    const performSearch = async () => {
+        try {
+            setIsSearching(true)
+            const token = await getToken()
+            const base = import.meta.env.VITE_API_BASE || '/api'
+            const res = await fetch(`${base}/chat/users/search?q=${searchQuery}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            if (res.ok) {
+                const data = await res.json()
+                setSearchResults(data)
+            }
+        } catch (err) {
+            console.error('Search failed', err)
+        } finally {
+            setIsSearching(false)
+        }
+    }
+
+    const selectUser = (user) => {
+        setSearchQuery('') // Clear search
+        setSearchResults([])
+
+        // check if conversation exists
+        const existing = conversations.find(c => c.user.id === user.id)
+        if (existing) {
+            setActiveConversation(existing)
+        } else {
+            // Create placeholder
+            setActiveConversation({ user: { id: user.id, name: user.name, email: user.email }, messages: [] })
+        }
+    }
+
     return (
         <div className="chat-page-container">
             <div className="chat-sidebar">
                 <div className="chat-sidebar-header">
+                    <button onClick={() => navigate('/')} className="back-link" style={{ marginBottom: '10px', padding: 0, fontSize: '15px' }}>
+                        <FiArrowLeft style={{ marginBottom: '-2px' }} /> Back to Home
+                    </button>
                     <h2>Messages</h2>
+                    <input
+                        className="chat-search-input"
+                        placeholder="Search users..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
                 </div>
                 <div className="conversation-list">
-                    {loading ? (
-                        <div style={{ padding: 20 }}>Loading...</div>
-                    ) : conversations.length === 0 ? (
-                        <div style={{ padding: 20, color: 'var(--muted)' }}>No conversations yet.</div>
-                    ) : (
-                        conversations.map(conv => (
-                            <div
-                                key={conv.user.id}
-                                className={`conversation-item ${activeConversation?.user?.id === conv.user.id ? 'active' : ''}`}
-                                onClick={() => setActiveConversation(conv)}
-                            >
-                                <div className="conv-avatar">
-                                    {conv.user.name ? conv.user.name.charAt(0).toUpperCase() : '?'}
-                                </div>
-                                <div className="conv-content">
-                                    <div className="conv-name">{conv.user.name || 'User'}</div>
-                                    <div className="conv-preview">{conv.lastMessage?.content}</div>
-                                </div>
-                                {conv.unreadCount > 0 && <div className="unread-badge">{conv.unreadCount}</div>}
+                    {searchQuery.length >= 2 ? (
+                        <div className="search-results-list">
+                            <div className="list-label" style={{ padding: '0 15px 10px', color: 'var(--muted)', fontSize: '0.9em' }}>
+                                Search Results
                             </div>
-                        ))
+                            {isSearching ? (
+                                <div style={{ padding: '0 15px' }}>Searching...</div>
+                            ) : searchResults.length === 0 ? (
+                                <div style={{ padding: '0 15px' }}>No users found.</div>
+                            ) : (
+                                searchResults.map(user => (
+                                    <div
+                                        key={user.id}
+                                        className="conversation-item"
+                                        onClick={() => selectUser(user)}
+                                    >
+                                        <div className="conv-avatar">
+                                            {user.name ? user.name.charAt(0).toUpperCase() : '?'}
+                                        </div>
+                                        <div className="conv-content">
+                                            <div className="conv-name">{user.name}</div>
+                                            <div className="conv-preview" style={{ fontSize: '0.8em', color: 'var(--muted)' }}>{user.email}</div>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    ) : (
+                        loading ? (
+                            <div style={{ padding: 20 }}>Loading...</div>
+                        ) : conversations.length === 0 ? (
+                            <div style={{ padding: 20, color: 'var(--muted)' }}>No conversations yet.</div>
+                        ) : (
+                            conversations.map(conv => (
+                                <div
+                                    key={conv.user.id}
+                                    className={`conversation-item ${activeConversation?.user?.id === conv.user.id ? 'active' : ''}`}
+                                    onClick={() => setActiveConversation(conv)}
+                                >
+                                    <div className="conv-avatar">
+                                        {conv.user.name ? conv.user.name.charAt(0).toUpperCase() : '?'}
+                                    </div>
+                                    <div className="conv-content">
+                                        <div className="conv-name">{conv.user.name || 'User'}</div>
+                                        <div className="conv-preview">{conv.lastMessage?.content}</div>
+                                    </div>
+                                    {conv.unreadCount > 0 && <div className="unread-badge">{conv.unreadCount}</div>}
+                                </div>
+                            ))
+                        )
                     )}
                 </div>
             </div>
 
             <div className="chat-main">
+                {console.log('DEBUG Render activeConversation:', activeConversation)}
                 {activeConversation ? (
                     <>
                         <div className="chat-header">

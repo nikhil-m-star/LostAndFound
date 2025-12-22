@@ -160,4 +160,28 @@ router.post('/mark-read', auth, async (req, res) => {
     }
 });
 
+// Search users to start a chat
+router.get('/users/search', auth, async (req, res) => {
+    try {
+        const { q } = req.query;
+        if (!q || q.length < 2) return res.json([]);
+
+        // Search in name or email, exclude current user
+        // Using ilike for case-insensitive partial match
+        const { data, error } = await supabase
+            .from('users')
+            .select('id, name, email')
+            .or(`name.ilike.%${q}%,email.ilike.%${q}%`)
+            .neq('id', req.user.id)
+            .limit(10);
+
+        if (error) throw error;
+
+        res.json(data);
+    } catch (err) {
+        console.error('Error searching users:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 module.exports = router;

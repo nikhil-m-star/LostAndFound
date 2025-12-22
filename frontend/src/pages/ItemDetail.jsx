@@ -386,24 +386,31 @@ export default function ItemDetail() {
                         {item.reportedBy?.email || 'No Email'}
                       </div>
                     </div>
-                    {userId && item.reportedBy?._id && userId !== item.reportedBy._id && (
+                    {/* Debug Logs */}
+                    {console.log('DEBUG CHECK:', {
+                      userId,
+                      reporterId: item.reportedBy?._id,
+                      match: userId === item.reportedBy?._id,
+                      token: userId && item.reportedBy?._id && userId !== item.reportedBy?._id
+                    })}
+                    {userId && item.reportedBy?._id && (
                       <button
                         onClick={() => navigate(`/chat?userId=${item.reportedBy._id}`)}
                         style={{
                           marginLeft: 'auto',
                           padding: '6px 12px',
                           fontSize: '14px',
-                          background: 'var(--accent)',
+                          background: userId === item.reportedBy._id ? '#555' : 'var(--accent)',
                           border: 'none',
                           borderRadius: '6px',
-                          color: '#000',
+                          color: '#fff',
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
                           gap: '6px'
                         }}
                       >
-                        Chat
+                        {userId === item.reportedBy._id ? 'Chat (Self)' : 'Chat'}
                       </button>
                     )}
                   </div>
