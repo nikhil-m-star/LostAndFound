@@ -23,10 +23,29 @@ export default function Chat() {
 
     const messagesEndRef = useRef(null)
 
+    const [currentSupabaseUser, setCurrentSupabaseUser] = useState(null)
+
     // Initial load
     useEffect(() => {
+        fetchCurrentUser()
         fetchConversations()
     }, [])
+
+    const fetchCurrentUser = async () => {
+        try {
+            const token = await getToken()
+            const base = import.meta.env.VITE_API_BASE || '/api'
+            const res = await fetch(`${base}/auth/me`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            if (res.ok) {
+                const data = await res.json()
+                setCurrentSupabaseUser(data)
+            }
+        } catch (err) {
+            console.error('Failed to fetch user', err)
+        }
+    }
 
     // If navigated with userId, try to start/open that conversation
     useEffect(() => {
@@ -127,7 +146,7 @@ export default function Chat() {
         // Optimistic update
         setMessages(prev => [...prev, {
             id: tempId,
-            sender_id: userId,
+            sender_id: currentSupabaseUser?.id || userId, // Use strict ID
             content: text,
             created_at: new Date().toISOString(),
             is_read: false
@@ -299,8 +318,8 @@ export default function Chat() {
                         </div>
                         <div className="chat-messages">
                             {messages.map(msg => {
-                                const isMe = msg.sender_id === userId
-                                // console.log('Message:', msg.content, 'isMe:', isMe, 'sender:', msg.sender_id, 'myId:', userId)
+                                // Use Supabase ID if available, otherwise fallback (though fallback might fail alignment)
+                                const isMe = msg.sender_id === (currentSupabaseUser?.id || userId)
                                 return (
                                     <div key={msg.id} className={`message-bubble ${isMe ? 'mine' : 'theirs'}`}>
                                         {msg.content}
