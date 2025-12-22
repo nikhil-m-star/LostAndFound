@@ -7,6 +7,7 @@ import ThreeDCube from '../components/ThreeDCube'
 import ThreeDPyramid from '../components/ThreeDPyramid'
 import ThreeDRing from '../components/ThreeDRing'
 import ScrollReveal from '../components/ScrollReveal'
+import ThemeToggle from '../components/ThemeToggle'
 
 // Variants for the grid container to stagger children
 const containerVariants = {
@@ -30,11 +31,25 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  // Mouse position state for parallax
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+
   const { isSignedIn, user } = useUser();
   const navigate = useNavigate()
 
   useEffect(() => {
     fetchItems()
+
+    const handleMouseMove = (e) => {
+      // Normalize mouse position from -1 to 1
+      setMousePos({
+        x: (e.clientX / window.innerWidth) * 2 - 1,
+        y: (e.clientY / window.innerHeight) * 2 - 1
+      })
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
   const fetchItems = async () => {
@@ -71,13 +86,41 @@ export default function Home() {
     <div className="home-container">
       <ScrollReveal>
         <div className="top-hero hero-layout">
-          <div className="hero-3d desktop-only"><ThreeDPyramid /></div>
-          <div className="hero-3d mobile-scale"><ThreeDCube /></div>
+          {/* Parallax Wrappers for 3D Elements */}
+          <motion.div
+            className="hero-3d desktop-only"
+            animate={{
+              rotateX: mousePos.y * 11, // Tilts based on vertical mouse pos
+              rotateY: mousePos.x * 12, // Tilts based on horizontal mouse pos
+              x: mousePos.x * -16, // Moves opposite to mouse (parallax)
+              y: mousePos.y * -16
+            }}
+            transition={{ type: "spring", stiffness: 50, damping: 20 }}
+          >
+            <ThreeDPyramid />
+          </motion.div>
+
+          <motion.div
+            className="hero-3d mobile-scale"
+            animate={{
+              rotateX: mousePos.y * 10,
+              rotateY: mousePos.x * 10
+            }}
+            transition={{ type: "spring", stiffness: 50, damping: 20 }}
+          >
+            <ThreeDCube />
+          </motion.div>
+
           <div className="hero-content">
             <div className="page-title intro-title">Welcome to Lost & Found</div>
             <div className="intro-subtitle">Browse reports or add a new one</div>
 
+            <div style={{ margin: '20px 0', display: 'flex', justifyContent: 'center' }}>
+              <ThemeToggle />
+            </div>
+
             {!isSignedIn && (
+              // ... existing code ...
               <div className="auth-card">
                 <h4 className="auth-title">Join the Community</h4>
                 <div className="auth-buttons">
@@ -103,8 +146,32 @@ export default function Home() {
               </div>
             )}
           </div>
-          <div className="hero-3d mobile-hide"><ThreeDCube /></div>
-          <div className="hero-3d desktop-only"><ThreeDRing /></div>
+
+          <motion.div
+            className="hero-3d mobile-hide"
+            animate={{
+              rotateX: mousePos.y * -10, // Inverted rotation for variety
+              rotateY: mousePos.x * -10,
+              x: mousePos.x * 20,
+              y: mousePos.y * 20
+            }}
+            transition={{ type: "spring", stiffness: 60, damping: 20 }}
+          >
+            <ThreeDCube />
+          </motion.div>
+
+          <motion.div
+            className="hero-3d desktop-only"
+            animate={{
+              rotateX: mousePos.y * 15,
+              rotateY: mousePos.x * 15,
+              x: mousePos.x * -25, // Stronger parallax for rightmost element
+              y: mousePos.y * -25
+            }}
+            transition={{ type: "spring", stiffness: 45, damping: 15 }}
+          >
+            <ThreeDRing />
+          </motion.div>
         </div>
       </ScrollReveal>
 

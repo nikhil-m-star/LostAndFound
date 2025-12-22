@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '@clerk/clerk-react'
+import ScrollReveal from '../components/ScrollReveal'
 
 export default function ItemDetail() {
   const { id } = useParams()
@@ -178,264 +179,267 @@ export default function ItemDetail() {
 
   return (
     <div className="detail-container">
-      <button onClick={() => navigate('/')} className="back-link">
-        ← Back to Home
-      </button>
+      <ScrollReveal>
+        <button onClick={() => navigate('/')} className="back-link">
+          ← Back to Home
+        </button>
 
-      {/* Header */}
-      <div className="detail-header">
-        <h1 className="page-title" style={{ fontSize: '3rem', marginBottom: '8px' }}>{item.title}</h1>
-        <div className="detail-meta-row">
-          <div className="detail-meta-tag tag-category">
-            {item.category || 'Item'}
-          </div>
-          <div className="detail-meta-tag tag-status">
-            {item.status === 'lost' ? 'Lost Item' : 'Found Item'}
-          </div>
-          {item.location && (
-            <div className="detail-meta-tag tag-location">
-              📍 {item.location}
+        {/* Header */}
+        <div className="detail-header">
+          <h1 className="page-title" style={{ fontSize: '3rem', marginBottom: '8px' }}>{item.title}</h1>
+          <div className="detail-meta-row">
+            <div className="detail-meta-tag tag-category">
+              {item.category || 'Item'}
             </div>
-          )}
+            <div className="detail-meta-tag tag-status">
+              {item.status === 'lost' ? 'Lost Item' : 'Found Item'}
+            </div>
+            {item.location && (
+              <div className="detail-meta-tag tag-location">
+                📍 {item.location}
+              </div>
+            )}
+          </div>
         </div>
-
-
-      </div>
+      </ScrollReveal>
 
       <div className="detail-grid">
         {/* Left Column: Images */}
-        <div className="detail-image-grid">
-          {item.images && item.images.length > 0 ? (
-            <>
-              {/* Main Image */}
-              <img
-                src={item.images[0].url}
-                alt={item.title}
-                className="detail-main-image"
-                onClick={() => window.open(item.images[0].url, '_blank')}
-              />
+        <ScrollReveal delay={0.2}>
+          <div className="detail-image-grid">
+            {item.images && item.images.length > 0 ? (
+              <>
+                {/* Main Image */}
+                <img
+                  src={item.images[0].url}
+                  alt={item.title}
+                  className="detail-main-image"
+                  onClick={() => window.open(item.images[0].url, '_blank')}
+                />
 
-              {/* Thumbnails (if more than 1) */}
-              {item.images.length > 1 && (
-                <div className="detail-thumbnails">
-                  {item.images.map((img, idx) => (
-                    <img
-                      key={idx}
-                      src={img.url}
-                      alt={`${item.title} ${idx + 1}`}
-                      className={`detail-thumb ${idx === 0 ? 'active' : ''}`}
-                      onClick={() => window.open(img.url, '_blank')}
-                    />
-                  ))}
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="no-images-placeholder">
-              <span>No images available</span>
-            </div>
-          )}
-        </div>
+                {/* Thumbnails (if more than 1) */}
+                {item.images.length > 1 && (
+                  <div className="detail-thumbnails">
+                    {item.images.map((img, idx) => (
+                      <img
+                        key={idx}
+                        src={img.url}
+                        alt={`${item.title} ${idx + 1}`}
+                        className={`detail-thumb ${idx === 0 ? 'active' : ''}`}
+                        onClick={() => window.open(img.url, '_blank')}
+                      />
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="no-images-placeholder">
+                <span>No images available</span>
+              </div>
+            )}
+          </div>
+        </ScrollReveal>
 
         {/* Right Column: Details / Edit Form */}
-        <div className="detail-info-box">
-          {isEditing ? (
-            <div className="report-form" style={{ padding: 0 }}>
-              <div>
-                <label className="field-label">Title</label>
-                <input
-                  value={editForm.title}
-                  onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                  placeholder="Title"
-                  required
-                />
-              </div>
-              <div>
-                <label className="field-label">Description</label>
-                <textarea
-                  value={editForm.description}
-                  onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                  placeholder="Description"
-                  required
-                  style={{ minHeight: '120px' }}
-                />
-              </div>
-              <div>
-                <label className="field-label">Category</label>
-                <select
-                  value={editForm.category}
-                  onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
-                >
-                  {['Electronics', 'Clothing', 'Accessories', 'Documents', 'Others'].map(c => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="field-label">Date Event</label>
-                <input
-                  type="date"
-                  value={editForm.dateEvent}
-                  onChange={(e) => setEditForm({ ...editForm, dateEvent: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="field-label">Contact Method</label>
-                <select
-                  value={editForm.contactMethod}
-                  onChange={(e) => setEditForm({ ...editForm, contactMethod: e.target.value })}
-                >
-                  <option value="email">Email</option>
-                  <option value="phone">Phone</option>
-                </select>
-              </div>
-              {editForm.contactMethod === 'phone' && (
+        <ScrollReveal delay={0.3}>
+          <div className="detail-info-box">
+            {isEditing ? (
+              <div className="report-form" style={{ padding: 0 }}>
                 <div>
-                  <label className="field-label">Phone</label>
+                  <label className="field-label">Title</label>
                   <input
-                    value={editForm.contactPhone}
-                    onChange={(e) => setEditForm({ ...editForm, contactPhone: e.target.value })}
-                    placeholder="Phone Number"
+                    value={editForm.title}
+                    onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                    placeholder="Title"
+                    required
                   />
                 </div>
-              )}
-              <div>
-                <label className="field-label">Location</label>
-                <input
-                  value={editForm.location}
-                  onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
-                  placeholder="Location"
-                />
-              </div>
-              <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
-                <button onClick={handleSave} disabled={saving} style={{ flex: 1 }}>
-                  {saving ? 'Saving...' : 'Save Changes'}
-                </button>
-                <button onClick={handleCancelEdit} disabled={saving} style={{ flex: 1, background: 'rgba(255,255,255,0.1)' }}>
-                  Cancel
-                </button>
-              </div>
-            </div>
-          ) : (
-            <>
-              {isOwner && !isEditing && (
-                <div className="owner-action-bar">
-                  <span className="owner-label">Your Report</span>
-                  <div className="action-buttons">
-                    <button className="btn-edit" onClick={handleEdit}>Edit</button>
-                    <button className="btn-delete" onClick={handleDelete} disabled={deleting}>
-                      {deleting ? '...' : 'Delete'}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Description Section */}
-              <div className="info-group">
-                <div className="detail-label">About this Item</div>
-                <div className="detail-description">
-                  {item.description || 'No description provided.'}
-                </div>
-              </div>
-
-              {/* Key Details Grid */}
-              <div className="detail-stats-grid">
                 <div>
-                  <div className="detail-label">Location</div>
-                  <div className="detail-value">{item.location || 'Unknown'}</div>
+                  <label className="field-label">Description</label>
+                  <textarea
+                    value={editForm.description}
+                    onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                    placeholder="Description"
+                    required
+                    style={{ minHeight: '120px' }}
+                  />
                 </div>
                 <div>
-                  <div className="detail-label">{item.status === 'lost' ? 'Lost Date' : 'Found Date'}</div>
-                  <div className="detail-value">
-                    {item.dateEvent ? new Date(item.dateEvent).toLocaleDateString(undefined, {
-                      weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
-                    }) : 'Unknown'}
-                  </div>
+                  <label className="field-label">Category</label>
+                  <select
+                    value={editForm.category}
+                    onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
+                  >
+                    {['Electronics', 'Clothing', 'Accessories', 'Documents', 'Others'].map(c => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
-                  <div className="detail-label">Reported On</div>
-                  <div className="detail-value">
-                    {new Date(item.createdAt).toLocaleDateString(undefined, {
-                      year: 'numeric', month: 'numeric', day: 'numeric'
-                    })}
-                  </div>
+                  <label className="field-label">Date Event</label>
+                  <input
+                    type="date"
+                    value={editForm.dateEvent}
+                    onChange={(e) => setEditForm({ ...editForm, dateEvent: e.target.value })}
+                  />
                 </div>
                 <div>
-                  <div className="detail-label">Category</div>
-                  <div className="detail-value">{item.category}</div>
+                  <label className="field-label">Contact Method</label>
+                  <select
+                    value={editForm.contactMethod}
+                    onChange={(e) => setEditForm({ ...editForm, contactMethod: e.target.value })}
+                  >
+                    <option value="email">Email</option>
+                    <option value="phone">Phone</option>
+                  </select>
+                </div>
+                {editForm.contactMethod === 'phone' && (
+                  <div>
+                    <label className="field-label">Phone</label>
+                    <input
+                      value={editForm.contactPhone}
+                      onChange={(e) => setEditForm({ ...editForm, contactPhone: e.target.value })}
+                      placeholder="Phone Number"
+                    />
+                  </div>
+                )}
+                <div>
+                  <label className="field-label">Location</label>
+                  <input
+                    value={editForm.location}
+                    onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
+                    placeholder="Location"
+                  />
+                </div>
+                <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+                  <button onClick={handleSave} disabled={saving} style={{ flex: 1 }}>
+                    {saving ? 'Saving...' : 'Save Changes'}
+                  </button>
+                  <button onClick={handleCancelEdit} disabled={saving} style={{ flex: 1, background: 'rgba(255,255,255,0.1)' }}>
+                    Cancel
+                  </button>
                 </div>
               </div>
-
-              {/* Reporter / Contact Card */}
-              <div className="detail-reporter-card">
-                <div className="detail-label" style={{ marginBottom: '16px' }}>Reported By</div>
-
-                <div className="reporter-header">
-                  <div className="reporter-avatar">
-                    {item.reportedBy?.name ? item.reportedBy.name.charAt(0).toUpperCase() : '?'}
-                  </div>
-                  <div className="reporter-info">
-                    <div className="reporter-name">
-                      {item.reportedBy?.name || 'Unknown User'}
-                    </div>
-                    <div className="reporter-email">
-                      {item.reportedBy?.email || 'No Email'}
+            ) : (
+              <>
+                {isOwner && !isEditing && (
+                  <div className="owner-action-bar">
+                    <span className="owner-label">Your Report</span>
+                    <div className="action-buttons">
+                      <button className="btn-edit" onClick={handleEdit}>Edit</button>
+                      <button className="btn-delete" onClick={handleDelete} disabled={deleting}>
+                        {deleting ? '...' : 'Delete'}
+                      </button>
                     </div>
                   </div>
-                  {userId && item.reportedBy?._id && userId !== item.reportedBy._id && (
-                    <button
-                      onClick={() => navigate(`/chat?userId=${item.reportedBy._id}`)}
-                      style={{
-                        marginLeft: 'auto',
-                        padding: '6px 12px',
-                        fontSize: '14px',
-                        background: 'var(--accent)',
-                        border: 'none',
-                        borderRadius: '6px',
-                        color: '#000',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px'
-                      }}
-                    >
-                      Chat
-                    </button>
-                  )}
+                )}
+
+                {/* Description Section */}
+                <div className="info-group">
+                  <div className="detail-label">About this Item</div>
+                  <div className="detail-description">
+                    {item.description || 'No description provided.'}
+                  </div>
                 </div>
 
-                <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px' }}>
-                  <div className="detail-label">Contact Information</div>
-
-                  {item.contactMethod === 'email' && (
-                    <div className="contact-row">
-                      <span style={{ fontSize: '1.2em' }}>✉️</span>
-                      <span style={{ color: 'var(--accent-light)' }}>
-                        {item.reportedBy?.email || 'Email not available'}
-                      </span>
+                {/* Key Details Grid */}
+                <div className="detail-stats-grid">
+                  <div>
+                    <div className="detail-label">Location</div>
+                    <div className="detail-value">{item.location || 'Unknown'}</div>
+                  </div>
+                  <div>
+                    <div className="detail-label">{item.status === 'lost' ? 'Lost Date' : 'Found Date'}</div>
+                    <div className="detail-value">
+                      {item.dateEvent ? new Date(item.dateEvent).toLocaleDateString(undefined, {
+                        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
+                      }) : 'Unknown'}
                     </div>
-                  )}
-
-                  {item.contactPhone && (
-                    <div className="contact-row">
-                      <span style={{ fontSize: '1.2em' }}>📞</span>
-                      <span style={{ fontFamily: 'monospace', fontSize: '1.1em', color: 'white' }}>
-                        {item.contactPhone}
-                      </span>
+                  </div>
+                  <div>
+                    <div className="detail-label">Reported On</div>
+                    <div className="detail-value">
+                      {new Date(item.createdAt).toLocaleDateString(undefined, {
+                        year: 'numeric', month: 'numeric', day: 'numeric'
+                      })}
                     </div>
-                  )}
-
-                  {!item.contactPhone && item.contactMethod !== 'email' && (
-                    <div style={{ color: 'var(--muted)', marginTop: '8px', fontStyle: 'italic' }}>
-                      No explicit contact details shared.
-                    </div>
-                  )}
+                  </div>
+                  <div>
+                    <div className="detail-label">Category</div>
+                    <div className="detail-value">{item.category}</div>
+                  </div>
                 </div>
-              </div>
-            </>
 
-          )}
-        </div>
+                {/* Reporter / Contact Card */}
+                <div className="detail-reporter-card">
+                  <div className="detail-label" style={{ marginBottom: '16px' }}>Reported By</div>
+
+                  <div className="reporter-header">
+                    <div className="reporter-avatar">
+                      {item.reportedBy?.name ? item.reportedBy.name.charAt(0).toUpperCase() : '?'}
+                    </div>
+                    <div className="reporter-info">
+                      <div className="reporter-name">
+                        {item.reportedBy?.name || 'Unknown User'}
+                      </div>
+                      <div className="reporter-email">
+                        {item.reportedBy?.email || 'No Email'}
+                      </div>
+                    </div>
+                    {userId && item.reportedBy?._id && userId !== item.reportedBy._id && (
+                      <button
+                        onClick={() => navigate(`/chat?userId=${item.reportedBy._id}`)}
+                        style={{
+                          marginLeft: 'auto',
+                          padding: '6px 12px',
+                          fontSize: '14px',
+                          background: 'var(--accent)',
+                          border: 'none',
+                          borderRadius: '6px',
+                          color: '#000',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px'
+                        }}
+                      >
+                        Chat
+                      </button>
+                    )}
+                  </div>
+
+                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px' }}>
+                    <div className="detail-label">Contact Information</div>
+
+                    {item.contactMethod === 'email' && (
+                      <div className="contact-row">
+                        <span style={{ fontSize: '1.2em' }}>✉️</span>
+                        <span style={{ color: 'var(--accent-light)' }}>
+                          {item.reportedBy?.email || 'Email not available'}
+                        </span>
+                      </div>
+                    )}
+
+                    {item.contactPhone && (
+                      <div className="contact-row">
+                        <span style={{ fontSize: '1.2em' }}>📞</span>
+                        <span style={{ fontFamily: 'monospace', fontSize: '1.1em', color: 'white' }}>
+                          {item.contactPhone}
+                        </span>
+                      </div>
+                    )}
+
+                    {!item.contactPhone && item.contactMethod !== 'email' && (
+                      <div style={{ color: 'var(--muted)', marginTop: '8px', fontStyle: 'italic' }}>
+                        No explicit contact details shared.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </ScrollReveal>
       </div>
     </div >
   )

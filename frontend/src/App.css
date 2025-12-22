@@ -1,9 +1,9 @@
 :root {
-	--bg: #0b0b0b;
+	--bg: #050505;
 	--panel: #141414;
 	--muted: #b3b3b3;
 	--text: #e6e6e6;
-	/* Spotify green shades */
+	/* Spotify green shades turned NEON */
 	--accent-900: #0f6a38;
 	/* deep */
 	--accent-700: #179f46;
@@ -19,15 +19,16 @@
 	--accent-muted: rgba(29, 185, 84, 0.12);
 	--glass: rgba(29, 185, 84, 0.04);
 
-	/* neon greens */
-	--neon-green: rgba(30, 255, 103, 0.25);
-	--neon-green-strong: rgba(30, 255, 103, 0.35);
+	/* INTENSIFIED NEON VARIABLES - SLIGHTLY BOOSTED */
+	--neon-green: rgba(30, 255, 103, 0.4);
+	--neon-green-strong: rgba(30, 255, 103, 0.5);
+	--neon-glow: 0 0 10px rgba(30, 255, 103, 0.5), 0 0 20px rgba(30, 255, 103, 0.3), 0 0 40px rgba(30, 255, 103, 0.1);
 	--base-font-size: 19px;
 
 	/* background gradient - black dominant with neon green at top-right and bottom-left */
-	--bg-gradient: linear-gradient(135deg, var(--neon-green-strong) 0%, var(--neon-green-strong) 8%, transparent 28%),
-		linear-gradient(315deg, var(--neon-green) 0%, var(--neon-green) 8%, transparent 28%),
-		linear-gradient(180deg, #000000 0%, #000000 100%);
+	--bg-gradient: linear-gradient(135deg, var(--neon-green) 0%, var(--glass) 15%, transparent 40%),
+		linear-gradient(315deg, var(--neon-green) 0%, var(--accent-muted) 15%, transparent 40%),
+		linear-gradient(180deg, #050505 0%, #000000 100%);
 }
 
 * {
@@ -51,7 +52,7 @@ body {
 	background-position: center;
 	background-size: cover;
 	font-size: var(--base-font-size);
-	background-color: #000;
+	background-color: #050505;
 }
 
 /* Global button styling */
@@ -62,7 +63,7 @@ button {
 /* Add neon glow to all buttons on hover, EXCEPT navbar buttons */
 /* Add neon glow to all buttons on hover, EXCEPT navbar buttons, mode toggles, and user profile */
 button:not(.navbar button):not(.mode-toggle):not(.user-btn):hover {
-	box-shadow: 0 0 15px #1eff67, 0 0 35px #1eff67;
+	box-shadow: 0 0 20px var(--accent-light), 0 0 40px var(--accent-light), 0 0 80px var(--neon-green);
 	/* text-shadow: 0 0 8px #1eff67; REMOVED */
 	transform: translateY(-2px) scale(1.02);
 	filter: brightness(1.1);
@@ -114,6 +115,7 @@ button:not(.navbar button):not(.mode-toggle):not(.user-btn):hover {
 	font-size: 72px;
 	font-weight: 800;
 	line-height: 1.1;
+	text-shadow: 0 0 20px var(--neon-green);
 }
 
 h3 {
@@ -121,6 +123,7 @@ h3 {
 	font-weight: 800;
 	margin-top: 50px !important;
 	margin-bottom: 50px !important;
+	text-shadow: 0 0 15px var(--neon-green);
 }
 
 .card .meta .title {
@@ -150,14 +153,14 @@ h3 {
 
 .sidebar {
 	width: 220px;
-	background: radial-gradient(700px 500px at 8% 8%, rgba(29, 185, 84, 0.04), transparent 20%), linear-gradient(180deg, rgba(3, 18, 12, 0.95) 0%, rgba(6, 20, 14, 0.9) 55%, rgba(0, 0, 0, 0.9) 100%);
+	background: radial-gradient(700px 500px at 8% 8%, var(--glass), transparent 20%), linear-gradient(180deg, rgba(3, 18, 12, 0.95) 0%, rgba(6, 20, 14, 0.9) 55%, rgba(0, 0, 0, 0.9) 100%);
 	padding: 20px;
 	position: fixed;
 	left: 0;
 	top: 0;
 	bottom: 0;
-	border-right: 1px solid rgba(29, 185, 84, 0.06);
-	box-shadow: 0 24px 80px rgba(3, 10, 6, 0.6) inset, 0 6px 40px rgba(29, 185, 84, 0.02);
+	border-right: 1px solid var(--accent-muted);
+	box-shadow: 0 24px 80px rgba(3, 10, 6, 0.6) inset, 0 6px 40px var(--glass);
 }
 
 .sidebar .brand {
@@ -222,9 +225,9 @@ h3 {
 
 .sidebar a.active,
 .sidebar a:hover {
-	background: linear-gradient(90deg, rgba(29, 185, 84, 0.06), rgba(29, 185, 84, 0.02));
+	background: linear-gradient(90deg, var(--accent-muted), var(--glass));
 	color: white;
-	box-shadow: 0 6px 22px rgba(29, 185, 84, 0.04);
+	box-shadow: 0 6px 22px var(--glass);
 }
 
 .playlist {
@@ -258,10 +261,10 @@ h3 {
 	justify-content: center;
 	padding: 10px 18px;
 	margin-bottom: 10px;
-	background: linear-gradient(90deg, rgba(0, 0, 0, 0.45), rgba(2, 8, 5, 0.6));
-	border-bottom: 1px solid rgba(29, 185, 84, 0.04);
-	box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6), 0 6px 24px rgba(29, 185, 84, 0.03) inset;
-	backdrop-filter: blur(6px);
+	background: linear-gradient(90deg, rgba(0, 0, 0, 0.65), rgba(2, 8, 5, 0.75));
+	border-bottom: 1px solid var(--accent-muted);
+	box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--glass);
+	backdrop-filter: blur(8px);
 }
 
 .navbar a,
@@ -277,8 +280,8 @@ h3 {
 
 .navbar a:hover,
 .navbar button:hover {
-	background: linear-gradient(90deg, rgba(29, 185, 84, 0.06), rgba(29, 185, 84, 0.02));
-	box-shadow: 0 8px 26px rgba(29, 185, 84, 0.06), 0 0 12px var(--neon-green);
+	background: linear-gradient(90deg, var(--accent-muted), var(--glass));
+	box-shadow: 0 8px 26px var(--accent-muted), 0 0 12px var(--neon-green);
 	color: var(--accent-200);
 	transform: translateY(-2px);
 }
@@ -331,7 +334,7 @@ h3 {
 	width: 100%;
 	padding: 12px 14px;
 	margin-bottom: 12px;
-	border: 1px solid rgba(29, 185, 84, 0.06);
+	border: 1px solid var(--accent-muted);
 	background: linear-gradient(180deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.18));
 	color: var(--text);
 	border-radius: 10px;
@@ -342,7 +345,7 @@ h3 {
 /* Specific styling for Select elements (Dropdowns) */
 .report-form select {
 	appearance: none;
-	background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%231DB954%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+	background-image: var(--select-arrow);
 	background-repeat: no-repeat;
 	background-position: right 1rem center;
 	background-size: 0.8em auto;
@@ -357,7 +360,7 @@ h3 {
 .report-form select:focus {
 	outline: none;
 	border-color: var(--accent);
-	box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.2);
+	box-shadow: 0 0 0 2px var(--accent-muted);
 }
 
 /* Custom Scrollbar */
@@ -370,7 +373,11 @@ h3 {
 }
 
 ::-webkit-scrollbar-thumb {
-	background: rgba(29, 185, 84, 0.3);
+	background: var(--accent-strong);
+	/* Using strong/dark accent for thumb */
+	background: rgba(255, 255, 255, 0.2);
+	/* Actually neutral is safer, but user wants theme. Let's use neon-green */
+	background: var(--neon-green-strong);
 	border-radius: 5px;
 	border: 2px solid #0b0b0b;
 }
@@ -434,14 +441,17 @@ select option {
 	margin: 0;
 	font: inherit;
 	color: var(--accent);
-	width: 1.15em;
-	height: 1.15em;
-	border: 1px solid var(--accent-700);
+	width: 20px;
+	height: 20px;
+	min-width: 20px;
+	min-height: 20px;
+	border: 2px solid var(--accent-700);
 	border-radius: 50%;
 	display: grid;
 	place-content: center;
 	cursor: pointer;
-	margin-right: 8px;
+	margin-right: 12px;
+	flex-shrink: 0;
 	transform: translateY(2px);
 }
 
@@ -508,14 +518,14 @@ select option {
 .file-drop {
 	padding: 18px;
 	border-radius: 10px;
-	background: linear-gradient(180deg, rgba(29, 185, 84, 0.03), rgba(0, 0, 0, 0.20));
-	border: 1px solid rgba(29, 185, 84, 0.06);
+	background: linear-gradient(180deg, var(--glass), rgba(0, 0, 0, 0.20));
+	border: 1px solid var(--glass);
 	cursor: pointer;
 }
 
 .file-drop:hover {
-	border-color: rgba(29, 185, 84, 0.34);
-	box-shadow: 0 14px 46px rgba(29, 185, 84, 0.12);
+	border-color: var(--neon-green-strong);
+	box-shadow: 0 14px 46px var(--accent-muted);
 }
 
 .thumb-preview {
@@ -617,7 +627,7 @@ select option {
 	position: absolute;
 	width: 100px;
 	height: 100px;
-	background: rgba(30, 255, 103, 0.08);
+	background: var(--glass);
 	border: 2px solid var(--neon-green-strong);
 	box-shadow: 0 0 25px var(--neon-green);
 }
@@ -678,7 +688,7 @@ select option {
 	height: 0;
 	border-left: 50px solid transparent;
 	border-right: 50px solid transparent;
-	border-bottom: 86px solid rgba(30, 255, 103, 0.15);
+	border-bottom: 86px solid var(--glass);
 	top: 7px;
 	left: 0;
 	transform-origin: 50% 86px;
@@ -744,7 +754,7 @@ select option {
 
 .ring:nth-child(1) {
 	animation: spin 3s infinite linear;
-	border-color: rgba(30, 255, 103, 0.8);
+	border-color: var(--neon-green-strong);
 }
 
 .ring:nth-child(2) {
@@ -753,7 +763,7 @@ select option {
 	height: 80%;
 	top: 10%;
 	left: 10%;
-	border-color: rgba(30, 255, 103, 0.5);
+	border-color: var(--neon-green);
 }
 
 .ring:nth-child(3) {
@@ -762,7 +772,7 @@ select option {
 	height: 60%;
 	top: 20%;
 	left: 20%;
-	border-color: rgba(30, 255, 103, 0.3);
+	border-color: var(--glass);
 }
 
 @keyframes rotate3d {
@@ -790,7 +800,7 @@ select option {
 /* User Menu Styles */
 /* User Menu Styles */
 .user-btn:hover {
-	box-shadow: 0 0 15px #1eff67, 0 0 35px #1eff67;
+	box-shadow: 0 0 15px var(--accent-light), 0 0 35px var(--accent-light);
 	/* text-shadow removed */
 	border-color: var(--accent) !important;
 	transform: translateY(-2px) scale(1.02);
@@ -838,10 +848,10 @@ select option {
 }
 
 .tag-status {
-	background: rgba(29, 185, 84, 0.15);
+	background: var(--glass);
 	color: var(--accent-light);
-	border: 1px solid rgba(29, 185, 84, 0.2);
-	box-shadow: 0 0 10px rgba(29, 185, 84, 0.1);
+	border: 1px solid var(--accent-muted);
+	box-shadow: 0 0 10px var(--glass);
 }
 
 .tag-location {
@@ -1157,10 +1167,10 @@ select option {
 }
 
 .auth-btn-signup {
-	background: linear-gradient(90deg, #1DB954, #1aa34a);
+	background: linear-gradient(90deg, var(--accent), var(--accent-700));
 	color: #000;
 	border: none;
-	box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);
+	box-shadow: 0 4px 15px var(--accent-muted);
 }
 
 .auth-btn-login {
@@ -1226,7 +1236,7 @@ select option {
 	padding: 30px;
 	background: rgba(20, 20, 20, 0.6);
 	border-radius: 16px;
-	border: 1px solid rgba(29, 185, 84, 0.1);
+	border: 1px solid var(--accent-muted);
 	backdrop-filter: blur(10px);
 	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 	max-width: 500px;
@@ -1252,7 +1262,7 @@ select option {
 .primary-action-btn {
 	padding: 12px 32px;
 	margin-top: 10px;
-	background: #1db954;
+	background: var(--accent);
 	color: white;
 	border: none;
 	border-radius: 50px;
@@ -1265,7 +1275,7 @@ select option {
 
 .primary-action-btn:hover {
 	transform: scale(1.05);
-	box-shadow: 0 0 20px rgba(29, 185, 84, 0.4);
+	box-shadow: 0 0 20px var(--neon-green);
 }
 
 .welcome-section {
@@ -1380,7 +1390,7 @@ select option {
 	justify-content: center;
 	color: var(--accent);
 	/* Neon icon color */
-	box-shadow: 0 0 15px rgba(29, 185, 84, 0.3);
+	box-shadow: 0 0 15px var(--neon-green);
 	cursor: pointer;
 	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
@@ -1393,8 +1403,8 @@ select option {
 }
 
 .floating-menu-btn:hover {
-	background: rgba(29, 185, 84, 0.15);
-	box-shadow: 0 0 25px rgba(29, 185, 84, 0.6);
+	background: var(--glass);
+	box-shadow: 0 0 25px var(--accent-muted);
 	transform: scale(1.05);
 }
 
@@ -1430,7 +1440,7 @@ select option {
 	right: 0;
 	width: 300px;
 	background: rgba(5, 5, 5, 0.98);
-	border-left: 1px solid rgba(29, 185, 84, 0.2);
+	border-left: 1px solid var(--accent-muted);
 	z-index: 1600;
 	transform: translateX(100%);
 	transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -1531,10 +1541,10 @@ select option {
 
 .mobile-nav-links a:hover,
 .mobile-nav-links a.active {
-	background: rgba(29, 185, 84, 0.1);
+	background: var(--glass);
 	color: var(--accent);
-	border-color: rgba(29, 185, 84, 0.2);
-	box-shadow: 0 0 15px rgba(29, 185, 84, 0.1);
+	border-color: var(--accent-muted);
+	box-shadow: 0 0 15px var(--glass);
 }
 
 .mobile-menu-footer {
@@ -1608,7 +1618,7 @@ select option {
 	background: #1a1a1a;
 	padding: 4px;
 	border-radius: 12px;
-	border: 1px solid rgba(29, 185, 84, 0.1);
+	border: 1px solid var(--accent-muted);
 }
 
 .mode-toggle {
@@ -1656,7 +1666,7 @@ select option {
 		/* Push input lower */
 		margin: 0 !important;
 		border-radius: 16px !important;
-		border: 1px solid rgba(29, 185, 84, 0.15) !important;
+		border: 1px solid var(--accent-muted) !important;
 		width: 100% !important;
 		max-width: 100% !important;
 	}
@@ -1814,9 +1824,9 @@ select option {
 }
 
 .conversation-item.active {
-	background: rgba(29, 185, 84, 0.12);
-	border-color: rgba(29, 185, 84, 0.25);
-	box-shadow: 0 4px 12px rgba(29, 185, 84, 0.08);
+	background: var(--glass);
+	border-color: var(--accent-muted);
+	box-shadow: 0 4px 12px var(--glass);
 }
 
 .conv-avatar {
@@ -1915,11 +1925,11 @@ select option {
 }
 
 .message-bubble.mine {
-	background: linear-gradient(135deg, rgba(23, 159, 70, 0.8), rgba(15, 106, 56, 0.8));
+	background: linear-gradient(135deg, var(--accent-700), var(--accent-900));
 	color: white;
 	align-self: flex-end;
 	border-bottom-right-radius: 4px;
-	box-shadow: 0 4px 15px rgba(23, 159, 70, 0.2);
+	box-shadow: 0 4px 15px var(--accent-muted);
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	backdrop-filter: blur(4px);
 }
@@ -1966,7 +1976,7 @@ select option {
 .chat-input-area input:focus {
 	border-color: var(--accent);
 	background: rgba(0, 0, 0, 0.3);
-	box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.08), inset 0 2px 4px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 0 0 3px var(--glass), inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .chat-input-area button {
@@ -1982,12 +1992,12 @@ select option {
 	cursor: pointer;
 	font-size: 20px;
 	transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-	box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+	box-shadow: 0 4px 12px var(--accent-muted);
 }
 
 .chat-input-area button:hover:not(:disabled) {
 	transform: scale(1.08) rotate(-10deg);
-	box-shadow: 0 8px 20px rgba(29, 185, 84, 0.5);
+	box-shadow: 0 8px 20px var(--neon-green-strong);
 }
 
 .chat-input-area button:active:not(:disabled) {

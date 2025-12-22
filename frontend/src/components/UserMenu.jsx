@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useUser, useClerk } from '@clerk/clerk-react'
 import { useNavigate } from 'react-router-dom'
 import { FiLogOut, FiUser } from 'react-icons/fi'
+import { useTheme } from '../context/ThemeContext'
 
 export default function UserMenu() {
     const { user, isSignedIn } = useUser()
@@ -9,6 +10,7 @@ export default function UserMenu() {
     const navigate = useNavigate()
     const [isOpen, setIsOpen] = useState(false)
     const menuRef = useRef(null)
+    const { currentTheme, setCurrentTheme, themes } = useTheme()
 
     // Close menu when clicking outside
     useEffect(() => {
@@ -69,43 +71,72 @@ export default function UserMenu() {
                     position: 'absolute',
                     top: '55px',
                     right: '0',
-                    width: '200px',
+                    width: '240px',
                     background: '#141414',
-                    border: '1px solid rgba(29, 185, 84, 0.1)',
-                    borderRadius: '12px',
-                    padding: '8px',
+                    border: '1px solid var(--accent-muted)',
+                    borderRadius: '16px',
+                    padding: '12px',
                     boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
                     overflow: 'hidden',
                     animation: 'fadeIn 0.2s ease'
                 }}>
-                    <div style={{ padding: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)', marginBottom: '4px' }}>
-                        <div style={{ fontSize: '14px', fontWeight: 700, color: '#fff' }}>{user.fullName}</div>
+                    <div style={{ padding: '0 0 12px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', marginBottom: '12px' }}>
+                        <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>{user.fullName}</div>
                         <div style={{ fontSize: '12px', color: 'var(--muted)', textOverflow: 'ellipsis', overflow: 'hidden' }}>{user.primaryEmailAddress?.emailAddress}</div>
                     </div>
 
-                    <button
-                        onClick={handleLogout}
-                        style={{
-                            width: '100%',
-                            textAlign: 'left',
-                            padding: '10px 12px',
-                            background: 'transparent',
-                            border: 'none',
-                            color: '#ff5555',
-                            borderRadius: '8px',
-                            fontSize: '14px',
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px',
-                            transition: 'background 0.2s'
-                        }}
-                        onMouseEnter={(e) => e.target.style.background = 'rgba(255, 85, 85, 0.1)'}
-                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
-                    >
-                        <FiLogOut /> Log Out
-                    </button>
+                    <div style={{ marginBottom: '12px' }}>
+                        <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--muted)', marginBottom: '8px', paddingLeft: '4px' }}>
+                            THEME
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px', padding: '0 4px' }}>
+                            {Object.values(themes).map((t) => (
+                                <button
+                                    key={t.id}
+                                    onClick={() => setCurrentTheme(t)}
+                                    title={t.name}
+                                    style={{
+                                        width: '24px',
+                                        height: '24px',
+                                        borderRadius: '50%',
+                                        background: t.accent,
+                                        border: currentTheme.id === t.id ? '2px solid white' : 'none',
+                                        cursor: 'pointer',
+                                        boxShadow: currentTheme.id === t.id ? `0 0 10px ${t.accent}` : 'none',
+                                        transition: 'transform 0.2s',
+                                        display: 'block', // Override global button flex
+                                        padding: 0
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px' }}>
+                        <button
+                            onClick={handleLogout}
+                            style={{
+                                width: '100%',
+                                textAlign: 'left',
+                                padding: '10px 8px',
+                                background: 'transparent',
+                                border: 'none',
+                                color: '#ff5555',
+                                borderRadius: '8px',
+                                fontSize: '14px',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                transition: 'background 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.target.style.background = 'rgba(255, 85, 85, 0.1)'}
+                            onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                        >
+                            <FiLogOut /> Log Out
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

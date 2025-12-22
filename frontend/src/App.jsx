@@ -13,10 +13,12 @@ import Chat from './pages/Chat'
 import Sidebar from './components/Sidebar'
 import UserMenu from './components/UserMenu'
 import MobileNavbar from './components/MobileNavbar'
+import FluidBackground from './components/FluidBackground'
 
 export default function App() {
   return (
     <div className="app">
+      <FluidBackground />
       <Sidebar />
       <MobileNavbar />
       <main className="main-content" style={{ position: 'relative' }}>
