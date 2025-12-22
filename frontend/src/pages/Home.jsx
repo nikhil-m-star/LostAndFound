@@ -1,10 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser, SignUpButton, SignInButton } from '@clerk/clerk-react'
+import { motion } from 'framer-motion'
 import Card from '../components/Card'
 import ThreeDCube from '../components/ThreeDCube'
 import ThreeDPyramid from '../components/ThreeDPyramid'
 import ThreeDRing from '../components/ThreeDRing'
+import ScrollReveal from '../components/ScrollReveal'
+
+// Variants for the grid container to stagger children
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
+
+// Variants for each item card
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+}
 
 export default function Home() {
   const [items, setItems] = useState([])
@@ -50,44 +69,48 @@ export default function Home() {
 
   return (
     <div className="home-container">
-      <div className="top-hero hero-layout">
-        <div className="hero-3d desktop-only"><ThreeDPyramid /></div>
-        <div className="hero-3d mobile-scale"><ThreeDCube /></div>
-        <div className="hero-content">
-          <div className="page-title intro-title">Welcome to Lost & Found</div>
-          <div className="intro-subtitle">Browse reports or add a new one</div>
+      <ScrollReveal>
+        <div className="top-hero hero-layout">
+          <div className="hero-3d desktop-only"><ThreeDPyramid /></div>
+          <div className="hero-3d mobile-scale"><ThreeDCube /></div>
+          <div className="hero-content">
+            <div className="page-title intro-title">Welcome to Lost & Found</div>
+            <div className="intro-subtitle">Browse reports or add a new one</div>
 
-          {!isSignedIn && (
-            <div className="auth-card">
-              <h4 className="auth-title">Join the Community</h4>
-              <div className="auth-buttons">
-                <SignUpButton mode="modal">
-                  <button className="auth-btn auth-btn-signup">
-                    Sign Up
-                  </button>
-                </SignUpButton>
-                <SignInButton mode="modal">
-                  <button className="auth-btn auth-btn-login">
-                    Log In
-                  </button>
-                </SignInButton>
+            {!isSignedIn && (
+              <div className="auth-card">
+                <h4 className="auth-title">Join the Community</h4>
+                <div className="auth-buttons">
+                  <SignUpButton mode="modal">
+                    <button className="auth-btn auth-btn-signup">
+                      Sign Up
+                    </button>
+                  </SignUpButton>
+                  <SignInButton mode="modal">
+                    <button className="auth-btn auth-btn-login">
+                      Log In
+                    </button>
+                  </SignInButton>
+                </div>
               </div>
-            </div>
-          )}
-          {isSignedIn && (
-            <div className="welcome-section">
-              <h3>Welcome back, {user.firstName}!</h3>
-              <button onClick={() => navigate('/report/lost')} className="primary-action-btn">
-                Report an Item
-              </button>
-            </div>
-          )}
+            )}
+            {isSignedIn && (
+              <div className="welcome-section">
+                <h3>Welcome back, {user.firstName}!</h3>
+                <button onClick={() => navigate('/report/lost')} className="primary-action-btn">
+                  Report an Item
+                </button>
+              </div>
+            )}
+          </div>
+          <div className="hero-3d mobile-hide"><ThreeDCube /></div>
+          <div className="hero-3d desktop-only"><ThreeDRing /></div>
         </div>
-        <div className="hero-3d mobile-hide"><ThreeDCube /></div>
-        <div className="hero-3d desktop-only"><ThreeDRing /></div>
-      </div>
+      </ScrollReveal>
 
-      <h3 style={{ width: '100%', textAlign: 'center' }}>Recent reports {loading && '(Loading...)'}</h3>
+      <ScrollReveal delay={0.2}>
+        <h3 style={{ width: '100%', textAlign: 'center' }}>Recent reports {loading && '(Loading...)'}</h3>
+      </ScrollReveal>
 
       {/* Show notice if using dummy data */}
 
@@ -100,32 +123,41 @@ export default function Home() {
       )}
 
       {!loading && items.length === 0 && (
-        <div style={{
-          padding: '40px',
-          textAlign: 'center',
-          color: 'var(--muted)',
-          backgroundColor: 'rgba(29,185,84,0.05)',
-          borderRadius: '10px',
-          border: '1px solid rgba(29,185,84,0.1)'
-        }}>
-          <div style={{ fontSize: '18px', marginBottom: '8px' }}>📭 No items found</div>
-          <div style={{ fontSize: '14px' }}>Be the first to report a lost or found item!</div>
-        </div>
+        <ScrollReveal>
+          <div style={{
+            padding: '40px',
+            textAlign: 'center',
+            color: 'var(--muted)',
+            backgroundColor: 'rgba(29,185,84,0.05)',
+            borderRadius: '10px',
+            border: '1px solid rgba(29,185,84,0.1)'
+          }}>
+            <div style={{ fontSize: '18px', marginBottom: '8px' }}>📭 No items found</div>
+            <div style={{ fontSize: '14px' }}>Be the first to report a lost or found item!</div>
+          </div>
+        </ScrollReveal>
       )}
 
       {items.length > 0 && (
-        <div className="grid">
+        <motion.div
+          className="grid"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+        >
           {items.map((item) => (
-            <Card
-              key={item._id}
-              id={item._id}
-              title={item.title}
-              subtitle={`${item.status === 'lost' ? 'Lost' : 'Found'} ${item.location ? `at ${item.location}` : ''}`}
-              image={item.images && item.images.length > 0 ? item.images[0].url : null}
-              onClick={() => handleCardClick(item._id)}
-            />
+            <motion.div key={item._id} variants={itemVariants}>
+              <Card
+                id={item._id}
+                title={item.title}
+                subtitle={`${item.status === 'lost' ? 'Lost' : 'Found'} ${item.location ? `at ${item.location}` : ''}`}
+                image={item.images && item.images.length > 0 ? item.images[0].url : null}
+                onClick={() => handleCardClick(item._id)}
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   )
