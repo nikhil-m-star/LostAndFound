@@ -132,7 +132,10 @@ router.get('/my-items', auth, async (req, res) => {
       reportedBy: item.reported_by ? { ...item.reported_by, _id: item.reported_by.id } : null
     }));
 
-    res.json(items);
+    res.json({
+      items,
+      debug_req_user_id: req.user.id
+    });
   } catch (err) {
     console.error('Error fetching my items:', err);
     res.status(500).json({ message: 'Server error' });
