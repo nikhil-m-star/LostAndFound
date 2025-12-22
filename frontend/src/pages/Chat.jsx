@@ -150,13 +150,25 @@ export default function Chat() {
 
             if (res.ok) {
                 const sentMsg = await res.json()
-                // Replace temp message? Actually just re-fetch or let polling handle it
-                // For smoother feel, let's update ID if we matched
+                // Replace temp message with real one
                 setMessages(prev => prev.map(m => m.id === tempId ? sentMsg : m))
-                fetchConversations() // Update sidebar order
+
+                // Update conversation list but DO NOT reset activeConversation
+                // We do this by calling fetchConversations, but we ensure activeConversation isn't clobbered
+                // The current implementation of fetchConversations just setsConversations, which is fine.
+                // activeConversation holds a reference to an object. Even if conversations array is replaced,
+                // activeConversation still points to the old valid object.
+                // The issue might be that the REFERENCE in the sidebar list updates, but activeConversation is old.
+                // This shouldn't be an issue for React unless we rely on object identity for equality checks.
+                // Sidebar uses ID check: activeConversation?.user?.id === conv.user.id
+
+                fetchConversations()
             }
         } catch (err) {
             console.error('Send failed', err)
+            // Rollback optimistic update?
+            setMessages(prev => prev.filter(m => m.id !== tempId))
+            alert('Failed to send message')
         }
     }
 
@@ -288,6 +300,7 @@ export default function Chat() {
                         <div className="chat-messages">
                             {messages.map(msg => {
                                 const isMe = msg.sender_id === userId
+                                // console.log('Message:', msg.content, 'isMe:', isMe, 'sender:', msg.sender_id, 'myId:', userId)
                                 return (
                                     <div key={msg.id} className={`message-bubble ${isMe ? 'mine' : 'theirs'}`}>
                                         {msg.content}

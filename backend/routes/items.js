@@ -107,6 +107,35 @@ router.post('/', auth, upload.array('images', 6), async (req, res) => {
   }
 });
 
+// Get current user's items
+router.get('/my-items', auth, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('items')
+      .select('*, reported_by:users (id, name, email)')
+      .eq('reported_by', req.user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    // Map response
+    const items = data.map(item => ({
+      ...item,
+      _id: item.id,
+      createdAt: item.created_at,
+      dateEvent: item.date_event,
+      contactMethod: item.contact_method,
+      contactPhone: item.contact_phone,
+      reportedBy: item.reported_by ? { ...item.reported_by, _id: item.reported_by.id } : null
+    }));
+
+    res.json(items);
+  } catch (err) {
+    console.error('Error fetching my items:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Get items (with simple search via query params)
 router.get('/', async (req, res) => {
   try {

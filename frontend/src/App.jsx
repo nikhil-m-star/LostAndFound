@@ -10,6 +10,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import AIChat from './pages/AIChat'
 import Chat from './pages/Chat'
+import MyReports from './pages/MyReports'
 import AdminUsers from './pages/AdminUsers'
 import Sidebar from './components/Sidebar'
 import UserMenu from './components/UserMenu'
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/ai-chat" element={<AIChat />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/my-reports" element={<MyReports />} />
           <Route path="/admin/users" element={<AdminUsers />} />
         </Routes>
       </main>
