@@ -50,7 +50,11 @@ export default function MyReports() {
                 if (data.debug_req_user_id) {
                     console.log('Server Debug User ID:', data.debug_req_user_id)
                     // Optionally update debug user state if needed, but console is fine or appended to debugUser
-                    setDebugUser(prev => ({ ...prev, server_seen_id: data.debug_req_user_id }))
+                    setDebugUser(prev => ({
+                        ...prev,
+                        server_seen_id: data.debug_req_user_id,
+                        backend_item_count: data.backend_item_count
+                    }))
                 }
             }
         } catch (err) {
@@ -96,6 +100,8 @@ export default function MyReports() {
                     <p style={{ color: '#aaa' }}>DEBUG INFO (Please report this ID):</p>
                     <p>Database User ID: <span style={{ color: 'var(--accent)' }}>{debugUser.id}</span></p>
                     <p>Server Seen ID: <span style={{ color: 'red' }}>{debugUser.server_seen_id || 'Waiting...'}</span></p>
+                    <p>Backend Items: <span style={{ color: 'cyan' }}>{debugUser.backend_item_count !== undefined ? debugUser.backend_item_count : 'N/A'}</span></p>
+                    <p>Frontend Items: <span style={{ color: 'cyan' }}>{items.length}</span></p>
                     <p>Email: {debugUser.email}</p>
                     <p>Clerk ID: {debugUser.clerk_id}</p>
                 </div>
