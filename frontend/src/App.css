@@ -2143,3 +2143,23 @@ select option {
 		z-index: 50;
 	}
 }
+
+
+/* Responsive View Utilities */
+.mobile-view {
+	display: none;
+}
+
+.desktop-view {
+	display: block;
+}
+
+@media (max-width: 768px) {
+	.desktop-view {
+		display: none !important;
+	}
+
+	.mobile-view {
+		display: flex !important;
+	}
+}
