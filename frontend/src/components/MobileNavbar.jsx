@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { FiHome, FiCpu, FiMenu, FiX, FiLogOut, FiMessageSquare } from 'react-icons/fi'
+import { FiHome, FiCpu, FiMenu, FiX, FiLogOut, FiMessageSquare, FiBox, FiUsers } from 'react-icons/fi'
 import { MdOutlineReport } from 'react-icons/md'
 import { useUser, useClerk } from '@clerk/clerk-react'
 
@@ -58,6 +58,16 @@ export default function MobileNavbar() {
                         <NavLink to="/chat" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
                             <FiMessageSquare /> <span>Messages</span>
                         </NavLink>
+
+                        <NavLink to="/my-reports" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
+                            <FiBox /> <span>My Reports</span>
+                        </NavLink>
+
+                        <NavLink to="/users" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
+                            <FiUsers /> <span>All Users</span>
+                        </NavLink>
+
+
 
                         <NavLink to="/report/found" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
                             <MdOutlineReport /> <span>Report Found</span>
