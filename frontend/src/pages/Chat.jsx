@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useAuth, useUser } from '@clerk/clerk-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { FiSend, FiMessageSquare, FiArrowLeft } from 'react-icons/fi'
+import { FiSend, FiMessageSquare, FiArrowLeft, FiUsers } from 'react-icons/fi'
 
 export default function Chat() {
     const { getToken, userId } = useAuth()
@@ -238,12 +238,24 @@ export default function Chat() {
     }
 
     return (
-        <div className="chat-page-container">
+        <div className={`chat-page-container ${activeConversation ? 'mobile-view-thread' : ''}`}>
             <div className="chat-sidebar">
                 <div className="chat-sidebar-header">
-                    <button onClick={() => navigate('/')} className="back-link" style={{ marginBottom: '10px', padding: 0, fontSize: '15px' }}>
-                        <FiArrowLeft style={{ marginBottom: '-2px' }} /> Back to Home
-                    </button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                        <button onClick={() => navigate('/')} className="back-link" style={{ padding: 0, fontSize: '15px' }}>
+                            <FiArrowLeft style={{ marginBottom: '-2px' }} /> Back to Home
+                        </button>
+
+                        {/* User Requested Icon to find users */}
+                        <button onClick={() => navigate('/users')} style={{
+                            background: 'transparent', border: '1px solid var(--glass)',
+                            color: 'var(--accent)', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', gap: '6px'
+                        }}>
+                            <FiUsers size={18} /> <span style={{ fontSize: '13px' }}>Find Users</span>
+                        </button>
+                    </div>
+
                     <h2>Messages</h2>
                     <input
                         className="chat-search-input"
@@ -312,10 +324,25 @@ export default function Chat() {
                 {activeConversation ? (
                     <>
                         <div className="chat-header">
+                            <button
+                                className="mobile-only-back"
+                                onClick={() => setActiveConversation(null)}
+                                style={{
+                                    background: 'transparent', border: 'none', color: 'var(--muted)',
+                                    marginRight: '12px', display: 'none', cursor: 'pointer'
+                                }}
+                            >
+                                <FiArrowLeft size={24} />
+                            </button>
                             <div className="chat-partner-name">
                                 {activeConversation.user.name || 'User'}
                             </div>
                         </div>
+                        <style>{`
+                            @media (max-width: 900px) {
+                                .mobile-only-back { display: block !important; }
+                            }
+                        `}</style>
                         <div className="chat-messages">
                             {messages.map(msg => {
                                 // Use Supabase ID if available, otherwise fallback (though fallback might fail alignment)

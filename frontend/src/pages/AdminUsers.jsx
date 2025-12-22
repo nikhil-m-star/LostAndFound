@@ -68,7 +68,7 @@ export default function AdminUsers() {
             </div>
 
             {/* Mobile Card Grid View */}
-            <div className="mobile-view" style={{ display: 'none', flexDirection: 'column', gap: '12px' }}>
+            <div className="mobile-view" style={{ flexDirection: 'column', gap: '12px' }}>
                 {users.map(user => (
                     <div key={user.id} style={{
                         background: 'rgba(30,30,30,0.6)',
@@ -94,13 +94,6 @@ export default function AdminUsers() {
                     </div>
                 ))}
             </div>
-
-            <style>{`
-                @media (max-width: 768px) {
-                    .desktop-view { display: none !important; }
-                    .mobile-view { display: flex !important; }
-                }
-            `}</style>
         </div>
     )
 }
