@@ -247,7 +247,7 @@ export default function Chat() {
                         </button>
 
                         {/* User Requested Icon to find users */}
-                        <button onClick={() => navigate('/users')} style={{
+                        <button onClick={() => navigate('/admin/users')} style={{
                             background: 'transparent', border: '1px solid var(--glass)',
                             color: 'var(--accent)', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', gap: '6px'

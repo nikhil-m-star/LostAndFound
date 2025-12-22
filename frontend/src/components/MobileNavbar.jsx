@@ -63,7 +63,7 @@ export default function MobileNavbar() {
                             <FiBox /> <span>My Reports</span>
                         </NavLink>
 
-                        <NavLink to="/users" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
+                        <NavLink to="/admin/users" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
                             <FiUsers /> <span>All Users</span>
                         </NavLink>
 
