@@ -10,9 +10,29 @@ export default function MyReports() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
+    const [debugUser, setDebugUser] = useState(null)
+
     useEffect(() => {
         fetchMyItems()
+        fetchCurrentUser()
     }, [])
+
+    const fetchCurrentUser = async () => {
+        try {
+            const token = await getToken()
+            const base = import.meta.env.VITE_API_BASE || '/api'
+            const res = await fetch(`${base}/auth/me`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            if (res.ok) {
+                const data = await res.json()
+                setDebugUser(data)
+                console.log('Current DB User:', data)
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
 
     const fetchMyItems = async () => {
         try {
@@ -59,6 +79,15 @@ export default function MyReports() {
                             <Card item={item} />
                         </motion.div>
                     ))}
+                </div>
+            )}
+            {/* DEBUG INFO: Remove after fixing */}
+            {debugUser && (
+                <div style={{ marginTop: 40, padding: 20, background: '#333', borderRadius: 8, fontSize: 12, fontFamily: 'monospace' }}>
+                    <p style={{ color: '#aaa' }}>DEBUG INFO (Please report this ID):</p>
+                    <p>Database User ID: <span style={{ color: 'var(--accent)' }}>{debugUser.id}</span></p>
+                    <p>Email: {debugUser.email}</p>
+                    <p>Clerk ID: {debugUser.clerk_id}</p>
                 </div>
             )}
         </div>

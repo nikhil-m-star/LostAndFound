@@ -110,11 +110,14 @@ router.post('/', auth, upload.array('images', 6), async (req, res) => {
 // Get current user's items
 router.get('/my-items', auth, async (req, res) => {
   try {
+    console.log(`[DEBUG] GET /my-items using User ID: ${req.user.id}`);
     const { data, error } = await supabase
       .from('items')
       .select('*, reported_by:users (id, name, email)')
       .eq('reported_by', req.user.id)
       .order('created_at', { ascending: false });
+
+    console.log(`[DEBUG] Found ${data?.length} items for user ${req.user.id}`);
 
     if (error) throw error;
 
