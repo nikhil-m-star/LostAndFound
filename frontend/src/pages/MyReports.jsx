@@ -89,7 +89,12 @@ export default function MyReports() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.3, delay: index * 0.05 }}
                         >
-                            <Card item={item} />
+                            <Card
+                                title={item.title}
+                                subtitle={item.status}
+                                image={item.images?.[0]?.url}
+                                onClick={() => window.location.href = `/items/${item._id}`}
+                            />
                         </motion.div>
                     ))}
                 </div>
