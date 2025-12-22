@@ -58,17 +58,6 @@ exports.processQuery = async (userText) => {
 
             // Keyword Search
             if (analysis.keywords && analysis.keywords.length > 0) {
-                // Construct OR filter for keywords
-                // For Supabase, we can use the .or() filter logic
-                // but combining multiple .or() calls can be tricky.
-                // Let's do a logic where we match ANY of the keywords in ANY of the fields (title, desc, category)
-                // This is complex in PostgREST. 
-                // Simplified approach: Search for the first/main keyword or use textSearch if column supported.
-                // Better approach: use ilike logic for each keyword on relevant columns.
-
-                // Let's try to verify if keywords exist.
-                // We will construct a single OR string for all keywords against title/desc/cat/loc 
-                // This might be too loose, but good for "Found It" logic.
                 const orClauses = [];
                 analysis.keywords.forEach(kw => {
                     orClauses.push(`title.ilike.%${kw}%`);
@@ -78,6 +67,11 @@ exports.processQuery = async (userText) => {
                 if (orClauses.length > 0) {
                     query = query.or(orClauses.join(','));
                 }
+            } else {
+                // FALLBACK: If no keywords, but intent is specific (lost/found), 
+                // just return recent items of that status to be helpful.
+                // We don't filter by keyword, so we rely on sorting by date below.
+                console.log('[Gemini] No keywords extracted, fetching recent items for intent:', analysis.intent);
             }
 
             // Location Search

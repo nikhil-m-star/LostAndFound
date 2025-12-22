@@ -38,9 +38,9 @@ export default function AdminUsers() {
                 background: 'rgba(255,255,255,0.05)',
                 borderRadius: 12,
                 border: '1px solid var(--glass)',
-                overflow: 'hidden'
+                overflowX: 'auto' // Allow horizontal scroll on mobile
             }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <table style={{ width: '100%', minWidth: '600px', borderCollapse: 'collapse', textAlign: 'left' }}>
                     <thead style={{ background: 'rgba(0,0,0,0.3)' }}>
                         <tr>
                             <th style={{ padding: 15, borderBottom: '1px solid var(--glass)' }}>Name</th>
