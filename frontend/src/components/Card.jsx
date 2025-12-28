@@ -76,7 +76,7 @@ export default function Card({ id, title, subtitle, image, onClick }) {
         {image ? (
           <img src={image} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }} />
         ) : (
-          <div style={{ width: '100%', height: '100%', backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, color: '#999' }}>
+          <div style={{ width: '100%', aspectRatio: '1/1', backgroundColor: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, color: '#555', border: '1px solid #222' }}>
             No Image
           </div>
         )}
