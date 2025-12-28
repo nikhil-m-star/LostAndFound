@@ -291,16 +291,20 @@ h3 {
 }
 
 .grid {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 	gap: 32px;
 	width: 100%;
 }
 
 .card {
 	background: transparent;
-	width: 280px;
+	width: 100%;
+	/* Allow cards to fill grid cells */
+	max-width: 400px;
+	/* Prevent becoming too wide on large screens if row isn't full */
+	margin: 0 auto;
+	/* Center in cell if max-width hit */
 	padding: 20px;
 	border-radius: 16px;
 	display: flex;
