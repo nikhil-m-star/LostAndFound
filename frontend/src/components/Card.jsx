@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 
 export default function Card({ id, title, subtitle, image, onClick }) {
   const ref = useRef(null)
+  const [imgError, setImgError] = React.useState(false)
 
   // Motion values for mouse position relative to the card center
   const x = useMotionValue(0)
@@ -73,8 +74,13 @@ export default function Card({ id, title, subtitle, image, onClick }) {
 
       <div className="thumb" style={{ transform: "translateZ(20px)" }}>
         {/* translateZ makes image pop out */}
-        {image ? (
-          <img src={image} alt={title} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }} />
+        {image && !imgError ? (
+          <img
+            src={image}
+            alt={title}
+            onError={() => setImgError(true)}
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }}
+          />
         ) : (
           <div style={{ position: 'absolute', inset: 0, backgroundColor: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, color: '#555', border: '1px solid #222' }}>
             No Image
