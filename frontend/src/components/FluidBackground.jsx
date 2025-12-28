@@ -16,7 +16,7 @@ const FluidBackground = () => {
                 zIndex: -1,
                 overflow: 'hidden',
                 pointerEvents: 'none',
-                background: '#030303'
+                background: 'var(--bg-gradient)'
             }}
         >
             {/* Blob 1: Top-Left moving to Center */}

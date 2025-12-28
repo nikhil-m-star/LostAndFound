@@ -45,12 +45,9 @@ body {
 	font-family: 'Poppins', Inter, system-ui, Arial, sans-serif;
 	margin: 0;
 	padding: 0;
-	background: var(--bg-gradient);
+	/* Background moved to FluidBackground for performance */
+	background-color: #050505;
 	color: var(--text);
-	background-attachment: fixed;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: cover;
 	font-size: var(--base-font-size);
 	background-color: #050505;
 }
@@ -402,6 +399,7 @@ select option {
 .card .thumb {
 	width: 100%;
 	height: auto;
+	position: relative;
 	aspect-ratio: 1 / 1;
 	flex-shrink: 0;
 	border-radius: 12px;
