@@ -96,7 +96,7 @@ router.post('/', auth, upload.array('images', 6), async (req, res) => {
       contactMethod: item.contact_method,
       contactPhone: item.contact_phone,
       reportedBy: item.reported_by,
-      // _id: item.id // Alias for mongo compatibility if needed
+      _id: item.id // Alias for mongo compatibility if needed
     });
 
     res.json(mapItem(data));
