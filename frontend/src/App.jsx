@@ -16,6 +16,7 @@ import Sidebar from './components/Sidebar'
 import UserMenu from './components/UserMenu'
 import MobileNavbar from './components/MobileNavbar'
 import FluidBackground from './components/FluidBackground'
+import PrivateRoute from './components/PrivateRoute'
 
 export default function App() {
   return (
@@ -26,16 +27,51 @@ export default function App() {
       <main className="main-content" style={{ position: 'relative' }}>
         <UserMenu />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/report/found" element={<ReportFound />} />
-          <Route path="/report/lost" element={<ReportLost />} />
-          <Route path="/items/:id" element={<ItemDetail />} />
+          {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/ai-chat" element={<AIChat />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/my-reports" element={<MyReports />} />
-          <Route path="/admin/users" element={<AdminUsers />} />
+
+          {/* Protected Routes */}
+          <Route path="/" element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          } />
+          <Route path="/report/found" element={
+            <PrivateRoute>
+              <ReportFound />
+            </PrivateRoute>
+          } />
+          <Route path="/report/lost" element={
+            <PrivateRoute>
+              <ReportLost />
+            </PrivateRoute>
+          } />
+          <Route path="/items/:id" element={
+            <PrivateRoute>
+              <ItemDetail />
+            </PrivateRoute>
+          } />
+          <Route path="/ai-chat" element={
+            <PrivateRoute>
+              <AIChat />
+            </PrivateRoute>
+          } />
+          <Route path="/chat" element={
+            <PrivateRoute>
+              <Chat />
+            </PrivateRoute>
+          } />
+          <Route path="/my-reports" element={
+            <PrivateRoute>
+              <MyReports />
+            </PrivateRoute>
+          } />
+          <Route path="/admin/users" element={
+            <PrivateRoute>
+              <AdminUsers />
+            </PrivateRoute>
+          } />
         </Routes>
       </main>
       {/* Player removed — not needed for Lost & Found app */}
