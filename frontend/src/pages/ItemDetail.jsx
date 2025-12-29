@@ -41,7 +41,7 @@ export default function ItemDetail() {
         contactPhone: data.contactPhone || ''
       })
 
-      // Check if current user is the owner
+      // Check if current user is the owner OR Admin
       if (userId && data.reportedBy) {
         try {
           const token = await getToken();
@@ -50,7 +50,9 @@ export default function ItemDetail() {
           })
           if (userRes.ok) {
             const user = await userRes.json()
-            setIsOwner(user._id === data.reportedBy._id || user._id === data.reportedBy.toString())
+            const isAdmin = user.email === 'nikhilm.cs24@bmsce.ac.in';
+            // Allow if owner OR admin
+            setIsOwner(user._id === data.reportedBy._id || user._id === data.reportedBy.toString() || isAdmin)
           }
         } catch (e) {
           console.error('Error checking ownership:', e)

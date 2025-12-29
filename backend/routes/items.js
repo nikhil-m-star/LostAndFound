@@ -282,8 +282,15 @@ router.delete('/:id', auth, async (req, res) => {
 
     if (fetchError || !existingItem) return res.status(404).json({ message: 'Item not found' });
 
-    if (existingItem.reported_by !== req.user.id) {
+    const ADMIN_EMAIL = 'nikhilm.cs24@bmsce.ac.in';
+    const isAdmin = req.user.email === ADMIN_EMAIL;
+
+    if (existingItem.reported_by !== req.user.id && !isAdmin) {
       return res.status(403).json({ message: 'Not authorized to delete this item' });
+    }
+
+    if (isAdmin && existingItem.reported_by !== req.user.id) {
+      console.log(`[ADMIN DELETE] Admin ${req.user.email} deleting item ${req.params.id} owned by ${existingItem.reported_by}`);
     }
 
     // Delete images from Cloudinary if they exist
