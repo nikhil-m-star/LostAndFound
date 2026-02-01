@@ -107,7 +107,17 @@ export default function Home() {
               </div>
             )}
             {isSignedIn && (
-              <div className="welcome-section" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <div className="recent-reports-section" style={{ width: '100%', maxWidth: '1200px', margin: '40px 0 20px 0' }}>
+                <h2 className="section-title" style={{
+                  fontSize: '28px',
+                  fontWeight: 900,
+                  borderBottom: '4px solid black',
+                  display: 'inline-block',
+                  marginBottom: '24px',
+                  paddingRight: '20px'
+                }}>
+                  RECENT REPORTS
+                </h2>
                 <button
                   onClick={() => navigate('/report/lost')}
                   className="primary-action-btn shadow-red bg-red"

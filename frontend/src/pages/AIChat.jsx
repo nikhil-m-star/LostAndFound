@@ -138,23 +138,42 @@ export default function AIChat() {
                     </div>
                 </div>
 
-                <div className="chat-toggles">
+                <div className="chat-toggles" style={{ display: 'flex', gap: '0' }}>
                     <button
-                        className="mode-toggle"
                         onClick={() => setMode('chat')}
                         style={{
-                            background: mode === 'chat' ? 'var(--accent-muted)' : 'transparent',
-                            color: mode === 'chat' ? '#fff' : 'var(--muted)',
+                            flex: 1,
+                            padding: '12px 24px',
+                            background: mode === 'chat' ? 'var(--neo-black)' : 'transparent',
+                            color: mode === 'chat' ? 'var(--neo-white)' : 'var(--neo-black)',
+                            border: '3px solid var(--neo-black)',
+                            borderRight: 'none',
+                            fontWeight: 900,
+                            textTransform: 'uppercase',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            transition: 'all 0.1s ease'
                         }}
                     >
                         <FiMessageSquare /> Chat
                     </button>
                     <button
-                        className="mode-toggle"
                         onClick={() => setMode('search')}
                         style={{
-                            background: mode === 'search' ? 'var(--accent-muted)' : 'transparent',
-                            color: mode === 'search' ? '#fff' : 'var(--muted)',
+                            flex: 1,
+                            padding: '12px 24px',
+                            background: mode === 'search' ? 'var(--neo-black)' : 'transparent',
+                            color: mode === 'search' ? 'var(--neo-white)' : 'var(--neo-black)',
+                            border: '3px solid var(--neo-black)',
+                            fontWeight: 900,
+                            textTransform: 'uppercase',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            transition: 'all 0.1s ease'
                         }}
                     >
                         <FiSearch /> Search
@@ -274,7 +293,7 @@ export default function AIChat() {
                                 transition: 'all 0.1s ease',
                                 flexShrink: 0
                             }} disabled={!chatInput.trim()}>
-                                <FiSend size={24} style={{ stroke: chatInput.trim() ? 'white' : 'black' }} />
+                                <FiSend size={24} style={{ stroke: chatInput.trim() ? '#ffffff' : '#000000', strokeWidth: 2 }} />
                             </button>
                         </div>
                     </form>
