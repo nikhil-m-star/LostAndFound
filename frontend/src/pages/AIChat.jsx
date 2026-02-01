@@ -132,10 +132,6 @@ export default function AIChat() {
                     <div className="chat-icon-circle">
                         {mode === 'chat' ? <FiCpu size={24} color="#000" /> : <FiSearch size={24} color="#000" />}
                     </div>
-                    <div>
-                        <div className="chat-title-text">{mode === 'chat' ? 'AI Assistant' : 'Search Items'}</div>
-                        <div className="chat-subtitle-text">{mode === 'chat' ? 'Ask me anything' : 'Find quickly'}</div>
-                    </div>
                 </div>
 
                 <div className="chat-toggles" style={{ display: 'flex', gap: '16px' }}>
@@ -231,12 +227,7 @@ export default function AIChat() {
                         ))}
                         <div ref={bottomRef} style={{ height: '10px' }} />
 
-                        {/* Suggestions */}
-                        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '16px' }}>
-                            <button className="shadow-red bg-red" onClick={() => handleSuggestion("I lost my keys")} style={{ flex: 1, minWidth: '120px', padding: '12px', border: '3px solid black', fontWeight: 900, cursor: 'pointer' }}>LOST KEYS</button>
-                            <button className="shadow-green bg-green" onClick={() => handleSuggestion("Found a phone")} style={{ flex: 1, minWidth: '120px', padding: '12px', border: '3px solid black', fontWeight: 900, cursor: 'pointer' }}>FOUND PHONE</button>
-                            <button className="shadow-violet bg-violet" onClick={() => handleSuggestion("Report an item")} style={{ flex: 1, minWidth: '120px', padding: '12px', border: '3px solid black', fontWeight: 900, cursor: 'pointer' }}>REPORT ITEM</button>
-                        </div>
+                        {/* Suggestions Removed */}
                     </div>
 
                     <form onSubmit={handleSend} className="chat-input-form" style={{
