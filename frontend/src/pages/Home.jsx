@@ -3,9 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useUser, SignUpButton, SignInButton } from '@clerk/clerk-react'
 import { motion } from 'framer-motion'
 import Card from '../components/Card'
-import ThreeDCube from '../components/ThreeDCube'
-import ThreeDPyramid from '../components/ThreeDPyramid'
-import ThreeDRing from '../components/ThreeDRing'
+
 import ScrollReveal from '../components/ScrollReveal'
 import ThemeToggle from '../components/ThemeToggle'
 
@@ -87,29 +85,7 @@ export default function Home() {
       <ScrollReveal>
         <div className="top-hero hero-layout">
           {/* Parallax Wrappers for 3D Elements */}
-          <motion.div
-            className="hero-3d desktop-only"
-            animate={{
-              rotateX: mousePos.y * 11, // Tilts based on vertical mouse pos
-              rotateY: mousePos.x * 12, // Tilts based on horizontal mouse pos
-              x: mousePos.x * -16, // Moves opposite to mouse (parallax)
-              y: mousePos.y * -16
-            }}
-            transition={{ type: "spring", stiffness: 50, damping: 20 }}
-          >
-            <ThreeDPyramid />
-          </motion.div>
 
-          <motion.div
-            className="hero-3d mobile-scale"
-            animate={{
-              rotateX: mousePos.y * 10,
-              rotateY: mousePos.x * 10
-            }}
-            transition={{ type: "spring", stiffness: 50, damping: 20 }}
-          >
-            <ThreeDCube />
-          </motion.div>
 
           <div className="hero-content">
             <div className="page-title intro-title">Welcome to Lost & Found</div>
@@ -147,31 +123,7 @@ export default function Home() {
             )}
           </div>
 
-          <motion.div
-            className="hero-3d mobile-hide"
-            animate={{
-              rotateX: mousePos.y * -10, // Inverted rotation for variety
-              rotateY: mousePos.x * -10,
-              x: mousePos.x * 20,
-              y: mousePos.y * 20
-            }}
-            transition={{ type: "spring", stiffness: 60, damping: 20 }}
-          >
-            <ThreeDCube />
-          </motion.div>
 
-          <motion.div
-            className="hero-3d desktop-only"
-            animate={{
-              rotateX: mousePos.y * 15,
-              rotateY: mousePos.x * 15,
-              x: mousePos.x * -25, // Stronger parallax for rightmost element
-              y: mousePos.y * -25
-            }}
-            transition={{ type: "spring", stiffness: 45, damping: 15 }}
-          >
-            <ThreeDRing />
-          </motion.div>
         </div>
       </ScrollReveal>
 
