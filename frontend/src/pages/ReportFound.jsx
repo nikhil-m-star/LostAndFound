@@ -78,6 +78,14 @@ export default function ReportFound() {
         <p style={{ fontWeight: 700, color: 'var(--muted)', fontSize: '1.2rem' }}>Help return it to its owner.</p>
       </div>
 
+      <style>{`
+        .form-found input:focus,
+        .form-found textarea:focus,
+        .form-found select:focus {
+          background-color: var(--neo-green) !important;
+        }
+      `}</style>
+
       <div className="report-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
         {/* Left: Photos */}
         <div className="form-left">
@@ -88,7 +96,7 @@ export default function ReportFound() {
         </div>
 
         {/* Right: Form */}
-        <div className="form-right">
+        <div className="form-right form-found">
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <div>
               <label className="neo-label">TITLE</label>
@@ -137,7 +145,7 @@ export default function ReportFound() {
               )}
             </div>
 
-            <button type="submit" disabled={loading} style={{ width: '100%', marginTop: '16px', fontSize: '18px', background: 'var(--neo-black)', color: 'var(--neo-white)' }}>
+            <button type="submit" disabled={loading} className="primary-action-btn" style={{ width: '100%', marginTop: '16px', fontSize: '18px', background: 'var(--neo-green)', color: 'var(--neo-black)', border: '3px solid var(--neo-black)' }}>
               {loading ? 'SUBMITTING...' : 'SUBMIT REPORT'}
             </button>
           </form>

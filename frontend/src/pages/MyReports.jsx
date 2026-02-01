@@ -61,6 +61,7 @@ export default function MyReports() {
                                 subtitle={item.status}
                                 image={item.images?.[0]?.url}
                                 onClick={() => window.location.href = `/items/${item._id}`}
+                                variant={['red', 'yellow', 'green', 'violet'][index % 4]}
                             />
                         </motion.div>
                     ))}

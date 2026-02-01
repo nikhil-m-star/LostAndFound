@@ -210,7 +210,7 @@ export default function AIChat() {
 
                                 {msg.results && msg.results.length > 0 && (
                                     <div className="chat-results" style={{ marginTop: '16px', display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                                        {msg.results.map(item => (
+                                        {msg.results.map((item, index) => (
                                             <div key={item._id} style={{ width: '220px' }}>
                                                 <Card
                                                     id={item._id}
@@ -218,6 +218,7 @@ export default function AIChat() {
                                                     subtitle={`${item.status} in ${item.location}`}
                                                     image={item.images?.[0]?.url}
                                                     onClick={() => navigate(`/items/${item._id}`)}
+                                                    variant={['red', 'yellow', 'green', 'violet'][index % 4]}
                                                 />
                                             </div>
                                         ))}
@@ -331,7 +332,7 @@ export default function AIChat() {
                         <div style={{ textAlign: 'center', color: 'var(--neo-black)', fontWeight: 700, marginTop: '40px' }}>No items found matching "{searchQuery}"</div>
                     ) : (
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', justifyContent: 'center' }}>
-                            {filteredItems.map(item => (
+                            {filteredItems.map((item, index) => (
                                 <Card
                                     key={item._id}
                                     id={item._id}
@@ -339,6 +340,7 @@ export default function AIChat() {
                                     subtitle={`${item.status} in ${item.location}`}
                                     image={item.images?.[0]?.url}
                                     onClick={() => navigate(`/items/${item._id}`)}
+                                    variant={['red', 'yellow', 'green', 'violet'][index % 4]}
                                 />
                             ))}
                         </div>
