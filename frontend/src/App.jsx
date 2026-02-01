@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Analytics } from "@vercel/analytics/react"
-import { Routes, Route, useNavigate, Link } from 'react-router-dom'
+import { Routes, Route, useNavigate, Link, useLocation } from 'react-router-dom'
 import { useClerk, useUser } from '@clerk/clerk-react'
 import Home from './pages/Home'
 import ReportFound from './pages/ReportFound'
@@ -16,12 +16,16 @@ import Navbar from './components/Navbar'
 import UserMenu from './components/UserMenu'
 import MobileNavbar from './components/MobileNavbar'
 import PrivateRoute from './components/PrivateRoute'
+import BackgroundShapes from './components/BackgroundShapes'
 
 export default function App() {
+  const location = useLocation();
+
   return (
     <div className="app">
       <Navbar />
       <MobileNavbar />
+      {location.pathname !== '/' && <BackgroundShapes />}
       <main className="main-content" style={{ position: 'relative' }}>
 
         <Routes>
