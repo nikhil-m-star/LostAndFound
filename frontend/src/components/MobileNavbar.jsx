@@ -48,33 +48,31 @@ export default function MobileNavbar() {
 
                     <nav className="mobile-nav-links">
                         <NavLink to="/" end onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
-                            <FiHome /> <span>Home</span>
+                            <span>Home</span>
                         </NavLink>
 
                         <NavLink to="/ai-chat" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
-                            <FiCpu /> <span>AI Assistant</span>
+                            <span>AI Assistant</span>
                         </NavLink>
 
                         <NavLink to="/chat" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
-                            <FiMessageSquare /> <span>Messages</span>
+                            <span>Messages</span>
                         </NavLink>
 
                         <NavLink to="/my-reports" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
-                            <FiBox /> <span>My Reports</span>
+                            <span>My Reports</span>
                         </NavLink>
 
                         <NavLink to="/admin/users" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
-                            <FiUsers /> <span>All Users</span>
+                            <span>All Users</span>
                         </NavLink>
 
-
-
                         <NavLink to="/report/found" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
-                            <MdOutlineReport /> <span>Report Found</span>
+                            <span>Report Found</span>
                         </NavLink>
 
                         <NavLink to="/report/lost" onClick={closeMenu} className={({ isActive }) => isActive ? 'active' : ''}>
-                            <MdOutlineReport /> <span>Report Lost</span>
+                            <span>Report Lost</span>
                         </NavLink>
                     </nav>
 

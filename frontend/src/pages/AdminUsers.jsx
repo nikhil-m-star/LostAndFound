@@ -29,67 +29,33 @@ export default function AdminUsers() {
         }
     }
 
-    if (loading) return <div style={{ padding: 40, color: 'var(--text)' }}>Loading users...</div>
-    if (error) return <div style={{ padding: 40, color: 'red' }}>Error: {error}</div>
+    if (loading) return <div style={{ padding: 40, color: 'var(--neo-black)', fontWeight: 700 }}>Loading users...</div>
+    if (error) return <div style={{ padding: 40, color: 'red', fontWeight: 700 }}>Error: {error}</div>
 
     return (
-        <div style={{ padding: '20px 20px 80px', color: 'var(--text)' }}>
-            <h1 style={{ marginBottom: 20 }}>All Users</h1>
+        <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+            <h1 style={{ marginBottom: 32, textAlign: 'center' }}>All Users</h1>
 
-            {/* Desktop Table View */}
-            <div className="desktop-view">
-                <div style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    borderRadius: 12,
-                    border: '1px solid var(--glass)',
-                    overflow: 'hidden'
-                }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                        <thead style={{ background: 'rgba(0,0,0,0.3)' }}>
-                            <tr>
-                                <th style={{ padding: 15, borderBottom: '1px solid var(--glass)' }}>Name</th>
-                                <th style={{ padding: 15, borderBottom: '1px solid var(--glass)' }}>Email</th>
-                                <th style={{ padding: 15, borderBottom: '1px solid var(--glass)' }}>Joined</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map(user => (
-                                <tr key={user.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                                    <td style={{ padding: 15 }}>{user.name}</td>
-                                    <td style={{ padding: 15, color: 'var(--muted)' }}>{user.email}</td>
-                                    <td style={{ padding: 15, color: 'var(--muted)' }}>
-                                        {new Date(user.created_at).toLocaleDateString()}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            {/* Mobile Card Grid View */}
-            <div className="mobile-view" style={{ flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
                 {users.map(user => (
-                    <div key={user.id} style={{
-                        background: 'rgba(30,30,30,0.6)',
-                        padding: '16px',
-                        borderRadius: '12px',
-                        border: '1px solid var(--glass)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px'
-                    }}>
+                    <div key={user.id} className="neo-card" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
                         <div style={{
-                            width: '40px', height: '40px', borderRadius: '50%',
-                            background: 'var(--accent)', color: '#000',
+                            width: '48px', height: '48px',
+                            background: 'var(--neo-black)',
+                            color: 'var(--neo-white)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: '20px'
+                            fontSize: '24px',
+                            fontWeight: 900,
+                            border: '2px solid var(--neo-black)'
                         }}>
-                            <FiUser />
+                            {user.name.charAt(0).toUpperCase()}
                         </div>
                         <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: '600', fontSize: '16px' }}>{user.name}</div>
-                            <div style={{ fontSize: '14px', color: 'var(--muted)', marginTop: '2px' }}>{user.email}</div>
+                            <div style={{ fontSize: '18px', fontWeight: 900, textTransform: 'uppercase' }}>{user.name}</div>
+                            <div style={{ fontSize: '14px', fontWeight: 700, opacity: 0.8 }}>{user.email}</div>
+                        </div>
+                        <div style={{ fontSize: '14px', fontWeight: 700, display: 'none', md: { display: 'block' } }}>
+                            Joined: {new Date(user.created_at).toLocaleDateString()}
                         </div>
                     </div>
                 ))}
