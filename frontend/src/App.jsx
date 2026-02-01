@@ -25,7 +25,7 @@ export default function App() {
       <Navbar />
       <MobileNavbar />
       <main className="main-content" style={{ position: 'relative' }}>
-        <UserMenu />
+
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
