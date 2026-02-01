@@ -6,17 +6,22 @@ const FluidBackground = () => {
     // 8 blobs: 4 on left, 4 on right (approx), moving in fluid sine waves
 
     const blobs = [
-        // LEFT SIDE CLUSTER (Cyans & Blues)
-        { color: 'var(--neon-cyan)', x: ['-20%', '10%', '-10%'], y: ['-20%', '0%', '-10%'], scale: [1, 1.4, 1], dur: 12, delay: 0 },
-        { color: 'var(--neon-blue)', x: ['-10%', '5%', '-15%'], y: ['20%', '40%', '20%'], scale: [1.2, 0.8, 1.2], dur: 14, delay: 1 },
-        { color: 'var(--purple)', x: ['-5%', '15%', '-5%'], y: ['50%', '30%', '50%'], scale: [0.9, 1.3, 0.9], dur: 16, delay: 2 },
-        { color: 'var(--accent-400)', x: ['-15%', '0%', '-20%'], y: ['80%', '60%', '80%'], scale: [1.1, 0.9, 1.1], dur: 11, delay: 0.5 },
+        // SPREAD OUT & NON-SPHERICAL BLOBS
+        // Left Cluster
+        { color: 'var(--neon-cyan)', x: ['-20%', '20%', '-25%'], y: ['10%', '-10%', '15%'], scale: [1.2, 1.8, 1.2], rotate: [0, 90, 0], borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%', dur: 18, delay: 0 },
+        { color: 'var(--neon-blue)', x: ['-10%', '15%', '-5%'], y: ['40%', '60%', '35%'], scale: [1, 1.5, 1], rotate: [0, -60, 0], borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%', dur: 20, delay: 1 },
 
-        // RIGHT SIDE CLUSTER (Pinks & Purples)
-        { color: 'var(--neon-pink)', x: ['100%', '80%', '100%'], y: ['-10%', '10%', '-10%'], scale: [1, 1.5, 1], dur: 13, delay: 0 },
-        { color: 'var(--neon-purple)', x: ['110%', '90%', '110%'], y: ['30%', '50%', '30%'], scale: [1.3, 0.9, 1.3], dur: 15, delay: 1.5 },
-        { color: 'var(--pink)', x: ['95%', '75%', '95%'], y: ['60%', '80%', '60%'], scale: [0.9, 1.2, 0.9], dur: 12, delay: 0.5 },
-        { color: 'var(--cyan)', x: ['105%', '85%', '105%'], y: ['85%', '65%', '85%'], scale: [1.1, 0.8, 1.1], dur: 14, delay: 2.5 },
+        // Center Cluster
+        { color: 'var(--purple)', x: ['30%', '50%', '30%'], y: ['-10%', '10%', '-15%'], scale: [1.5, 1.1, 1.5], rotate: [0, 45, 0], borderRadius: '50% 20% 50% 80% / 25% 80% 25% 75%', dur: 22, delay: 2 },
+        { color: 'var(--accent-400)', x: ['40%', '60%', '45%'], y: ['80%', '60%', '85%'], scale: [1.2, 1.6, 1.2], rotate: [0, -45, 0], borderRadius: '40% 60% 30% 70% / 50% 30% 60% 40%', dur: 19, delay: 0.5 },
+
+        // Right Cluster
+        { color: 'var(--neon-pink)', x: ['80%', '60%', '85%'], y: ['20%', '5%', '25%'], scale: [1.4, 1.1, 1.4], rotate: [0, 120, 0], borderRadius: '70% 30% 50% 50% / 30% 50% 70% 50%', dur: 21, delay: 0 },
+        { color: 'var(--neon-purple)', x: ['90%', '70%', '95%'], y: ['60%', '80%', '55%'], scale: [1.3, 1.7, 1.3], rotate: [0, -90, 0], borderRadius: '25% 75% 75% 25% / 75% 25% 25% 75%', dur: 23, delay: 1.5 },
+
+        // Extra Floaters
+        { color: 'var(--pink)', x: ['10%', '30%', '5%'], y: ['85%', '65%', '90%'], scale: [1, 1.4, 1], rotate: [0, 180, 0], borderRadius: '60% 40% 40% 60% / 40% 60% 60% 40%', dur: 25, delay: 3 },
+        { color: 'var(--cyan)', x: ['85%', '65%', '90%'], y: ['-5%', '15%', '-10%'], scale: [1.4, 1, 1.4], rotate: [0, -120, 0], borderRadius: '40% 60% 70% 30% / 50% 30% 60% 40%', dur: 24, delay: 2.5 },
     ];
 
     return (
@@ -44,18 +49,20 @@ const FluidBackground = () => {
                         position: 'absolute',
                         left: 0,
                         top: 0,
-                        width: '50vmax',
-                        height: '50vmax',
-                        borderRadius: '50%',
+                        width: '60vmax',
+                        height: '50vmax', // Slightly flattened aspect ratio
+                        borderRadius: blob.borderRadius,
                         background: `radial-gradient(circle at center, ${blob.color}, transparent 65%)`,
                         filter: 'blur(80px)',
-                        opacity: 0.5,
+                        opacity: 0.45,
                         mixBlendMode: 'screen',
                     }}
                     animate={{
                         x: blob.x,
                         y: blob.y,
                         scale: blob.scale,
+                        rotate: blob.rotate,
+                        borderRadius: blob.borderRadius, // Animate shape slightly if possible, or just keep it static irregular
                     }}
                     transition={{
                         duration: blob.dur,
