@@ -238,8 +238,108 @@ img {
 }
 
 /* Fix for UserMenu button image needing to be small */
+/* Fix for UserMenu button image needing to be small */
 .user-btn img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+}
+
+/* --- RESPONSIVE VISIBILITY RULES --- */
+
+/* Default: Show Desktop, Hide Mobile components */
+.floating-menu-btn,
+.mobile-menu,
+.mobile-menu-overlay {
+	display: none !important;
+}
+
+/* Mobile Screens (max-width: 768px) */
+@media (max-width: 768px) {
+
+	/* Hide Desktop Navbar */
+	.neo-navbar {
+		display: none !important;
+	}
+
+	/* Show Mobile Components */
+	.floating-menu-btn {
+		display: flex !important;
+	}
+
+	/* Mobile Menu styles when open are handled by .open class, but we need to allow display */
+	.mobile-menu,
+	.mobile-menu-overlay {
+		display: block;
+		/* But hidden by opacity/transform usually */
+	}
+}
+
+/* --- MOBILE MENU STYLING FIXES --- */
+.mobile-user-avatar {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	overflow: hidden;
+	border: 3px solid var(--neo-black);
+	margin-bottom: 8px;
+}
+
+.mobile-user-avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.mobile-user-info {
+	color: var(--neo-black);
+	text-align: center;
+}
+
+.mobile-brand-header {
+	color: var(--neo-black);
+	font-weight: 900;
+	font-size: 24px;
+	text-transform: uppercase;
+}
+
+/* --- TEXT VISIBILITY FIXES --- */
+/* Force all text to black unless explicitly overridden */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div {
+	color: var(--neo-black);
+}
+
+/* Re-apply white text only where needed (e.g. inside dark buttons or specific cards) */
+.primary-btn,
+.neo-nav-link:hover,
+.neo-nav-link.active {
+	color: var(--neo-black) !important;
+	/* Keep black for neo-brutalism usually */
+}
+
+/* Exception: Text inside black backgrounds might need to be white */
+.bg-black,
+[style*="background-color: #000"],
+[style*="background: #000"] {
+	color: var(--neo-white) !important;
+}
+
+/* Fix User Menu Dropdown Text */
+.user-dropdown {
+	background: var(--neo-white) !important;
+	border: 3px solid var(--neo-black) !important;
+	color: var(--neo-black) !important;
+	box-shadow: 8px 8px 0 0 var(--neo-black) !important;
+}
+
+.user-dropdown div {
+	color: var(--neo-black) !important;
 }
