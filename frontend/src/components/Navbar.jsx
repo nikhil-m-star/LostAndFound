@@ -5,35 +5,40 @@ import { FiHome, FiCpu, FiMessageSquare, FiUsers, FiBox, FiSearch, FiPlusCircle 
 import UserMenu from './UserMenu'
 
 export default function Navbar() {
-    const { user } = useUser()
+    const { user, isSignedIn } = useUser() // Added isSignedIn
     const isAdmin = user?.primaryEmailAddress?.emailAddress === 'nikhilm.cs24@bmsce.ac.in'
 
     return (
         <nav className="neo-navbar">
             <div className="neo-brand">Lost & Found</div>
             <div className="neo-nav-links" style={{ display: 'flex', gap: '16px' }}>
-                <NavLink to="/" end className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="Home">
+                <NavLink to="/" end className={({ isActive }) => `neo-nav-link hover-red ${isActive ? 'active' : ''}`} title="Home">
                     <span>Home</span>
                 </NavLink>
-                <NavLink to="/ai-chat" className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="AI Assistant">
-                    <span>AI</span>
-                </NavLink>
-                <NavLink to="/chat" className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="Messages">
-                    <span>Chat</span>
-                </NavLink>
-                <NavLink to="/report/found" className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="Report Found">
-                    <span>Found</span>
-                </NavLink>
-                <NavLink to="/report/lost" className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="Report Lost">
-                    <span>Lost</span>
-                </NavLink>
-                <NavLink to="/my-reports" className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="My Reports">
-                    <span>My Items</span>
-                </NavLink>
-                {isAdmin && (
-                    <NavLink to="/admin/users" className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="All Users">
-                        <span>Users</span>
-                    </NavLink>
+                {isSignedIn && (
+                    <>
+                        <NavLink to="/ai-chat" className={({ isActive }) => `neo-nav-link hover-yellow ${isActive ? 'active' : ''}`} title="AI Assistant">
+                            <span>AI</span>
+                        </NavLink>
+                        <NavLink to="/chat" className={({ isActive }) => `neo-nav-link hover-violet ${isActive ? 'active' : ''}`} title="Messages">
+                            <span>Chat</span>
+                        </NavLink>
+                        <NavLink to="/report/found" className={({ isActive }) => `neo-nav-link hover-green ${isActive ? 'active' : ''}`} title="Report Found">
+                            <span>Found</span>
+                        </NavLink>
+                        <NavLink to="/report/lost" className={({ isActive }) => `neo-nav-link hover-red ${isActive ? 'active' : ''}`} title="Report Lost">
+                            <span>Lost</span>
+                        </NavLink>
+                        <NavLink to="/my-reports" className={({ isActive }) => `neo-nav-link hover-yellow ${isActive ? 'active' : ''}`} title="My Reports">
+                            <span>My Reports</span>
+                        </NavLink>
+
+                        {isAdmin && (
+                            <NavLink to="/admin/users" className={({ isActive }) => `neo-nav-link hover-black ${isActive ? 'active' : ''}`} title="Admin Users">
+                                <span>Users</span>
+                            </NavLink>
+                        )}
+                    </>
                 )}
             </div>
 

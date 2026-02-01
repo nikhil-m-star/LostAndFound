@@ -159,17 +159,22 @@ export default function Home() {
           whileInView="show"
           viewport={{ once: true, margin: "-50px" }}
         >
-          {items.map((item) => (
-            <motion.div key={item._id} variants={itemVariants}>
-              <Card
-                id={item._id}
-                title={item.title}
-                subtitle={`${item.status === 'lost' ? 'Lost' : 'Found'} ${item.location ? `at ${item.location}` : ''}`}
-                image={item.images && item.images.length > 0 ? item.images[0].url : null}
-                onClick={() => handleCardClick(item._id)}
-              />
-            </motion.div>
-          ))}
+          {items.map((item, index) => {
+            const variants = ['red', 'yellow', 'green', 'violet'];
+            const variant = variants[index % variants.length];
+            return (
+              <motion.div key={item._id} variants={itemVariants}>
+                <Card
+                  id={item._id}
+                  title={item.title}
+                  subtitle={`${item.status === 'lost' ? 'Lost' : 'Found'} ${item.location ? `at ${item.location}` : ''}`}
+                  image={item.images && item.images.length > 0 ? item.images[0].url : null}
+                  onClick={() => handleCardClick(item._id)}
+                  variant={variant}
+                />
+              </motion.div>
+            )
+          })}
         </motion.div>
       )}
     </div>

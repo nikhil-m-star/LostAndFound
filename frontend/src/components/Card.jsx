@@ -1,17 +1,21 @@
 import React from 'react'
 
-export default function Card({ id, title, subtitle, image, onClick }) {
-  // Neo-Brutalism Card: Simple structural HTML, heavier lifting done by CSS
+export default function Card({ id, title, subtitle, image, onClick, variant = 'black' }) {
+  // Map variant to shadow/bg classes
+  const shadowClass = `shadow-${variant}`
+  const bgClass = `bg-${variant}`
+
   return (
     <div
-      className="neo-card"
+      className={`neo-card ${shadowClass}`}
       onClick={onClick}
       style={{
         cursor: onClick ? 'pointer' : 'default',
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        gap: '16px'
+        gap: '16px',
+        transition: 'all 0.2s cubic-bezier(0, 0, 0.2, 1)'
       }}
     >
       {/* Image Container with Border */}
@@ -34,16 +38,15 @@ export default function Card({ id, title, subtitle, image, onClick }) {
             }}
           />
         ) : (
-          <div style={{
+          <div className={bgClass} style={{
             height: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'var(--neo-yellow)',
-            color: 'black',
             fontWeight: '900',
             textTransform: 'uppercase',
-            fontSize: '24px'
+            fontSize: '24px',
+            color: 'black'
           }}>
             No Image
           </div>

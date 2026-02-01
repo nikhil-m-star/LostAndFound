@@ -13,6 +13,8 @@
 	/* Secondary Highlight */
 	--neo-violet: #C4B5FD;
 	/* Tertiary/Muted */
+	--neo-green: #2ECC71;
+	/* Success/Vibrant */
 
 	/* Semantic Mappings */
 	--bg: var(--neo-bg);
@@ -28,6 +30,63 @@
 	--neo-shadow-active: 0px 0px 0px 0px var(--neo-black);
 
 	--base-font-size: 18px;
+}
+
+/* Color Utilities for Dynamic Shadows & Borders */
+.shadow-red {
+	box-shadow: 6px 6px 0 var(--neo-red) !important;
+}
+
+.shadow-yellow {
+	box-shadow: 6px 6px 0 var(--neo-yellow) !important;
+}
+
+.shadow-violet {
+	box-shadow: 6px 6px 0 var(--neo-violet) !important;
+}
+
+.shadow-green {
+	box-shadow: 6px 6px 0 var(--neo-green) !important;
+}
+
+.shadow-black {
+	box-shadow: 6px 6px 0 var(--neo-black) !important;
+}
+
+.bg-red {
+	background-color: var(--neo-red) !important;
+	color: black !important;
+}
+
+.bg-yellow {
+	background-color: var(--neo-yellow) !important;
+	color: black !important;
+}
+
+.bg-violet {
+	background-color: var(--neo-violet) !important;
+	color: black !important;
+}
+
+.bg-green {
+	background-color: var(--neo-green) !important;
+	color: black !important;
+}
+
+.hover-red:hover {
+	background-color: var(--neo-red) !important;
+}
+
+.hover-yellow:hover {
+	background-color: var(--neo-yellow) !important;
+}
+
+.hover-violet:hover {
+	background-color: var(--neo-violet) !important;
+}
+
+.hover-green:hover {
+	background-color: var(--neo-green) !important;
 }
 
 * {
