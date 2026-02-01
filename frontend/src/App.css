@@ -505,7 +505,7 @@ select option {
 }
 
 .report-form button:hover {
-	background: linear-gradient(90deg, var(--accent), var(--accent-400));
+	background: linear-gradient(90deg, var(--cyan), var(--purple));
 	transform: translateY(-1px);
 	/* box-shadow handled by global rule */
 }
@@ -536,8 +536,8 @@ select option {
 }
 
 .file-drop:hover {
-	border-color: var(--neon-green-strong);
-	box-shadow: 0 14px 46px var(--accent-muted);
+	border-color: var(--cyan);
+	box-shadow: 0 14px 46px rgba(0, 243, 255, 0.1);
 }
 
 .thumb-preview {
@@ -595,7 +595,8 @@ select option {
 
 .sidebar a.active,
 .sidebar a:hover {
-	background: var(--accent-muted);
+	background: rgba(0, 243, 255, 0.15);
+	/* cyan muted */
 	color: white;
 }
 
