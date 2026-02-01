@@ -87,11 +87,9 @@ export default function Home() {
           {/* Parallax Wrappers for 3D Elements */}
 
 
-          <div className="hero-content">
-            <div className="page-title intro-title">Welcome to Lost & Found</div>
+          <div className="hero-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', paddingTop: '40px' }}>
 
             {!isSignedIn && (
-              // ... existing code ...
               <div className="auth-card">
                 <h4 className="auth-title">Join the Community</h4>
                 <div className="auth-buttons">
@@ -109,9 +107,24 @@ export default function Home() {
               </div>
             )}
             {isSignedIn && (
-              <div className="welcome-section">
-                <button onClick={() => navigate('/report/lost')} className="primary-action-btn">
-                  Report an Item
+              <div className="welcome-section" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                <button
+                  onClick={() => navigate('/report/lost')}
+                  className="primary-action-btn shadow-red bg-red"
+                  style={{
+                    fontSize: '24px',
+                    padding: '24px 48px',
+                    border: '4px solid black',
+                    fontWeight: 900,
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                    transform: 'rotate(-2deg)',
+                    transition: 'all 0.2s cubic-bezier(0, 0, 0.2, 1)'
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'rotate(0deg) scale(1.05)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'rotate(-2deg) scale(1)'; }}
+                >
+                  REPORT AN ITEM
                 </button>
               </div>
             )}

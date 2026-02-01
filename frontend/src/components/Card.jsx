@@ -2,12 +2,12 @@ import React from 'react'
 
 export default function Card({ id, title, subtitle, image, onClick, variant = 'black' }) {
   // Map variant to shadow/bg classes
-  const shadowClass = `shadow-${variant}`
-  const bgClass = `bg-${variant}`
+  const shadowClass = `shadow-black` // Fixed black shadow for contrast against colored card
+  const bgClass = `bg-${variant}` // Card itself is colored
 
   return (
     <div
-      className={`neo-card ${shadowClass}`}
+      className={`neo-card ${bgClass} ${shadowClass}`}
       onClick={onClick}
       style={{
         cursor: onClick ? 'pointer' : 'default',
@@ -15,7 +15,8 @@ export default function Card({ id, title, subtitle, image, onClick, variant = 'b
         display: 'flex',
         flexDirection: 'column',
         gap: '16px',
-        transition: 'all 0.2s cubic-bezier(0, 0, 0.2, 1)'
+        transition: 'all 0.2s cubic-bezier(0, 0, 0.2, 1)',
+        border: '4px solid black'
       }}
     >
       {/* Image Container with Border */}
@@ -38,15 +39,16 @@ export default function Card({ id, title, subtitle, image, onClick, variant = 'b
             }}
           />
         ) : (
-          <div className={bgClass} style={{
+          <div style={{
             height: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            backgroundColor: 'var(--neo-white)', // White bg for placeholder if card is colored
+            color: 'black',
             fontWeight: '900',
             textTransform: 'uppercase',
-            fontSize: '24px',
-            color: 'black'
+            fontSize: '24px'
           }}>
             No Image
           </div>

@@ -274,7 +274,7 @@ export default function AIChat() {
                                 transition: 'all 0.1s ease',
                                 flexShrink: 0
                             }} disabled={!chatInput.trim()}>
-                                <FiSend size={24} color={chatInput.trim() ? 'white' : 'black'} />
+                                <FiSend size={24} style={{ stroke: chatInput.trim() ? 'white' : 'black' }} />
                             </button>
                         </div>
                     </form>
