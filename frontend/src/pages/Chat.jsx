@@ -410,9 +410,29 @@ export default function Chat() {
                                 }}
                             />
                             <button type="submit" disabled={!newMessage.trim()} style={{
-                                background: 'var(--neo-white)', color: 'var(--neo-black)', border: '2px solid var(--neo-black)', width: '48px', height: '48px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                background: '#FFFFFF',
+                                color: '#000000',
+                                border: '2px solid #000000',
+                                width: '48px',
+                                height: '48px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
                             }}>
-                                <FiSend size={24} style={{ stroke: 'black', strokeWidth: 2 }} />
+                                <svg
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="black"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
                             </button>
                         </form>
                     </>
