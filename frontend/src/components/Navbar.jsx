@@ -9,33 +9,30 @@ export default function Navbar() {
     const isAdmin = user?.primaryEmailAddress?.emailAddress === 'nikhilm.cs24@bmsce.ac.in'
 
     return (
-        <nav className="liquid-navbar glass-card" style={{ width: 'auto', aspectRatio: 'auto', borderRadius: '50px', padding: '10px 30px' }}>
-            <div className="glass-overlay" />
-            <div className="glass-specular" />
-
-            <div className="brand" style={{ position: 'relative', zIndex: 10 }}>Lost & Found</div>
-            <div className="nav-links" style={{ position: 'relative', zIndex: 10 }}>
-                <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''} title="Home">
-                    <FiHome /> <span>Home</span>
+        <nav className="neo-navbar">
+            <div className="neo-brand">Lost & Found</div>
+            <div className="neo-nav-links" style={{ display: 'flex', gap: '16px' }}>
+                <NavLink to="/" end className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="Home">
+                    <span>Home</span>
                 </NavLink>
-                <NavLink to="/ai-chat" className={({ isActive }) => isActive ? 'active' : ''} title="AI Assistant">
-                    <FiCpu /> <span>AI</span>
+                <NavLink to="/ai-chat" className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="AI Assistant">
+                    <span>AI</span>
                 </NavLink>
-                <NavLink to="/chat" className={({ isActive }) => isActive ? 'active' : ''} title="Messages">
-                    <FiMessageSquare /> <span>Chat</span>
+                <NavLink to="/chat" className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="Messages">
+                    <span>Chat</span>
                 </NavLink>
-                <NavLink to="/report/found" className={({ isActive }) => isActive ? 'active' : ''} title="Report Found">
-                    <FiPlusCircle /> <span>Found</span>
+                <NavLink to="/report/found" className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="Report Found">
+                    <span>Found</span>
                 </NavLink>
-                <NavLink to="/report/lost" className={({ isActive }) => isActive ? 'active' : ''} title="Report Lost">
-                    <FiSearch /> <span>Lost</span>
+                <NavLink to="/report/lost" className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="Report Lost">
+                    <span>Lost</span>
                 </NavLink>
-                <NavLink to="/my-reports" className={({ isActive }) => isActive ? 'active' : ''} title="My Reports">
-                    <FiBox /> <span>My Items</span>
+                <NavLink to="/my-reports" className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="My Reports">
+                    <span>My Items</span>
                 </NavLink>
                 {isAdmin && (
-                    <NavLink to="/admin/users" className={({ isActive }) => isActive ? 'active' : ''} title="All Users">
-                        <FiUsers /> <span>Users</span>
+                    <NavLink to="/admin/users" className={({ isActive }) => `neo-nav-link ${isActive ? 'active' : ''}`} title="All Users">
+                        <span>Users</span>
                     </NavLink>
                 )}
             </div>

@@ -15,13 +15,11 @@ import AdminUsers from './pages/AdminUsers'
 import Navbar from './components/Navbar'
 import UserMenu from './components/UserMenu'
 import MobileNavbar from './components/MobileNavbar'
-import FluidBackground from './components/FluidBackground'
 import PrivateRoute from './components/PrivateRoute'
 
 export default function App() {
   return (
     <div className="app">
-      <FluidBackground />
       <Navbar />
       <MobileNavbar />
       <main className="main-content" style={{ position: 'relative' }}>
