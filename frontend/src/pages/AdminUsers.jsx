@@ -48,7 +48,11 @@ export default function AdminUsers() {
                             fontWeight: 900,
                             border: '2px solid var(--neo-black)'
                         }}>
-                            {user.name.charAt(0).toUpperCase()}
+                            {user.imageUrl ? (
+                                <img src={user.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={user.name} />
+                            ) : (
+                                user.name.charAt(0).toUpperCase()
+                            )}
                         </div>
                         <div style={{ flex: 1 }}>
                             <div style={{ fontSize: '18px', fontWeight: 900, textTransform: 'uppercase' }}>{user.name}</div>

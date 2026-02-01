@@ -238,55 +238,71 @@ export default function Chat() {
     }
 
     return (
-        <div className={`chat-page-container ${activeConversation ? 'mobile-view-thread' : ''}`}>
-            <div className="chat-sidebar">
-                <div className="chat-sidebar-header">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                        <button onClick={() => navigate('/')} className="back-link" style={{ padding: 0, fontSize: '15px' }}>
-                            <FiArrowLeft style={{ marginBottom: '-2px' }} /> Back to Home
+        <div className={`chat-page-container ${activeConversation ? 'mobile-view-thread' : ''}`} style={{
+            display: 'flex', height: 'calc(100vh - 80px)', background: 'var(--neo-white)', border: '2px solid var(--neo-black)', margin: '20px'
+        }}>
+            <div className="chat-sidebar" style={{
+                width: '320px', borderRight: '2px solid var(--neo-black)', display: 'flex', flexDirection: 'column', background: 'var(--neo-bg)'
+            }}>
+                <div className="chat-sidebar-header" style={{ padding: '16px', borderBottom: '2px solid var(--neo-black)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                        <button onClick={() => navigate('/')} className="back-link" style={{ padding: 0, fontSize: '15px', background: 'transparent', border: 'none', color: 'var(--neo-black)', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <FiArrowLeft /> BACK
                         </button>
 
-                        {/* User Requested Icon to find users */}
                         <button onClick={() => navigate('/admin/users')} style={{
-                            background: 'transparent', border: '1px solid var(--glass)',
-                            color: 'var(--accent)', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer',
-                            display: 'flex', alignItems: 'center', gap: '6px'
+                            background: 'var(--neo-yellow)', border: '2px solid var(--neo-black)',
+                            color: 'var(--neo-black)', padding: '6px 12px', fontSize: '12px', fontWeight: 900,
+                            cursor: 'pointer', boxShadow: '2px 2px 0 var(--neo-black)'
                         }}>
-                            <FiUsers size={18} /> <span style={{ fontSize: '13px' }}>Find Users</span>
+                            FIND USERS
                         </button>
                     </div>
 
-                    <h2>Messages</h2>
+                    <h2 style={{ fontSize: '24px', fontWeight: 900, textTransform: 'uppercase', marginBottom: '16px', color: 'var(--neo-black)' }}>Messages</h2>
                     <input
                         className="chat-search-input"
-                        placeholder="Search users..."
+                        placeholder="SEARCH USERS..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
+                        style={{
+                            width: '100%', padding: '10px', border: '2px solid var(--neo-black)', borderRadius: 0,
+                            fontFamily: 'Space Grotesk', fontWeight: 700, background: 'var(--neo-white)', color: 'var(--neo-black)', outline: 'none'
+                        }}
                     />
                 </div>
-                <div className="conversation-list">
+                <div className="conversation-list" style={{ flex: 1, overflowY: 'auto' }}>
                     {searchQuery.length >= 2 ? (
                         <div className="search-results-list">
-                            <div className="list-label" style={{ padding: '0 15px 10px', color: 'var(--muted)', fontSize: '0.9em' }}>
-                                Search Results
+                            <div className="list-label" style={{ padding: '8px 16px', color: 'var(--neo-black)', fontWeight: 700, background: 'var(--neo-violet)', borderBottom: '2px solid var(--neo-black)' }}>
+                                SEARCH RESULTS
                             </div>
                             {isSearching ? (
-                                <div style={{ padding: '0 15px' }}>Searching...</div>
+                                <div style={{ padding: '16px' }}>Searching...</div>
                             ) : searchResults.length === 0 ? (
-                                <div style={{ padding: '0 15px' }}>No users found.</div>
+                                <div style={{ padding: '16px' }}>No users found.</div>
                             ) : (
                                 searchResults.map(user => (
                                     <div
                                         key={user.id}
                                         className="conversation-item"
                                         onClick={() => selectUser(user)}
+                                        style={{
+                                            padding: '16px', borderBottom: '2px solid var(--neo-black)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px',
+                                            background: 'var(--neo-white)', transition: 'background 0.1s'
+                                        }}
+                                        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--neo-yellow)'}
+                                        onMouseLeave={(e) => e.currentTarget.style.background = 'var(--neo-white)'}
                                     >
-                                        <div className="conv-avatar">
+                                        <div className="conv-avatar" style={{
+                                            width: '40px', height: '40px', background: 'var(--neo-black)', color: 'var(--neo-white)',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '20px', border: '2px solid var(--neo-black)'
+                                        }}>
                                             {user.name ? user.name.charAt(0).toUpperCase() : '?'}
                                         </div>
                                         <div className="conv-content">
-                                            <div className="conv-name">{user.name}</div>
-                                            <div className="conv-preview" style={{ fontSize: '0.8em', color: 'var(--muted)' }}>{user.email}</div>
+                                            <div className="conv-name" style={{ fontWeight: 800, textTransform: 'uppercase' }}>{user.name}</div>
+                                            <div className="conv-preview" style={{ fontSize: '12px', fontWeight: 600 }}>{user.email}</div>
                                         </div>
                                     </div>
                                 ))
@@ -296,22 +312,32 @@ export default function Chat() {
                         loading ? (
                             <div style={{ padding: 20 }}>Loading...</div>
                         ) : conversations.length === 0 ? (
-                            <div style={{ padding: 20, color: 'var(--muted)' }}>No conversations yet.</div>
+                            <div style={{ padding: 20, color: 'var(--neo-black)' }}>No conversations yet.</div>
                         ) : (
                             conversations.map(conv => (
                                 <div
                                     key={conv.user.id}
                                     className={`conversation-item ${activeConversation?.user?.id === conv.user.id ? 'active' : ''}`}
                                     onClick={() => setActiveConversation(conv)}
+                                    style={{
+                                        padding: '16px', borderBottom: '2px solid var(--neo-black)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px',
+                                        background: activeConversation?.user?.id === conv.user.id ? 'var(--neo-yellow)' : 'var(--neo-white)',
+                                        transition: 'background 0.1s'
+                                    }}
                                 >
-                                    <div className="conv-avatar">
+                                    <div className="conv-avatar" style={{
+                                        width: '40px', height: '40px', background: 'var(--neo-black)', color: 'var(--neo-white)',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '20px', border: '2px solid var(--neo-black)'
+                                    }}>
                                         {conv.user.name ? conv.user.name.charAt(0).toUpperCase() : '?'}
                                     </div>
-                                    <div className="conv-content">
-                                        <div className="conv-name">{conv.user.name || 'User'}</div>
-                                        <div className="conv-preview">{conv.lastMessage?.content}</div>
+                                    <div className="conv-content" style={{ flex: 1 }}>
+                                        <div className="conv-name" style={{ fontWeight: 800, textTransform: 'uppercase' }}>{conv.user.name || 'User'}</div>
+                                        <div className="conv-preview" style={{ fontSize: '12px', fontWeight: 600, opacity: 0.8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '180px' }}>{conv.lastMessage?.content}</div>
                                     </div>
-                                    {conv.unreadCount > 0 && <div className="unread-badge">{conv.unreadCount}</div>}
+                                    {conv.unreadCount > 0 && <div className="unread-badge" style={{
+                                        background: 'var(--neo-red)', color: 'black', fontWeight: 900, padding: '2px 8px', border: '2px solid black', fontSize: '12px'
+                                    }}>{conv.unreadCount}</div>}
                                 </div>
                             ))
                         )
@@ -319,38 +345,51 @@ export default function Chat() {
                 </div>
             </div>
 
-            <div className="chat-main">
-                {console.log('DEBUG Render activeConversation:', activeConversation)}
+            <div className="chat-main" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'var(--neo-bg)' }}>
                 {activeConversation ? (
                     <>
-                        <div className="chat-header">
+                        <div className="chat-header" style={{
+                            padding: '16px', borderBottom: '2px solid var(--neo-black)', background: 'var(--neo-white)', display: 'flex', alignItems: 'center'
+                        }}>
                             <button
                                 className="mobile-only-back"
                                 onClick={() => setActiveConversation(null)}
                                 style={{
-                                    background: 'transparent', border: 'none', color: 'var(--muted)',
+                                    background: 'transparent', border: 'none', color: 'var(--neo-black)',
                                     marginRight: '12px', display: 'none', cursor: 'pointer'
                                 }}
                             >
                                 <FiArrowLeft size={24} />
                             </button>
-                            <div className="chat-partner-name">
+                            <div className="chat-partner-name" style={{ fontSize: '20px', fontWeight: 900, textTransform: 'uppercase' }}>
                                 {activeConversation.user.name || 'User'}
                             </div>
                         </div>
                         <style>{`
                             @media (max-width: 900px) {
                                 .mobile-only-back { display: block !important; }
+                                .chat-page-container { flex-direction: column; height: calc(100vh - 80px); margin: 0 !important; border: none !important; }
+                                .chat-sidebar { width: 100% !important; border-right: none !important; display: ${activeConversation ? 'none !important' : 'flex !important'}; }
+                                .chat-main { display: ${activeConversation ? 'flex !important' : 'none !important'}; height: 100%; border-left: none !important; }
                             }
                         `}</style>
-                        <div className="chat-messages">
+                        <div className="chat-messages" style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                             {messages.map(msg => {
-                                // Use Supabase ID if available, otherwise fallback (though fallback might fail alignment)
                                 const isMe = msg.sender_id === (currentSupabaseUser?.id || userId)
                                 return (
-                                    <div key={msg.id} className={`message-bubble ${isMe ? 'mine' : 'theirs'}`}>
+                                    <div key={msg.id} className={`message-bubble ${isMe ? 'mine' : 'theirs'}`} style={{
+                                        alignSelf: isMe ? 'flex-end' : 'flex-start',
+                                        maxWidth: '70%',
+                                        padding: '12px 16px',
+                                        background: isMe ? 'var(--neo-yellow)' : 'var(--neo-white)',
+                                        border: '2px solid var(--neo-black)',
+                                        boxShadow: isMe ? '4px 4px 0 var(--neo-black)' : '2px 2px 0 var(--neo-black)',
+                                        color: 'var(--neo-black)',
+                                        fontWeight: 700,
+                                        fontSize: '16px'
+                                    }}>
                                         {msg.content}
-                                        <div className="msg-time">
+                                        <div className="msg-time" style={{ fontSize: '10px', marginTop: '4px', opacity: 0.7, textAlign: 'right' }}>
                                             {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </div>
                                     </div>
@@ -358,21 +397,31 @@ export default function Chat() {
                             })}
                             <div ref={messagesEndRef} />
                         </div>
-                        <form className="chat-input-area" onSubmit={handleSend}>
+                        <form className="chat-input-area" onSubmit={handleSend} style={{
+                            padding: '16px', borderTop: '2px solid var(--neo-black)', background: 'var(--neo-white)', display: 'flex', gap: '12px'
+                        }}>
                             <input
-                                placeholder="Type a message..."
+                                placeholder="TYPE A MESSAGE..."
                                 value={newMessage}
                                 onChange={e => setNewMessage(e.target.value)}
+                                style={{
+                                    flex: 1, padding: '12px', border: '2px solid var(--neo-black)', borderRadius: 0,
+                                    fontFamily: 'Space Grotesk', fontWeight: 700, outline: 'none', background: 'transparent'
+                                }}
                             />
-                            <button type="submit" disabled={!newMessage.trim()}>
+                            <button type="submit" disabled={!newMessage.trim()} style={{
+                                background: 'var(--neo-black)', color: 'var(--neo-white)', border: 'none', width: '48px', height: '48px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}>
                                 <FiSend />
                             </button>
                         </form>
                     </>
                 ) : (
-                    <div className="no-chat-selected">
-                        <FiMessageSquare size={48} color="var(--muted)" />
-                        <p>Select a conversation to start messaging</p>
+                    <div className="no-chat-selected" style={{
+                        flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--neo-black)', opacity: 0.5
+                    }}>
+                        <FiMessageSquare size={64} style={{ marginBottom: '16px' }} />
+                        <p style={{ fontWeight: 700, fontSize: '18px' }}>Select a conversation to start messaging</p>
                     </div>
                 )}
             </div>

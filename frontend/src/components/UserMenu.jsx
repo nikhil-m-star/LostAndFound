@@ -40,14 +40,15 @@ export default function UserMenu() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
-                    background: 'rgba(0,0,0,0.4)',
-                    border: '1px solid rgba(29, 185, 84, 0.2)',
+                    background: 'var(--neo-yellow)', /* Vibrant background */
+                    border: '2px solid var(--neo-black)',
                     padding: '6px 16px 6px 6px',
-                    borderRadius: '30px',
+                    borderRadius: '0', /* Sharp corners */
                     cursor: 'pointer',
-                    color: 'var(--text)',
-                    transition: 'all 0.2s ease',
-                    backdropFilter: 'blur(10px)'
+                    color: 'var(--neo-black)',
+                    boxShadow: '4px 4px 0 var(--neo-black)',
+                    transition: 'all 0.1s ease',
+                    transform: isOpen ? 'translate(2px, 2px)' : 'none'
                 }}
             >
                 <div style={{
@@ -55,7 +56,7 @@ export default function UserMenu() {
                     height: '36px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: '2px solid var(--accent)'
+                    border: '2px solid var(--neo-black)'
                 }}>
                     <img
                         src={user.imageUrl}
@@ -63,76 +64,53 @@ export default function UserMenu() {
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                 </div>
-                <span style={{ fontWeight: 600, fontSize: '15px' }}>{user.firstName}</span>
+                <span style={{ fontWeight: 800, fontSize: '16px', textTransform: 'uppercase' }}>{user.firstName}</span>
             </button>
 
             {isOpen && (
                 <div className="user-dropdown" style={{
                     position: 'absolute',
-                    top: '55px',
+                    top: '60px',
                     right: '0',
-                    width: '240px',
-                    background: '#141414',
-                    border: '1px solid var(--accent-muted)',
-                    borderRadius: '16px',
-                    padding: '12px',
-                    boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+                    width: '260px',
+                    background: 'var(--neo-white)',
+                    border: '3px solid var(--neo-black)',
+                    borderRadius: '0',
+                    padding: '16px',
+                    boxShadow: '8px 8px 0 var(--neo-black)',
                     overflow: 'hidden',
-                    animation: 'fadeIn 0.2s ease'
+                    zIndex: 101
                 }}>
-                    <div style={{ padding: '0 0 12px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', marginBottom: '12px' }}>
-                        <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>{user.fullName}</div>
-                        <div style={{ fontSize: '12px', color: 'var(--muted)', textOverflow: 'ellipsis', overflow: 'hidden' }}>{user.primaryEmailAddress?.emailAddress}</div>
+                    <div style={{ padding: '0 0 16px 0', borderBottom: '3px solid var(--neo-black)', marginBottom: '16px' }}>
+                        <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--neo-black)', textTransform: 'uppercase' }}>{user.fullName}</div>
+                        <div style={{ fontSize: '14px', color: 'var(--neo-black)', opacity: 0.7, fontWeight: 700 }}>{user.primaryEmailAddress?.emailAddress}</div>
                     </div>
 
-                    <div style={{ marginBottom: '12px' }}>
-                        <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--muted)', marginBottom: '8px', paddingLeft: '4px' }}>
-                            THEME
-                        </div>
-                        <div style={{ display: 'flex', gap: '8px', padding: '0 4px' }}>
-                            {Object.values(themes).map((t) => (
-                                <button
-                                    key={t.id}
-                                    onClick={() => setCurrentTheme(t)}
-                                    title={t.name}
-                                    style={{
-                                        width: '24px',
-                                        height: '24px',
-                                        borderRadius: '50%',
-                                        background: t.accent,
-                                        border: currentTheme.id === t.id ? '2px solid white' : 'none',
-                                        cursor: 'pointer',
-                                        boxShadow: currentTheme.id === t.id ? `0 0 10px ${t.accent}` : 'none',
-                                        transition: 'transform 0.2s',
-                                        display: 'block', // Override global button flex
-                                        padding: 0
-                                    }}
-                                />
-                            ))}
-                        </div>
-                    </div>
+                    {/* Removed Theme Section as requested */}
 
-                    <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px' }}>
+                    <div>
                         <button
                             onClick={handleLogout}
                             style={{
                                 width: '100%',
-                                textAlign: 'left',
-                                padding: '10px 8px',
-                                background: 'transparent',
-                                border: 'none',
-                                color: '#ff5555',
-                                borderRadius: '8px',
-                                fontSize: '14px',
-                                fontWeight: 600,
+                                textAlign: 'center',
+                                padding: '12px',
+                                background: 'var(--neo-red)',
+                                border: '2px solid var(--neo-black)',
+                                color: 'var(--neo-black)',
+                                borderRadius: '0',
+                                fontSize: '16px',
+                                fontWeight: 900,
                                 cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',
+                                justifyContent: 'center',
                                 gap: '10px',
-                                transition: 'background 0.2s'
+                                boxShadow: '4px 4px 0 var(--neo-black)',
+                                transition: 'all 0.1s'
                             }}
-                            onMouseEnter={(e) => e.target.style.background = 'rgba(255, 85, 85, 0.1)'}
-                            onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                            onMouseEnter={(e) => { e.target.style.transform = 'translate(-2px, -2px)'; e.target.style.boxShadow = '6px 6px 0 var(--neo-black)'; }}
+                            onMouseLeave={(e) => { e.target.style.transform = 'none'; e.target.style.boxShadow = '4px 4px 0 var(--neo-black)'; }}
                         >
                             <FiLogOut /> Log Out
                         </button>

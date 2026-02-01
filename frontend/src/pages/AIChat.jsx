@@ -170,7 +170,6 @@ export default function AIChat() {
                         display: 'flex',
                         flexDirection: 'column',
                         gap: '24px',
-                        maskImage: 'linear-gradient(to bottom, transparent 0%, black 2%, black 100%)'
                     }}>
                         {messages.map(msg => (
                             <div key={msg.id} style={{
@@ -180,15 +179,13 @@ export default function AIChat() {
                             }}>
                                 <div style={{
                                     padding: '16px 20px',
-                                    borderRadius: '18px',
-                                    borderTopLeftRadius: msg.isBot ? '4px' : '18px',
-                                    borderTopRightRadius: msg.isBot ? '18px' : '4px',
-                                    background: msg.isBot ? 'rgba(30, 30, 30, 0.8)' : 'var(--accent-700)',
-                                    color: msg.isBot ? '#e0e0e0' : '#000',
+                                    background: msg.isBot ? 'var(--neo-white)' : 'var(--neo-yellow)', /* White for Bot, Yellow for User */
+                                    color: 'var(--neo-black)',
                                     lineHeight: '1.6',
-                                    border: msg.isBot ? '1px solid rgba(255,255,255,0.08)' : 'none',
+                                    border: '2px solid var(--neo-black)',
                                     fontSize: '16px',
-                                    boxShadow: msg.isBot ? '0 4px 12px rgba(0,0,0,0.1)' : '0 4px 15px rgba(23, 159, 70, 0.3)',
+                                    fontWeight: 700,
+                                    boxShadow: msg.isBot ? '4px 4px 0 var(--neo-black)' : '6px 6px 0 var(--neo-black)',
                                     whiteSpace: 'pre-wrap'
                                 }}>
                                     {msg.text}
@@ -217,7 +214,7 @@ export default function AIChat() {
                     <form onSubmit={handleSend} className="chat-input-form" style={{
                         flexShrink: 0,
                         padding: '16px 0',
-                        borderTop: '1px solid rgba(255,255,255,0.05)',
+                        borderTop: '2px solid var(--neo-black)',
                         display: 'flex',
                         gap: '12px',
                         background: 'transparent',
@@ -229,11 +226,10 @@ export default function AIChat() {
                             display: 'flex',
                             width: '100%',
                             gap: '12px',
-                            background: '#121212',
+                            background: 'var(--neo-white)',
                             padding: '8px',
-                            borderRadius: '16px',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            boxShadow: '0 -10px 40px rgba(0,0,0,0.5)',
+                            border: '2px solid var(--neo-black)',
+                            boxShadow: '4px 4px 0 var(--neo-black)',
                             boxSizing: 'border-box'
                         }}>
                             <input
@@ -243,30 +239,30 @@ export default function AIChat() {
                                 placeholder="Describe lost items or ask general questions..."
                                 style={{
                                     flex: 1,
-                                    minWidth: 0, /* Critical for preventing overflow */
+                                    minWidth: 0,
                                     padding: '12px 16px',
-                                    borderRadius: '12px',
                                     border: 'none',
                                     background: 'transparent',
-                                    color: '#fff',
+                                    color: 'var(--neo-black)',
                                     fontSize: '16px',
                                     fontFamily: 'inherit',
-                                    outline: 'none'
+                                    fontWeight: 700,
+                                    outline: 'none',
+                                    boxShadow: 'none',
+                                    margin: 0
                                 }}
                             />
                             <button type="submit" style={{
-                                background: chatInput.trim() ? 'var(--accent)' : 'rgba(255,255,255,0.1)',
-                                color: chatInput.trim() ? '#000' : 'rgba(255,255,255,0.3)',
-                                border: 'none',
+                                background: chatInput.trim() ? 'var(--neo-black)' : 'var(--neo-white)',
+                                color: chatInput.trim() ? 'var(--neo-white)' : 'var(--neo-black)', /* Invert */
+                                border: '2px solid var(--neo-black)',
                                 width: '48px',
                                 height: '48px',
-                                borderRadius: '12px',
                                 cursor: chatInput.trim() ? 'pointer' : 'default',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                transition: 'all 0.2s ease',
-                                transform: chatInput.trim() ? 'scale(1)' : 'scale(0.95)',
+                                transition: 'all 0.1s ease',
                                 flexShrink: 0
                             }} disabled={!chatInput.trim()}>
                                 <FiSend size={20} />
@@ -280,7 +276,7 @@ export default function AIChat() {
             {mode === 'search' && (
                 <div style={{ flex: 1, padding: '16px', overflowY: 'auto' }}>
                     <div style={{ marginBottom: '24px', position: 'relative' }}>
-                        <FiSearch style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', width: 20, height: 20 }} />
+                        <FiSearch style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--neo-black)', width: 20, height: 20, zIndex: 10 }} />
                         <input
                             type="text"
                             placeholder="Search by name, location, or status..."
@@ -289,20 +285,22 @@ export default function AIChat() {
                             style={{
                                 width: '100%',
                                 padding: '16px 16px 16px 48px',
-                                borderRadius: '12px',
-                                border: '1px solid rgba(29, 185, 84, 0.2)',
-                                background: '#1a1a1a',
-                                color: '#fff',
+                                border: '2px solid var(--neo-black)',
+                                background: 'var(--neo-white)',
+                                color: 'var(--neo-black)',
                                 fontSize: '16px',
-                                fontFamily: 'inherit'
+                                fontWeight: 700,
+                                fontFamily: 'inherit',
+                                borderRadius: 0,
+                                boxShadow: '4px 4px 0 var(--neo-black)'
                             }}
                         />
                     </div>
 
                     {loading ? (
-                        <div style={{ textAlign: 'center', color: 'var(--muted)', marginTop: '40px' }}>Loading items...</div>
+                        <div style={{ textAlign: 'center', color: 'var(--neo-black)', fontWeight: 700, marginTop: '40px' }}>Loading items...</div>
                     ) : filteredItems.length === 0 ? (
-                        <div style={{ textAlign: 'center', color: 'var(--muted)', marginTop: '40px' }}>No items found matching "{searchQuery}"</div>
+                        <div style={{ textAlign: 'center', color: 'var(--neo-black)', fontWeight: 700, marginTop: '40px' }}>No items found matching "{searchQuery}"</div>
                     ) : (
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', justifyContent: 'center' }}>
                             {filteredItems.map(item => (
