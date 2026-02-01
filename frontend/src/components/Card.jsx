@@ -31,10 +31,7 @@ export default function Card({ id, title, subtitle, image, onClick }) {
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              filter: 'grayscale(100%) contrast(1.2)' // Neo-brutalist touch: high contrast grayscale
             }}
-            onMouseOver={e => e.currentTarget.style.filter = 'none'} // Reveal color on hover
-            onMouseOut={e => e.currentTarget.style.filter = 'grayscale(100%) contrast(1.2)'}
           />
         ) : (
           <div style={{

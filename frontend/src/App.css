@@ -19,7 +19,7 @@
 	--text: var(--neo-black);
 	--accent: var(--neo-red);
 	--secondary: var(--neo-yellow);
-	--muted: var(--neo-violet);
+	--muted: #404040;
 
 	/* Dimensions & Spacing */
 	--border-width: 4px;

@@ -68,51 +68,78 @@ export default function ReportFound() {
   }
 
   return (
-    <div>
-      <div className="top-hero">
-        <div>
-          <div className="page-title">Report Found Item</div>
-          <div style={{ color: 'var(--muted)', marginTop: 6 }}>Add details and photos</div>
-        </div>
+    <div className="report-container" style={{ maxWidth: '1000px', margin: '40px auto', padding: '20px' }}>
+      <button onClick={() => navigate('/')} style={{ marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: 'transparent', border: 'none', boxShadow: 'none', textDecoration: 'underline' }}>
+        <span style={{ fontSize: '20px' }}>←</span> BACK TO HOME
+      </button>
+
+      <div style={{ marginBottom: '40px', borderBottom: '4px solid var(--neo-black)', paddingBottom: '24px' }}>
+        <h1 style={{ fontSize: '3rem', color: 'var(--neo-black)', marginBottom: '8px' }}>REPORT FOUND ITEM</h1>
+        <p style={{ fontWeight: 700, color: 'var(--muted)', fontSize: '1.2rem' }}>Help return it to its owner.</p>
       </div>
-      <div className="report-panel">
+
+      <div className="report-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
+        {/* Left: Photos */}
         <div className="form-left">
-          <div className="field-label">Photos</div>
-          <UploadField files={files} setFiles={setFiles} />
-          <div className="small-muted" style={{ marginTop: 8 }}>Tip: Add clear photos of the item and any distinguishing marks.</div>
+          <div className="neo-label" style={{ marginBottom: '16px', fontSize: '18px' }}>EVIDENCE PHOTOS</div>
+          <div style={{ background: 'var(--neo-white)', padding: '16px', border: '3px solid var(--neo-black)', boxShadow: '6px 6px 0 var(--neo-black)' }}>
+            <UploadField files={files} setFiles={setFiles} />
+          </div>
         </div>
 
-        <div className="form-right report-form">
-          <form onSubmit={handleSubmit}>
-            <label className="field-label">Title</label>
-            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
-
-            <label className="field-label">Description</label>
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
-
-            <label className="field-label">Location</label>
-            <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Location" />
-
-            <label className="field-label">Category</label>
-            <select value={category} onChange={(e) => setCategory(e.target.value)}>
-              {['Electronics', 'Clothing', 'Accessories', 'Documents', 'Others'].map(c => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
-
-            <label className="field-label">Date Found</label>
-            <input type="date" value={dateEvent} onChange={(e) => setDateEvent(e.target.value)} required />
-
-            <label className="field-label">Contact Method</label>
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
-              <label><input type="radio" checked={contactMethod === 'email'} onChange={() => setContactMethod('email')} /> Email</label>
-              <label><input type="radio" checked={contactMethod === 'phone'} onChange={() => setContactMethod('phone')} /> Phone</label>
+        {/* Right: Form */}
+        <div className="form-right">
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div>
+              <label className="neo-label">TITLE</label>
+              <input className="neo-input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="What did you find?" required />
             </div>
-            {contactMethod === 'phone' && (
-              <input value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="Phone Number" style={{ marginBottom: '12px' }} required />
-            )}
 
-            <button type="submit" disabled={loading}>{loading ? 'Uploading…' : 'Submit'}</button>
+            <div>
+              <label className="neo-label">DESCRIPTION</label>
+              <textarea className="neo-textarea" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe the item..." required style={{ minHeight: '120px' }} />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div>
+                <label className="neo-label">CATEGORY</label>
+                <select className="neo-select" value={category} onChange={(e) => setCategory(e.target.value)}>
+                  {['Electronics', 'Clothing', 'Accessories', 'Documents', 'Others'].map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="neo-label">DATE FOUND</label>
+                <input className="neo-input" type="date" value={dateEvent} onChange={(e) => setDateEvent(e.target.value)} required />
+              </div>
+            </div>
+
+            <div>
+              <label className="neo-label">LOCATION</label>
+              <input className="neo-input" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Where was it found?" />
+            </div>
+
+            <div style={{ background: 'var(--neo-yellow)', border: '3px solid var(--neo-black)', padding: '16px' }}>
+              <label className="neo-label" style={{ marginBottom: '12px', display: 'block' }}>CONTACT METHOD</label>
+              <div style={{ display: 'flex', gap: '24px', marginBottom: '16px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, cursor: 'pointer' }}>
+                  <input type="radio" value="email" checked={contactMethod === 'email'} onChange={() => setContactMethod('email')} style={{ width: '20px', height: '20px', accentColor: 'var(--neo-black)' }} />
+                  <span>EMAIL</span>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, cursor: 'pointer' }}>
+                  <input type="radio" value="phone" checked={contactMethod === 'phone'} onChange={() => setContactMethod('phone')} style={{ width: '20px', height: '20px', accentColor: 'var(--neo-black)' }} />
+                  <span>PHONE</span>
+                </label>
+              </div>
+              {contactMethod === 'phone' && (
+                <input className="neo-input" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="Enter Phone Number" required />
+              )}
+            </div>
+
+            <button type="submit" disabled={loading} style={{ width: '100%', marginTop: '16px', fontSize: '18px', background: 'var(--neo-black)', color: 'var(--neo-white)' }}>
+              {loading ? 'SUBMITTING...' : 'SUBMIT REPORT'}
+            </button>
           </form>
         </div>
       </div>
