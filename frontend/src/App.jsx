@@ -26,7 +26,7 @@ export default function App() {
       <Navbar />
       <MobileNavbar />
       {location.pathname !== '/' && <BackgroundShapes />}
-      <main className="main-content" style={{ position: 'relative' }}>
+      <main className="main-content" style={{ position: 'relative', zIndex: 1 }}>
 
         <Routes>
           {/* Public Routes */}
