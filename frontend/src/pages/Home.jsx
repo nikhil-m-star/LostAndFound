@@ -107,17 +107,8 @@ export default function Home() {
               </div>
             )}
             {isSignedIn && (
-              <div className="recent-reports-section" style={{ width: '100%', maxWidth: '1200px', margin: '40px 0 20px 0' }}>
-                <h2 className="section-title" style={{
-                  fontSize: '28px',
-                  fontWeight: 900,
-                  borderBottom: '4px solid black',
-                  display: 'inline-block',
-                  marginBottom: '24px',
-                  paddingRight: '20px'
-                }}>
-                  RECENT REPORTS
-                </h2>
+              <div className="welcome-section" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '40px', marginBottom: '40px' }}>
+                {/* Hero CTA */}
                 <button
                   onClick={() => navigate('/report/lost')}
                   className="primary-action-btn shadow-red bg-red"
@@ -136,16 +127,26 @@ export default function Home() {
                 >
                   REPORT AN ITEM
                 </button>
+
+                {/* Section Header */}
+                <div style={{ width: '100%', maxWidth: '1200px', textAlign: 'left', marginTop: '20px' }}>
+                  <h2 className="section-title" style={{
+                    fontSize: '28px',
+                    fontWeight: 900,
+                    borderBottom: '4px solid black',
+                    display: 'inline-block',
+                    marginBottom: '24px',
+                    paddingRight: '20px'
+                  }}>
+                    RECENT REPORTS {loading && '(Loading...)'}
+                  </h2>
+                </div>
               </div>
             )}
           </div>
 
 
         </div>
-      </ScrollReveal>
-
-      <ScrollReveal delay={0.2}>
-        <h3 style={{ width: '100%', textAlign: 'center' }}>Recent reports {loading && '(Loading...)'}</h3>
       </ScrollReveal>
 
       {/* Show notice if using dummy data */}
