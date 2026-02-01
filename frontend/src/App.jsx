@@ -16,7 +16,6 @@ import Navbar from './components/Navbar'
 import UserMenu from './components/UserMenu'
 import MobileNavbar from './components/MobileNavbar'
 import PrivateRoute from './components/PrivateRoute'
-import BackgroundShapes from './components/BackgroundShapes'
 
 export default function App() {
   const location = useLocation();
@@ -25,8 +24,7 @@ export default function App() {
     <div className="app">
       <Navbar />
       <MobileNavbar />
-      {location.pathname !== '/' && <BackgroundShapes />}
-      <main className="main-content" style={{ position: 'relative', zIndex: 1 }}>
+      <main className="main-content" style={{ position: 'relative' }}>
 
         <Routes>
           {/* Public Routes */}
