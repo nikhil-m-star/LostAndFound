@@ -1,0 +1,142 @@
+/* Liquid Glass Card System */
+.glass-card {
+    --bg-color: rgba(0, 0, 0, 0.4);
+    /* Darker for dark mode */
+    --highlight: rgba(0, 243, 255, 0.3);
+    /* Cyan highlight */
+    --text: #ffffff;
+
+    position: relative;
+    /* width/height managed by parent grid */
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    /* Square cards */
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-filter,
+.glass-overlay,
+.glass-specular {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.glass-filter {
+    z-index: 1;
+    backdrop-filter: blur(12px);
+    /* filter: url(#glass-distortion) will be applied inline with unique ID */
+}
+
+.glass-distortion-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(0, 243, 255, 0.1) 0%, transparent 70%),
+        radial-gradient(circle at 80% 70%, rgba(189, 0, 255, 0.1) 0%, transparent 70%);
+    background-size: 200% 200%;
+    animation: floatDistort 8s infinite ease-in-out;
+    mix-blend-mode: overlay;
+    z-index: 2;
+    pointer-events: none;
+}
+
+@keyframes floatDistort {
+    0% {
+        background-position: 0% 0%;
+    }
+
+    50% {
+        background-position: 100% 100%;
+    }
+
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+.glass-overlay {
+    z-index: 2;
+    background: var(--bg-color);
+}
+
+.glass-specular {
+    z-index: 3;
+    /* Initial highlight state, updated by JS */
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.0) 0%, transparent 100%);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: opacity 0.3s;
+}
+
+.glass-content {
+    position: relative;
+    z-index: 4;
+    padding: 24px;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* Text at bottom */
+    height: 100%;
+    width: 100%;
+}
+
+.glass-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.8;
+    transition: transform 0.5s ease;
+}
+
+.glass-card:hover .glass-image {
+    transform: scale(1.1);
+}
+
+.glass-content h3 {
+    margin: 0 0 4px 0;
+    font-size: 20px;
+    font-weight: 700;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.glass-content p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+    color: var(--cyan);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Glass Buttons */
+.liquid-btn {
+    position: relative;
+    overflow: hidden;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    color: white;
+    font-weight: 600;
+    padding: 12px 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 10;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.liquid-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px var(--accent-muted);
+    border-color: var(--cyan);
+}

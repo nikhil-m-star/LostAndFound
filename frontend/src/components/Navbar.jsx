@@ -9,9 +9,12 @@ export default function Navbar() {
     const isAdmin = user?.primaryEmailAddress?.emailAddress === 'nikhilm.cs24@bmsce.ac.in'
 
     return (
-        <nav className="liquid-navbar">
-            <div className="brand">Lost & Found</div>
-            <div className="nav-links">
+        <nav className="liquid-navbar glass-card" style={{ width: 'auto', aspectRatio: 'auto', borderRadius: '50px', padding: '10px 30px' }}>
+            <div className="glass-overlay" />
+            <div className="glass-specular" />
+
+            <div className="brand" style={{ position: 'relative', zIndex: 10 }}>Lost & Found</div>
+            <div className="nav-links" style={{ position: 'relative', zIndex: 10 }}>
                 <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''} title="Home">
                     <FiHome /> <span>Home</span>
                 </NavLink>

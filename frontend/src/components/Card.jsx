@@ -1,96 +1,100 @@
-import React, { useRef } from 'react'
+import React, { useRef, useId, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 
 export default function Card({ id, title, subtitle, image, onClick }) {
-  const ref = useRef(null)
-  const [imgError, setImgError] = React.useState(false)
+  const uniqueId = useId().replace(/:/g, '') // Sanitize ID for DOM
+  const filterId = `glass-distortion-${uniqueId}`
 
-  // Motion values for mouse position relative to the card center
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-
-  // Spring animations for smooth tilt return
-  const mouseXSpring = useSpring(x)
-  const mouseYSpring = useSpring(y)
-
-  // Transform mouse x/y to rotation degrees
-  // Adjust these values to control tilt intensity (e.g., -10deg to 10deg)
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"])
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"])
+  const cardRef = useRef(null)
+  const filterRef = useRef(null)
+  const specularRef = useRef(null)
 
   const handleMouseMove = (e) => {
-    if (!ref.current) return
-    const rect = ref.current.getBoundingClientRect()
-    const width = rect.width
-    const height = rect.height
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
 
-    // Calculate mouse position relative to card center (-0.5 to 0.5)
-    // 0 is center, -0.5 is left/top, 0.5 is right/bottom
-    const mouseX = e.clientX - rect.left
-    const mouseY = e.clientY - rect.top
-    const xPct = mouseX / width - 0.5
-    const yPct = mouseY / height - 0.5
+    // Update filter turbulence based on mouse position
+    // Calculate scale based on position (similar to requested logic)
+    const scaleX = (x / rect.width) * 100
+    const scaleY = (y / rect.height) * 100
+    const scaleVal = Math.min(scaleX, scaleY)
 
-    x.set(xPct)
-    y.set(yPct)
+    if (filterRef.current) {
+      filterRef.current.setAttribute('scale', scaleVal)
+    }
+
+    // Update specular highlight position
+    if (specularRef.current) {
+      specularRef.current.style.background = `radial-gradient(
+            circle at ${x}px ${y}px,
+            rgba(255, 255, 255, 0.4) 0%,
+            rgba(255, 255, 255, 0.1) 30%,
+            rgba(255, 255, 255, 0) 60%
+        )`
+      specularRef.current.style.opacity = 1
+    }
   }
 
   const handleMouseLeave = () => {
-    // Reset tilt on leave
-    x.set(0)
-    y.set(0)
+    // Reset effects
+    if (filterRef.current) {
+      filterRef.current.setAttribute('scale', '77') // Reset to default scale
+    }
+    if (specularRef.current) {
+      specularRef.current.style.background = 'radial-gradient(circle at center, rgba(255,255,255,0.0) 0%, transparent 100%)'
+      specularRef.current.style.opacity = 0
+    }
   }
 
   return (
     <motion.div
-      ref={ref}
-      className="card"
+      ref={cardRef}
+      className="glass-card"
       onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{
-        cursor: onClick ? 'pointer' : 'default',
-        rotateX,
-        rotateY,
-        transformStyle: "preserve-3d", // Critical for 3D effect
-        perspective: 1000 // Adds depth
-      }}
-      initial={{ scale: 1 }}
-      whileHover={{ scale: 1.02 }} // Slight scale up on hover
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.02 }}
+      style={{ cursor: onClick ? 'pointer' : 'default' }}
     >
-      {/* Gloss Effect Overlay */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 10,
-          borderRadius: 16, // Matches .card border-radius
-          background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.05) 45%, rgba(255,255,255,0.0) 50%)",
-          opacity: 0,
-          pointerEvents: "none",
-          transition: "opacity 0.3s"
-        }}
-      />
-
-      <div className="thumb" style={{ transform: "translateZ(20px)" }}>
-        {/* translateZ makes image pop out */}
-        {image && !imgError ? (
-          <img
-            src={image}
-            alt={title}
-            onError={() => setImgError(true)}
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }}
+      {/* Unique SVG Filter for this card */}
+      <svg style={{ display: 'none' }}>
+        <filter id={filterId}>
+          <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="2" result="noise" />
+          <feDisplacementMap
+            ref={filterRef}
+            in="SourceGraphic"
+            in2="noise"
+            scale="77"
+            xChannelSelector="R"
+            yChannelSelector="G"
           />
-        ) : (
-          <div style={{ position: 'absolute', inset: 0, backgroundColor: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, color: '#555', border: '1px solid #222' }}>
-            No Image
-          </div>
+        </filter>
+      </svg>
+
+      {/* Glass Layers */}
+      <div
+        className="glass-filter"
+        style={{ filter: `url(#${filterId}) saturate(120%) brightness(1.15) blur(1px)` }} // Apply the unique filter
+      />
+      <div className="glass-distortion-overlay" />
+      <div className="glass-overlay" />
+      <div className="glass-specular" ref={specularRef} />
+
+      {/* Content */}
+      <div className="glass-content">
+        {image && (
+          <img src={image} alt={title} className="glass-image" />
         )}
-      </div>
-      <div className="meta" style={{ transform: "translateZ(30px)" }}>
-        {/* translateZ makes text pop out even more */}
-        <div className="title">{title}</div>
-        <div className="sub">{subtitle}</div>
+
+        {/* Text Overlay (z-index higher) */}
+        <div style={{ position: 'relative', zIndex: 10, textAlign: 'left', width: '100%' }}>
+          <h3>{title}</h3>
+          <p>{subtitle}</p>
+        </div>
       </div>
     </motion.div>
   )
