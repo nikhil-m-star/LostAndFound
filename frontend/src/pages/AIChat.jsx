@@ -331,7 +331,7 @@ export default function AIChat() {
                     ) : filteredItems.length === 0 ? (
                         <div style={{ textAlign: 'center', color: 'var(--neo-black)', fontWeight: 700, marginTop: '40px' }}>No items found matching "{searchQuery}"</div>
                     ) : (
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', justifyContent: 'center' }}>
+                        <div className="grid" style={{ padding: '0 0 24px 0' }}>
                             {filteredItems.map((item, index) => (
                                 <Card
                                     key={item._id}
