@@ -184,5 +184,62 @@ input:focus,
 textarea:focus {
 	outline: none;
 	background: var(--neo-violet);
+	background: var(--neo-violet);
 	box-shadow: var(--neo-shadow);
+}
+
+/* --- LAYOUT UTILITIES (Restored) --- */
+
+.main-content {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 24px;
+	min-height: calc(100vh - 80px);
+	display: flex;
+	flex-direction: column;
+}
+
+.home-container {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	/* Center everything */
+}
+
+/* Grid Layout for Reports */
+.grid {
+	display: grid;
+	/* Changed from auto-fill to specifically target 3 columns on large screens */
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 32px;
+	width: 100%;
+	padding: 24px 0;
+}
+
+/* Ensure 3 columns on standard desktop */
+@media (min-width: 1024px) {
+	.grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+/* User Profile Image Fix - ensure it doesn't explode */
+img {
+	max-width: 100%;
+	display: block;
+}
+
+/* Centering Helpers */
+.center-flex {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* Fix for UserMenu button image needing to be small */
+.user-btn img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
