@@ -12,7 +12,7 @@ import AIChat from './pages/AIChat'
 import Chat from './pages/Chat'
 import MyReports from './pages/MyReports'
 import AdminUsers from './pages/AdminUsers'
-import Sidebar from './components/Sidebar'
+import Navbar from './components/Navbar'
 import UserMenu from './components/UserMenu'
 import MobileNavbar from './components/MobileNavbar'
 import FluidBackground from './components/FluidBackground'
@@ -22,7 +22,7 @@ export default function App() {
   return (
     <div className="app">
       <FluidBackground />
-      <Sidebar />
+      <Navbar />
       <MobileNavbar />
       <main className="main-content" style={{ position: 'relative' }}>
         <UserMenu />

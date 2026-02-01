@@ -32,7 +32,7 @@ export default function UserMenu() {
     }
 
     return (
-        <div className="user-menu-container" ref={menuRef} style={{ position: 'absolute', top: '20px', right: '30px', zIndex: 100 }}>
+        <div className="user-menu-container" ref={menuRef} style={{ position: 'relative', zIndex: 100 }}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="user-btn"

@@ -88,6 +88,7 @@ button:not(.navbar button):not(.mode-toggle):not(.user-btn):hover {
 /* ensure the app content sits above the neon overlay */
 .app {
 	display: flex;
+	flex-direction: column;
 	min-height: 100vh;
 	position: relative;
 	z-index: 1;
@@ -242,9 +243,12 @@ h3 {
 }
 
 .main-content {
-	margin-left: 220px;
+	margin-left: 0;
 	padding: 28px;
-	width: calc(100% - 220px);
+	width: 100%;
+	max-width: 1400px;
+	/* Optional constraint */
+	margin: 0 auto;
 }
 
 /* top navbar (used on some screens) */
@@ -801,7 +805,96 @@ select option {
 	}
 }
 
-/* User Menu Styles */
+/* Liquid Glass Navbar */
+.liquid-navbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 95%;
+	max-width: 1280px;
+	margin: 20px auto 30px auto;
+	padding: 12px 30px;
+	background: rgba(15, 15, 15, 0.65);
+	backdrop-filter: blur(20px) saturate(180%);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
+	border-radius: 50px;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+	position: sticky;
+	top: 20px;
+	z-index: 1000;
+	transition: all 0.3s ease;
+}
+
+.liquid-navbar:hover {
+	background: rgba(20, 20, 20, 0.75);
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+	transform: translateY(-2px);
+}
+
+.liquid-navbar .brand {
+	font-size: 1.5rem;
+	font-weight: 800;
+	color: var(--text);
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	background: linear-gradient(90deg, #fff, var(--accent));
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.liquid-navbar .nav-links {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+}
+
+.liquid-navbar a {
+	text-decoration: none;
+	color: var(--muted);
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 18px;
+	border-radius: 30px;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	border: 1px solid transparent;
+}
+
+.liquid-navbar a svg {
+	font-size: 1.2rem;
+	transition: transform 0.3s ease;
+}
+
+.liquid-navbar a:hover,
+.liquid-navbar a.active {
+	background: rgba(255, 255, 255, 0.1);
+	color: #fff;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.liquid-navbar a:hover svg,
+.liquid-navbar a.active svg {
+	transform: scale(1.1);
+	color: var(--accent);
+}
+
+.liquid-navbar a.active {
+	background: rgba(29, 185, 84, 0.15);
+	border-color: rgba(29, 185, 84, 0.3);
+	color: var(--accent-light);
+	box-shadow: 0 0 20px rgba(29, 185, 84, 0.2);
+}
+
+@media (max-width: 900px) {
+	.liquid-navbar {
+		display: none;
+	}
+}
+
 /* User Menu Styles */
 .user-btn:hover {
 	box-shadow: 0 0 15px var(--accent-light), 0 0 35px var(--accent-light);
