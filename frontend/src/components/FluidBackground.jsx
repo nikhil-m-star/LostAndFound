@@ -7,16 +7,16 @@ const FluidBackground = () => {
 
     const blobs = [
         // LEFT SIDE CLUSTER (Cyans & Blues)
-        { color: 'var(--neon-cyan)', x: ['-20%', '10%', '-10%'], y: ['-20%', '0%', '-10%'], scale: [1, 1.4, 1], dur: 25, delay: 0 },
-        { color: 'var(--neon-blue)', x: ['-10%', '5%', '-15%'], y: ['20%', '40%', '20%'], scale: [1.2, 0.8, 1.2], dur: 28, delay: 2 },
-        { color: 'var(--purple)', x: ['-5%', '15%', '-5%'], y: ['50%', '30%', '50%'], scale: [0.9, 1.3, 0.9], dur: 32, delay: 4 },
-        { color: 'var(--accent-400)', x: ['-15%', '0%', '-20%'], y: ['80%', '60%', '80%'], scale: [1.1, 0.9, 1.1], dur: 22, delay: 1 },
+        { color: 'var(--neon-cyan)', x: ['-20%', '10%', '-10%'], y: ['-20%', '0%', '-10%'], scale: [1, 1.4, 1], dur: 12, delay: 0 },
+        { color: 'var(--neon-blue)', x: ['-10%', '5%', '-15%'], y: ['20%', '40%', '20%'], scale: [1.2, 0.8, 1.2], dur: 14, delay: 1 },
+        { color: 'var(--purple)', x: ['-5%', '15%', '-5%'], y: ['50%', '30%', '50%'], scale: [0.9, 1.3, 0.9], dur: 16, delay: 2 },
+        { color: 'var(--accent-400)', x: ['-15%', '0%', '-20%'], y: ['80%', '60%', '80%'], scale: [1.1, 0.9, 1.1], dur: 11, delay: 0.5 },
 
         // RIGHT SIDE CLUSTER (Pinks & Purples)
-        { color: 'var(--neon-pink)', x: ['100%', '80%', '100%'], y: ['-10%', '10%', '-10%'], scale: [1, 1.5, 1], dur: 27, delay: 0 },
-        { color: 'var(--neon-purple)', x: ['110%', '90%', '110%'], y: ['30%', '50%', '30%'], scale: [1.3, 0.9, 1.3], dur: 30, delay: 3 },
-        { color: 'var(--pink)', x: ['95%', '75%', '95%'], y: ['60%', '80%', '60%'], scale: [0.9, 1.2, 0.9], dur: 24, delay: 1 },
-        { color: 'var(--cyan)', x: ['105%', '85%', '105%'], y: ['85%', '65%', '85%'], scale: [1.1, 0.8, 1.1], dur: 29, delay: 5 },
+        { color: 'var(--neon-pink)', x: ['100%', '80%', '100%'], y: ['-10%', '10%', '-10%'], scale: [1, 1.5, 1], dur: 13, delay: 0 },
+        { color: 'var(--neon-purple)', x: ['110%', '90%', '110%'], y: ['30%', '50%', '30%'], scale: [1.3, 0.9, 1.3], dur: 15, delay: 1.5 },
+        { color: 'var(--pink)', x: ['95%', '75%', '95%'], y: ['60%', '80%', '60%'], scale: [0.9, 1.2, 0.9], dur: 12, delay: 0.5 },
+        { color: 'var(--cyan)', x: ['105%', '85%', '105%'], y: ['85%', '65%', '85%'], scale: [1.1, 0.8, 1.1], dur: 14, delay: 2.5 },
     ];
 
     return (

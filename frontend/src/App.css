@@ -65,8 +65,7 @@ button {
 /* Add neon glow to all buttons on hover, EXCEPT navbar buttons */
 /* Add neon glow to all buttons on hover, EXCEPT navbar buttons, mode toggles, and user profile */
 button:not(.navbar button):not(.mode-toggle):not(.user-btn):hover {
-	box-shadow: 0 0 20px var(--accent-light), 0 0 40px var(--accent-light), 0 0 80px var(--neon-green);
-	/* text-shadow: 0 0 8px #1eff67; REMOVED */
+	/* box-shadow removed */
 	transform: translateY(-2px) scale(1.02);
 	filter: brightness(1.1);
 	transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
