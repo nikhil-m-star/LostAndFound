@@ -410,9 +410,9 @@ export default function Chat() {
                                 }}
                             />
                             <button type="submit" disabled={!newMessage.trim()} style={{
-                                background: 'var(--neo-black)', color: 'var(--neo-white)', border: 'none', width: '48px', height: '48px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                background: 'var(--neo-white)', color: 'var(--neo-black)', border: '2px solid var(--neo-black)', width: '48px', height: '48px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
                             }}>
-                                <FiSend size={24} style={{ stroke: '#ffffff', strokeWidth: 2 }} />
+                                <FiSend size={24} style={{ stroke: 'black', strokeWidth: 2 }} />
                             </button>
                         </form>
                     </>

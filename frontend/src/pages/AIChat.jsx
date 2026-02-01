@@ -138,7 +138,7 @@ export default function AIChat() {
                     </div>
                 </div>
 
-                <div className="chat-toggles" style={{ display: 'flex', gap: '0' }}>
+                <div className="chat-toggles" style={{ display: 'flex', gap: '16px' }}>
                     <button
                         onClick={() => setMode('chat')}
                         style={{
@@ -281,8 +281,8 @@ export default function AIChat() {
                                 }}
                             />
                             <button type="submit" style={{
-                                background: chatInput.trim() ? 'var(--neo-black)' : 'var(--neo-white)',
-                                color: chatInput.trim() ? 'var(--neo-white)' : 'var(--neo-black)',
+                                background: 'var(--neo-white)',
+                                color: 'var(--neo-black)',
                                 border: '2px solid var(--neo-black)',
                                 width: '48px',
                                 height: '48px',
@@ -293,7 +293,7 @@ export default function AIChat() {
                                 transition: 'all 0.1s ease',
                                 flexShrink: 0
                             }} disabled={!chatInput.trim()}>
-                                <FiSend size={24} style={{ stroke: chatInput.trim() ? '#ffffff' : '#000000', strokeWidth: 2 }} />
+                                <FiSend size={24} style={{ stroke: 'black', strokeWidth: 2 }} />
                             </button>
                         </div>
                     </form>
