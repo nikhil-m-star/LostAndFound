@@ -19,49 +19,73 @@ const FluidBackground = () => {
                 background: '#030303'
             }}
         >
-            {/* Blob 1: Top-Left moving to Center */}
+            {/* Blob 1: Cyan (Top Leaning) */}
             <motion.div
                 style={{
                     position: 'absolute',
-                    top: '-20%',
-                    left: '-20%',
-                    width: '90vmax',
-                    height: '90vmax',
-                    background: `radial-gradient(circle, ${currentTheme.neon} 0%, rgba(0,0,0,0) 65%)`,
-                    filter: 'blur(90px)',
+                    top: '-10%',
+                    left: '10%',
+                    width: '60vmax',
+                    height: '60vmax',
+                    background: 'radial-gradient(circle, rgba(0, 255, 242, 0.25) 0%, rgba(0,0,0,0) 70%)',
+                    filter: 'blur(100px)',
+                    mixBlendMode: 'screen',
                     borderRadius: '50%',
                 }}
                 animate={{
-                    x: ["0%", "40%", "0%"],
-                    y: ["0%", "30%", "0%"],
-                    scale: [1, 1.2, 1],
+                    x: ["0%", "20%", "0%"],
+                    y: ["0%", "15%", "0%"],
                 }}
                 transition={{
-                    duration: 15,
+                    duration: 18,
                     repeat: Infinity,
                     ease: "easeInOut"
                 }}
             />
 
-            {/* Blob 2: Bottom-Right moving to Center (Symmetric Mirror) */}
+            {/* Blob 2: Purple (Bottom Right Leaning) */}
             <motion.div
                 style={{
                     position: 'absolute',
-                    bottom: '-20%',
-                    right: '-20%',
-                    width: '90vmax',
-                    height: '90vmax',
-                    background: `radial-gradient(circle, ${currentTheme.neonStrong} 0%, rgba(0,0,0,0) 65%)`,
-                    filter: 'blur(90px)',
+                    bottom: '0%',
+                    right: '5%',
+                    width: '70vmax',
+                    height: '70vmax',
+                    background: 'radial-gradient(circle, rgba(189, 0, 255, 0.22) 0%, rgba(0,0,0,0) 70%)',
+                    filter: 'blur(100px)',
+                    mixBlendMode: 'screen',
                     borderRadius: '50%',
                 }}
                 animate={{
-                    x: ["0%", "-40%", "0%"],
-                    y: ["0%", "-30%", "0%"],
-                    scale: [1, 1.2, 1],
+                    x: ["0%", "-15%", "0%"],
+                    y: ["0%", "-20%", "0%"],
                 }}
                 transition={{
-                    duration: 15,
+                    duration: 22,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+            />
+
+            {/* Blob 3: Pink (Center/Left) */}
+            <motion.div
+                style={{
+                    position: 'absolute',
+                    top: '40%',
+                    left: '-10%',
+                    width: '60vmax',
+                    height: '60vmax',
+                    background: 'radial-gradient(circle, rgba(255, 0, 85, 0.15) 0%, rgba(0,0,0,0) 70%)',
+                    filter: 'blur(100px)',
+                    mixBlendMode: 'screen',
+                    borderRadius: '50%',
+                }}
+                animate={{
+                    x: ["0%", "10%", "0%"],
+                    y: ["0%", "-10%", "0%"],
+                }}
+                transition={{
+                    duration: 25,
                     repeat: Infinity,
                     ease: "easeInOut"
                 }}

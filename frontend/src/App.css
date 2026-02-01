@@ -2,32 +2,37 @@
 	--bg: #050505;
 	--panel: #141414;
 	--muted: #b3b3b3;
-	--text: #e6e6e6;
-	/* Spotify green shades turned NEON */
-	--accent-900: #0f6a38;
-	/* deep */
-	--accent-700: #179f46;
-	/* dark */
-	--accent: #1DB954;
-	/* base */
-	--accent-400: #3edb6a;
-	/* bright */
-	--accent-200: #9ff8c9;
-	/* pale */
-	--accent-light: #49e676;
-	/* lighter/hover highlight */
-	--accent-muted: rgba(29, 185, 84, 0.12);
-	--glass: rgba(29, 185, 84, 0.04);
+	--text: #ffffff;
 
-	/* INTENSIFIED NEON VARIABLES - SLIGHTLY BOOSTED */
-	--neon-green: rgba(30, 255, 103, 0.4);
-	--neon-green-strong: rgba(30, 255, 103, 0.5);
-	--neon-glow: 0 0 10px rgba(30, 255, 103, 0.5), 0 0 20px rgba(30, 255, 103, 0.3), 0 0 40px rgba(30, 255, 103, 0.1);
+	/* Multi-Color Palette */
+	--cyan: #00fff2;
+	--purple: #bd00ff;
+	--pink: #ff0055;
+
+	/* Use Cyan as primary accent for now, or mix them */
+	--accent: var(--cyan);
+	--accent-900: #008f88;
+	--accent-700: #00bfb6;
+	--accent-400: #57fffa;
+	--accent-200: #adfffb;
+	--accent-light: #57fffa;
+
+	--accent-muted: rgba(0, 255, 242, 0.12);
+	--glass: rgba(255, 255, 255, 0.05);
+
+	/* Neon Glows */
+	--neon-cyan: rgba(0, 255, 242, 0.5);
+	--neon-purple: rgba(189, 0, 255, 0.5);
+	--neon-pink: rgba(255, 0, 85, 0.5);
+
+	--neon-glow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-purple);
 	--base-font-size: 19px;
 
-	/* background gradient - black dominant with neon green at top-right and bottom-left */
-	--bg-gradient: linear-gradient(135deg, var(--neon-green) 0%, var(--glass) 15%, transparent 40%),
-		linear-gradient(315deg, var(--neon-green) 0%, var(--accent-muted) 15%, transparent 40%),
+	/* Multi-color Mesh Gradient */
+	--bg-gradient:
+		radial-gradient(circle at 15% 50%, rgba(189, 0, 255, 0.15), transparent 25%),
+		radial-gradient(circle at 85% 30%, rgba(0, 255, 242, 0.15), transparent 25%),
+		radial-gradient(circle at 50% 80%, rgba(255, 0, 85, 0.1), transparent 40%),
 		linear-gradient(180deg, #050505 0%, #000000 100%);
 }
 

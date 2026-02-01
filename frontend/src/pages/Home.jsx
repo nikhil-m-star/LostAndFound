@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import Card from '../components/Card'
 
 import ScrollReveal from '../components/ScrollReveal'
-import ThemeToggle from '../components/ThemeToggle'
+
 
 // Variants for the grid container to stagger children
 const containerVariants = {
@@ -89,11 +89,6 @@ export default function Home() {
 
           <div className="hero-content">
             <div className="page-title intro-title">Welcome to Lost & Found</div>
-            <div className="intro-subtitle">Browse reports or add a new one</div>
-
-            <div style={{ margin: '20px 0', display: 'flex', justifyContent: 'center' }}>
-              <ThemeToggle />
-            </div>
 
             {!isSignedIn && (
               // ... existing code ...
@@ -115,7 +110,6 @@ export default function Home() {
             )}
             {isSignedIn && (
               <div className="welcome-section">
-                <h3>Welcome back, {user.firstName}!</h3>
                 <button onClick={() => navigate('/report/lost')} className="primary-action-btn">
                   Report an Item
                 </button>
