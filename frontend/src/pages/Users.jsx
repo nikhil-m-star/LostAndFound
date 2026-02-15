@@ -39,31 +39,71 @@ export default function Users() {
         <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
             <h1 style={{ marginBottom: 32, textAlign: 'center' }}>All Users</h1>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
+            <style>{`
+                .user-card-grid {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 16px;
+                }
+                .user-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 16px;
+                }
+                .user-joined {
+                    display: none;
+                }
+                @media (min-width: 768px) {
+                    .user-card-grid {
+                        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                    }
+                    .user-joined {
+                        display: block;
+                        font-size: 14px;
+                        font-weight: 700;
+                        margin-right: 16px;
+                    }
+                }
+            `}</style>
+            <div className="user-card-grid">
                 {users.map(user => (
-                    <div key={user.id} className="neo-card" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <div key={user.id} className="neo-card user-item">
                         <div style={{
-                            width: '48px', height: '48px',
+                            width: '48px', height: '48px', minWidth: '48px', // Fixed size
                             background: 'var(--neo-black)',
                             color: 'var(--neo-white)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: '24px',
+                            fontSize: '20px',
                             fontWeight: 900,
                             border: '2px solid var(--neo-black)'
                         }}>
                             {user.imageUrl ? (
                                 <img src={user.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={user.name} />
                             ) : (
-                                user.name.charAt(0).toUpperCase()
+                                user.name ? user.name.charAt(0).toUpperCase() : '?'
                             )}
                         </div>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '18px', fontWeight: 900, textTransform: 'uppercase' }}>{user.name}</div>
-                            <div style={{ fontSize: '14px', fontWeight: 700, opacity: 0.8 }}>{user.email}</div>
+
+                        <div style={{ flex: 1, minWidth: 0 /* Allow text truncation */ }}>
+                            <div style={{
+                                fontSize: '16px', fontWeight: 900, textTransform: 'uppercase',
+                                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'
+                            }}>
+                                {user.name || 'Unknown'}
+                            </div>
+                            <div style={{
+                                fontSize: '12px', fontWeight: 700, opacity: 0.8,
+                                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'
+                            }}>
+                                {user.email}
+                            </div>
                         </div>
-                        <div style={{ fontSize: '14px', fontWeight: 700, display: 'none', md: { display: 'block' } }}>
+
+                        <div className="user-joined">
                             Joined: {new Date(user.created_at).toLocaleDateString()}
                         </div>
+
                         <button
                             onClick={() => navigate(`/chat?userId=${user.id}&userName=${encodeURIComponent(user.name)}`)}
                             title="Message User"
@@ -71,15 +111,16 @@ export default function Users() {
                                 background: 'var(--neo-black)',
                                 color: 'var(--neo-white)',
                                 border: '2px solid var(--neo-black)',
-                                width: '40px', height: '40px',
+                                width: '44px', height: '44px', minWidth: '44px', // Fixed size
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 cursor: 'pointer',
-                                transition: 'transform 0.1s'
+                                transition: 'transform 0.1s',
+                                padding: 0
                             }}
                             onMouseDown={e => e.currentTarget.style.transform = 'scale(0.95)'}
                             onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
                         >
-                            <IoSend size={18} />
+                            <IoSend size={20} />
                         </button>
                     </div>
                 ))}
