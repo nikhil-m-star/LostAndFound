@@ -459,8 +459,7 @@ export default function Chat() {
                     <div className="no-chat-selected" style={{
                         flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--neo-black)', opacity: 0.5
                     }}>
-                        <FiMessageSquare size={64} style={{ marginBottom: '16px' }} />
-                        <p style={{ fontWeight: 700, fontSize: '18px' }}>Select a conversation to start messaging</p>
+                        {/* Placeholder removed as per user request */}
                     </div>
                 )}
             </div>
