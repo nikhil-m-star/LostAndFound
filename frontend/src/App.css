@@ -313,6 +313,13 @@ img {
 	display: none !important;
 }
 
+/* Internal Clerk Watermark Removal */
+.cl-internal-b3fm6y,
+.cl-footer,
+.cl-branding {
+	display: none !important;
+}
+
 /* Mobile Screens (max-width: 768px) */
 @media (max-width: 768px) {
 
@@ -324,13 +331,96 @@ img {
 	/* Show Mobile Components */
 	.floating-menu-btn {
 		display: flex !important;
+		position: fixed;
+		bottom: 24px;
+		right: 24px;
+		z-index: 1000;
+		width: 60px;
+		height: 60px;
+		background: var(--neo-yellow);
+		border: 3px solid var(--neo-black);
+		box-shadow: 4px 4px 0 var(--neo-black);
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		border-radius: 50%;
+		transition: transform 0.2s;
 	}
 
-	/* Mobile Menu styles when open are handled by .open class, but we need to allow display */
-	.mobile-menu,
+	.floating-menu-btn:active {
+		transform: scale(0.95);
+		box-shadow: 2px 2px 0 var(--neo-black);
+	}
+
 	.mobile-menu-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background: rgba(0, 0, 0, 0.5);
+		backdrop-filter: blur(4px);
+		z-index: 998;
+		display: none;
+	}
+
+	.mobile-menu-overlay.open {
 		display: block;
-		/* But hidden by opacity/transform usually */
+	}
+
+	.mobile-menu {
+		position: fixed;
+		top: 0;
+		right: 0;
+		height: 100vh;
+		width: 80%;
+		max-width: 300px;
+		background: var(--neo-white);
+		border-left: 3px solid var(--neo-black);
+		z-index: 999;
+		transform: translateX(100%);
+		transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		display: flex;
+		flex-direction: column;
+	}
+
+	.mobile-menu.open {
+		transform: translateX(0);
+	}
+
+	.mobile-menu-content {
+		padding: 24px;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		overflow-y: auto;
+	}
+
+	.mobile-nav-links {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		margin-top: 24px;
+	}
+
+	.mobile-nav-links a {
+		font-size: 18px;
+		font-weight: 700;
+		text-transform: uppercase;
+		text-decoration: none;
+		color: var(--neo-black);
+		padding: 12px;
+		border: 2px solid transparent;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	.mobile-nav-links a.active,
+	.mobile-nav-links a:hover {
+		background: var(--neo-yellow);
+		border: 2px solid var(--neo-black);
+		box-shadow: 4px 4px 0 var(--neo-black);
 	}
 }
 
