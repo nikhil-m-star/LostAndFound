@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useAuth, useUser } from '@clerk/clerk-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { FiMessageSquare, FiArrowLeft, FiUsers } from 'react-icons/fi'
+import { FiArrowLeft } from 'react-icons/fi'
 import { IoSend } from 'react-icons/io5'
 
 export default function Chat() {
