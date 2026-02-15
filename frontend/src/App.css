@@ -247,6 +247,18 @@ textarea:focus {
 	box-shadow: var(--neo-shadow);
 }
 
+/* --- RESPONSIVE VISIBILITY RULES --- */
+
+/* Desktop Screens (min-width: 769px) */
+@media (min-width: 769px) {
+
+	.mobile-navbar-container,
+	.mobile-menu,
+	.mobile-menu-overlay {
+		display: none !important;
+	}
+}
+
 /* --- LAYOUT UTILITIES (Restored) --- */
 
 .main-content {
@@ -307,11 +319,8 @@ img {
 /* --- RESPONSIVE VISIBILITY RULES --- */
 
 /* Default: Show Desktop, Hide Mobile components */
-.mobile-navbar-container,
-.mobile-menu,
-.mobile-menu-overlay {
-	display: none !important;
-}
+/* Mobile components are hidden by default on desktop via media query below */
+/* .mobile-navbar-container, .mobile-menu, .mobile-menu-overlay { display: none; } */
 
 /* Internal Clerk Watermark Removal */
 .cl-internal-b3fm6y,
@@ -368,7 +377,7 @@ img {
 		height: 100vh;
 		background: rgba(0, 0, 0, 0.5);
 		backdrop-filter: blur(4px);
-		z-index: 998;
+		z-index: 1001;
 		display: none;
 	}
 
@@ -385,7 +394,9 @@ img {
 		max-width: 300px;
 		background: var(--neo-white);
 		border-left: 3px solid var(--neo-black);
-		z-index: 999;
+
+		z-index: 1002;
+		/* Highest */
 		transform: translateX(100%);
 		transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 		display: flex;
