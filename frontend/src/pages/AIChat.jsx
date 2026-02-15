@@ -129,9 +129,7 @@ export default function AIChat() {
             {/* Header with Mode Toggles */}
             <div className="chat-header" style={{ flexShrink: 0 }}>
                 <div className="chat-title-group">
-                    <div className="chat-icon-circle">
-                        {mode === 'chat' ? <FiCpu size={24} color="#000" /> : <FiSearch size={24} color="#000" />}
-                    </div>
+                    {/* Logo Removed */}
                 </div>
 
                 <div className="chat-toggles" style={{ display: 'flex', gap: '16px' }}>

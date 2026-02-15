@@ -48,8 +48,7 @@ export default function MobileNavbar() {
                                 <img src={user.imageUrl} alt={user.firstName} />
                             </div>
                             <div className="mobile-user-info">
-                                <span className="mobile-user-name">{user.fullName}</span>
-                                <span className="mobile-user-email">{user.primaryEmailAddress?.emailAddress}</span>
+                                <span className="mobile-user-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.fullName}</span>
                             </div>
                         </div>
                     ) : (

@@ -368,9 +368,29 @@ export default function Chat() {
                         <style>{`
                             @media (max-width: 900px) {
                                 .mobile-only-back { display: block !important; }
-                                .chat-page-container { flex-direction: column; height: calc(100vh - 80px); margin: 0 !important; border: none !important; }
-                                .chat-sidebar { width: 100% !important; border-right: none !important; display: ${activeConversation ? 'none !important' : 'flex !important'}; }
-                                .chat-main { display: ${activeConversation ? 'flex !important' : 'none !important'}; height: 100%; border-left: none !important; }
+                                .chat-page-container {
+                                    flex-direction: column;
+                                    height: calc(100vh - 80px); /* Adjust based on navbar height */
+                                    margin: 0 !important;
+                                    border: none !important;
+                                    width: 100vw !important;
+                                    position: fixed;
+                                    top: 80px; /* Adjust based on navbar height */
+                                    left: 0;
+                                    z-index: 50;
+                                }
+                                .chat-sidebar {
+                                    width: 100% !important;
+                                    border-right: none !important;
+                                    display: ${activeConversation ? 'none !important' : 'flex !important'};
+                                    height: 100%;
+                                }
+                                .chat-main {
+                                    display: ${activeConversation ? 'flex !important' : 'none !important'};
+                                    height: 100%;
+                                    border-left: none !important;
+                                    width: 100%;
+                                }
                             }
                         `}</style>
                         <div className="chat-messages" style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -410,8 +430,8 @@ export default function Chat() {
                                 }}
                             />
                             <button type="submit" disabled={!newMessage.trim()} style={{
-                                background: '#FFFFFF',
-                                color: '#000000',
+                                background: '#000000', /* Black background for visibility */
+                                color: '#FFFFFF',
                                 border: '2px solid #000000',
                                 width: '48px',
                                 height: '48px',
@@ -421,15 +441,7 @@ export default function Chat() {
                                 justifyContent: 'center',
                                 opacity: !newMessage.trim() ? 0.5 : 1
                             }}>
-                                <svg
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="black"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                                </svg>
+                                <FiSend size={20} />
                             </button>
                         </form>
                     </>
