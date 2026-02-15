@@ -65,7 +65,7 @@ export default function Users() {
                             Joined: {new Date(user.created_at).toLocaleDateString()}
                         </div>
                         <button
-                            onClick={() => navigate(`/chat?userId=${user.id}`)}
+                            onClick={() => navigate(`/chat?userId=${user.id}&userName=${encodeURIComponent(user.name)}`)}
                             title="Message User"
                             style={{
                                 background: 'var(--neo-black)',

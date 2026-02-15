@@ -10,6 +10,7 @@ export default function Chat() {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
     const targetUserId = searchParams.get('userId')
+    const targetUserName = searchParams.get('userName')
 
     const [conversations, setConversations] = useState([])
     const [activeConversation, setActiveConversation] = useState(null)
@@ -65,10 +66,10 @@ export default function Chat() {
                 // Ideally we would fetch the user name here so it doesn't say "User"
                 // But for now enabling the chat is the priority.
                 console.log('DEBUG setting placeholder for:', targetUserId);
-                setActiveConversation({ user: { id: targetUserId, name: 'User' }, messages: [] })
+                setActiveConversation({ user: { id: targetUserId, name: targetUserName || 'User' }, messages: [] })
             }
         }
-    }, [targetUserId, conversations])
+    }, [targetUserId, targetUserName, conversations])
 
     useEffect(() => {
         let interval
