@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useAuth, useUser } from '@clerk/clerk-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { FiSend, FiMessageSquare, FiArrowLeft, FiUsers } from 'react-icons/fi'
+import { FiMessageSquare, FiArrowLeft, FiUsers } from 'react-icons/fi'
+import { IoSend } from 'react-icons/io5'
 
 export default function Chat() {
     const { getToken, userId } = useAuth()
@@ -370,26 +371,34 @@ export default function Chat() {
                                 .mobile-only-back { display: block !important; }
                                 .chat-page-container {
                                     flex-direction: column;
-                                    height: calc(100vh - 80px); /* Adjust based on navbar height */
+                                    height: calc(100dvh - 75px) !important; /* Adjusted for mobile nav height usually ~70-80px */
                                     margin: 0 !important;
                                     border: none !important;
                                     width: 100vw !important;
                                     position: fixed;
-                                    top: 80px; /* Adjust based on navbar height */
+                                    top: 75px; /* Adjust to match precise navbar height */
                                     left: 0;
                                     z-index: 50;
+                                    background: var(--neo-bg);
                                 }
                                 .chat-sidebar {
                                     width: 100% !important;
                                     border-right: none !important;
                                     display: ${activeConversation ? 'none !important' : 'flex !important'};
+                                    flex: 1;
                                     height: 100%;
                                 }
                                 .chat-main {
                                     display: ${activeConversation ? 'flex !important' : 'none !important'};
+                                    flex: 1;
                                     height: 100%;
                                     border-left: none !important;
                                     width: 100%;
+                                    flex-direction: column;
+                                }
+                                /* Ensure input area stays at bottom */
+                                .chat-input-area {
+                                    padding-bottom: 24px; /* safe area */
                                 }
                             }
                         `}</style>
@@ -430,7 +439,7 @@ export default function Chat() {
                                 }}
                             />
                             <button type="submit" disabled={!newMessage.trim()} style={{
-                                background: '#000000', /* Black background for visibility */
+                                background: '#000000',
                                 color: '#FFFFFF',
                                 border: '2px solid #000000',
                                 width: '48px',
@@ -441,7 +450,7 @@ export default function Chat() {
                                 justifyContent: 'center',
                                 opacity: !newMessage.trim() ? 0.5 : 1
                             }}>
-                                <FiSend size={20} />
+                                <IoSend size={20} />
                             </button>
                         </form>
                     </>

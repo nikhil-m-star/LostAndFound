@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Card from '../components/Card'
-import { FiSend, FiCpu, FiSearch, FiMessageSquare } from 'react-icons/fi'
+import { FiCpu, FiSearch, FiMessageSquare } from 'react-icons/fi'
+import { IoSend } from 'react-icons/io5'
 
 const DUMMY_ITEMS = [
     { _id: 'd1', title: 'Blue Backpack', status: 'lost', location: 'Library', images: [{ url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=400&q=80' }] },
@@ -284,15 +285,7 @@ export default function AIChat() {
                                 flexShrink: 0,
                                 opacity: chatInput.trim() ? 1 : 0.5
                             }} disabled={!chatInput.trim()}>
-                                <svg
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="black"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                                </svg>
+                                <IoSend size={20} />
                             </button>
                         </div>
                     </form>
