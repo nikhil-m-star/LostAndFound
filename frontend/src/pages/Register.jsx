@@ -70,6 +70,7 @@ export default function Register() {
               borderRadius: '0px',
               boxShadow: '4px 4px 0px 0px #000000',
               color: '#000000',
+              backgroundColor: '#FFFFFF',
               fontWeight: '700'
             }
           }
