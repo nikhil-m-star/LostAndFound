@@ -272,11 +272,11 @@ export default function AIChat() {
                                 }}
                             />
                             <button type="submit" style={{
-                                background: '#FFFFFF',
-                                color: '#000000',
+                                background: '#000000',
+                                color: '#FFFFFF',
                                 border: '2px solid #000000',
-                                width: '48px',
-                                height: '48px',
+                                width: '44px',
+                                height: '44px',
                                 cursor: chatInput.trim() ? 'pointer' : 'default',
                                 display: 'flex',
                                 alignItems: 'center',

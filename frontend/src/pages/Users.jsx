@@ -36,7 +36,14 @@ export default function Users() {
     if (error) return <div style={{ padding: 40, color: 'red', fontWeight: 700 }}>Error: {error}</div>
 
     return (
-        <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }} className="users-page-container">
+            <style>{`
+                @media (max-width: 768px) {
+                    .users-page-container {
+                        padding: 12px !important;
+                    }
+                }
+            `}</style>
             <h1 style={{ marginBottom: 32, textAlign: 'center' }}>All Users</h1>
 
             <style>{`
