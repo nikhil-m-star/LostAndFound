@@ -67,9 +67,9 @@ export default function App() {
               <MyReports />
             </PrivateRoute>
           } />
-          <Route path="/admin/users" element={
+          <Route path="/users" element={
             <PrivateRoute>
-              <AdminUsers />
+              <Users />
             </PrivateRoute>
           } />
         </Routes>

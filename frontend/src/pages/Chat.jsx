@@ -251,7 +251,7 @@ export default function Chat() {
                             <FiArrowLeft /> BACK
                         </button>
 
-                        <button onClick={() => navigate('/admin/users')} style={{
+                        <button onClick={() => navigate('/users')} style={{
                             background: 'var(--neo-yellow)', border: '2px solid var(--neo-black)',
                             color: 'var(--neo-black)', padding: '6px 12px', fontSize: '12px', fontWeight: 900,
                             cursor: 'pointer', boxShadow: '2px 2px 0 var(--neo-black)'

@@ -32,12 +32,9 @@ export default function Navbar() {
                         <NavLink to="/my-reports" className={({ isActive }) => `neo-nav-link hover-yellow ${isActive ? 'active' : ''}`} title="My Reports">
                             <span>My Reports</span>
                         </NavLink>
-
-                        {isAdmin && (
-                            <NavLink to="/admin/users" className={({ isActive }) => `neo-nav-link hover-black ${isActive ? 'active' : ''}`} title="Admin Users">
-                                <span>Users</span>
-                            </NavLink>
-                        )}
+                        <NavLink to="/users" className={({ isActive }) => `neo-nav-link hover-black ${isActive ? 'active' : ''}`} title="All Users">
+                            <span>Users</span>
+                        </NavLink>
                     </>
                 )}
             </div>

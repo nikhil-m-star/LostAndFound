@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@clerk/clerk-react'
+import { useNavigate } from 'react-router-dom'
 import { FiUser } from 'react-icons/fi'
+import { IoSend } from 'react-icons/io5'
 
-export default function AdminUsers() {
+export default function Users() {
     const { getToken } = useAuth()
+    const navigate = useNavigate()
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -61,6 +64,23 @@ export default function AdminUsers() {
                         <div style={{ fontSize: '14px', fontWeight: 700, display: 'none', md: { display: 'block' } }}>
                             Joined: {new Date(user.created_at).toLocaleDateString()}
                         </div>
+                        <button
+                            onClick={() => navigate(`/chat?userId=${user.id}`)}
+                            title="Message User"
+                            style={{
+                                background: 'var(--neo-black)',
+                                color: 'var(--neo-white)',
+                                border: '2px solid var(--neo-black)',
+                                width: '40px', height: '40px',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                cursor: 'pointer',
+                                transition: 'transform 0.1s'
+                            }}
+                            onMouseDown={e => e.currentTarget.style.transform = 'scale(0.95)'}
+                            onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
+                        >
+                            <IoSend size={18} />
+                        </button>
                     </div>
                 ))}
             </div>
