@@ -307,7 +307,7 @@ img {
 /* --- RESPONSIVE VISIBILITY RULES --- */
 
 /* Default: Show Desktop, Hide Mobile components */
-.floating-menu-btn,
+.mobile-navbar-container,
 .mobile-menu,
 .mobile-menu-overlay {
 	display: none !important;
@@ -329,28 +329,36 @@ img {
 	}
 
 	/* Show Mobile Components */
-	.floating-menu-btn {
+	.mobile-navbar-container {
 		display: flex !important;
-		position: fixed;
-		bottom: 24px;
-		right: 24px;
+		justify-content: space-between;
+		align-items: center;
+		padding: 16px 24px;
+		background: var(--neo-white);
+		border-bottom: 3px solid var(--neo-black);
+		position: sticky;
+		top: 0;
 		z-index: 1000;
-		width: 60px;
-		height: 60px;
+	}
+
+	.mobile-menu-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		background: var(--neo-yellow);
 		border: 3px solid var(--neo-black);
 		box-shadow: 4px 4px 0 var(--neo-black);
-		align-items: center;
-		justify-content: center;
+		padding: 8px;
 		cursor: pointer;
-		border-radius: 50%;
-		transition: transform 0.2s;
+		transition: transform 0.1s;
 	}
 
-	.floating-menu-btn:active {
+	.mobile-menu-btn:active {
 		transform: scale(0.95);
 		box-shadow: 2px 2px 0 var(--neo-black);
 	}
+
+
 
 	.mobile-menu-overlay {
 		position: fixed;
