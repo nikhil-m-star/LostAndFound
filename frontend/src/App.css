@@ -329,6 +329,29 @@ img {
 	display: none !important;
 }
 
+/* Force Google/Social Buttons to match theme */
+.cl-socialButtonsBlockButton {
+	background-color: #FFFFFF !important;
+	color: #000000 !important;
+	border: 3px solid #000000 !important;
+	box-shadow: 4px 4px 0 0 #000000 !important;
+	border-radius: 0 !important;
+	text-transform: uppercase !important;
+	font-weight: 700 !important;
+	font-family: 'Space Grotesk', sans-serif !important;
+}
+
+.cl-socialButtonsBlockButton:hover {
+	background-color: #F0F0F0 !important;
+	box-shadow: 6px 6px 0 0 #000000 !important;
+	transform: translate(-2px, -2px) !important;
+}
+
+.cl-socialButtonsBlockButton__google {
+	background-color: #FFFFFF !important;
+	color: #000000 !important;
+}
+
 /* Mobile Screens (max-width: 768px) */
 @media (max-width: 768px) {
 
