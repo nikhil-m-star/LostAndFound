@@ -255,7 +255,7 @@ export default function ItemDetail() {
 
       <div className="detail-grid" style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
         gap: '40px'
       }}>
         {/* Left Column: Images */}
@@ -394,7 +394,8 @@ export default function ItemDetail() {
           </div>
 
           {/* Reporter Card */}
-          <div style={{
+
+          <div className="reporter-card" style={{
             background: 'var(--neo-black)',
             color: 'var(--neo-white)',
             padding: '24px',

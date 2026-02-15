@@ -402,3 +402,9 @@ div {
 .user-dropdown div {
 	color: var(--neo-black) !important;
 }
+
+/* Fix Reporter Card Text Color */
+.reporter-card,
+.reporter-card * {
+	color: var(--neo-white) !important;
+}
