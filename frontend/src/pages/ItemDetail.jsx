@@ -8,29 +8,41 @@ export default function ItemDetail() {
   const navigate = useNavigate()
   const { getToken, userId } = useAuth()
 
-  const [item, setItem] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [isOwner, setIsOwner] = useState(false)
-  const [isEditing, setIsEditing] = useState(false)
-  const [editForm, setEditForm] = useState({ title: '', description: '', location: '', category: '', dateEvent: '', contactMethod: '', contactPhone: '' })
-  const [saving, setSaving] = useState(false)
-  const [deleting, setDeleting] = useState(false)
+  // State Management
+  const [item, setItem] = useState(null)         // Holds the item data
+  const [loading, setLoading] = useState(true)   // Loading state for fetch
+  const [error, setError] = useState(null)       // Error state
+  const [isOwner, setIsOwner] = useState(false)  // Boolean to check if current user is owner
+  const [isEditing, setIsEditing] = useState(false) // Toggle for edit mode
+
+  // Form state for editing
+  const [editForm, setEditForm] = useState({
+    title: '', description: '', location: '', category: '',
+    dateEvent: '', contactMethod: '', contactPhone: ''
+  })
+
+  const [saving, setSaving] = useState(false)    // Saving state during update
+  const [deleting, setDeleting] = useState(false) // Deleting state
 
   useEffect(() => {
     fetchItem()
   }, [id])
 
+  // Fetch item details on component mount or ID change
   const fetchItem = async () => {
     try {
       setLoading(true)
       const base = import.meta.env.VITE_API_BASE || '/api'
+
+      // Fetch item data from backend
       const res = await fetch(`${base}/items/${id}`)
       if (!res.ok) {
         throw new Error('Failed to fetch item')
       }
       const data = await res.json()
       setItem(data)
+
+      // Initialize edit form with fetched data
       setEditForm({
         title: data.title || '',
         description: data.description || '',
@@ -41,10 +53,12 @@ export default function ItemDetail() {
         contactPhone: data.contactPhone || ''
       })
 
-      // Check if current user is the owner OR Admin
+      // Ownership Verification
+      // Check if current user is the owner OR Admin to allow edit/delete
       if (userId && data.reportedBy) {
         try {
           const token = await getToken();
+          // Fetch current user details to check admin status
           const userRes = await fetch(`${base}/auth/me`, {
             headers: { Authorization: `Bearer ${token}` }
           })

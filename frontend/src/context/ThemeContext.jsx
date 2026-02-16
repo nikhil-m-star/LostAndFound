@@ -1,7 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+// Context to hold the current theme state
 const ThemeContext = createContext();
 
+// Predefined color themes for the application
+// Each theme defines accent colors and neon glow effects
 export const themes = {
     green: {
         id: 'green',

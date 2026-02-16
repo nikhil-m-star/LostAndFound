@@ -17,6 +17,11 @@ import UserMenu from './components/UserMenu'
 import MobileNavbar from './components/MobileNavbar'
 import PrivateRoute from './components/PrivateRoute'
 
+/**
+ * Main Application Component
+ * Handles the overall layout (Navbar, MobileNavbar) and client-side routing.
+ * Uses Clerk for authentication and Vercel Analytics.
+ */
 export default function App() {
   const location = useLocation();
 

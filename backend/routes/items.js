@@ -11,7 +11,7 @@ router.post('/', auth, upload.array('images', 6), async (req, res) => {
     console.log('[DEBUG] POST /items Body:', req.body); // Check if reporterName is here
     const { title, description, location, status, category, dateEvent, contactMethod, contactPhone } = req.body;
 
-    // Basic Validation
+    // Basic Validation: Ensure required fields are present
     if (!category || !dateEvent) {
       return res.status(400).json({ message: 'Category and Date of Event are required' });
     }
@@ -89,16 +89,17 @@ router.post('/', auth, upload.array('images', 6), async (req, res) => {
     // For now, let's keep it simple and see if frontend breaks.
     // Actually, better to map it to ensure compatibility.
 
-    // Helper to map DB snake_case to API camelCase
+    // Helper to map DB snake_case columns to API camelCase properties for frontend consumption
     const mapItem = (item) => ({
       ...item,
       dateEvent: item.date_event,
       contactMethod: item.contact_method,
       contactPhone: item.contact_phone,
       reportedBy: item.reported_by,
-      _id: item.id // Alias for mongo compatibility if needed
+      _id: item.id // Alias for mongo compatibility (frontend often expects _id)
     });
 
+    // Return the created item
     res.json(mapItem(data));
 
   } catch (err) {
@@ -107,10 +108,14 @@ router.post('/', auth, upload.array('images', 6), async (req, res) => {
   }
 });
 
-// Get current user's items
+// @route   GET /api/items/my-items
+// @desc    Get all items reported by the current logged-in user
+// @access  Private
 router.get('/my-items', auth, async (req, res) => {
   try {
     console.log(`[DEBUG] GET /my-items using User ID: ${req.user.id}`);
+
+    // Fetch items from Supabase where reported_by matches current user
     const { data, error } = await supabase
       .from('items')
       .select('*, reported_by:users (id, name, email)')
@@ -121,7 +126,7 @@ router.get('/my-items', auth, async (req, res) => {
 
     if (error) throw error;
 
-    // Map response
+    // Map response to camelCase for frontend
     const items = data.map(item => ({
       ...item,
       _id: item.id,
@@ -139,7 +144,9 @@ router.get('/my-items', auth, async (req, res) => {
   }
 });
 
-// Get items (with simple search via query params)
+// @route   GET /api/items
+// @desc    Get all items with optional search and filtering
+// @access  Public
 router.get('/', async (req, res) => {
   try {
     const { q, status, limit = 20, page = 1 } = req.query;
@@ -148,16 +155,17 @@ router.get('/', async (req, res) => {
       .from('items')
       .select('*, reported_by:users (id, name, email)'); // Join including ID
 
-    // Filtering
+    // Filter by status if provided (Lost/Found)
     if (status) {
       query = query.eq('status', status);
     }
 
+    // Search query: check title, description, or location (case-insensitive)
     if (q) {
       query = query.or(`title.ilike.%${q}%,description.ilike.%${q}%,location.ilike.%${q}%`);
     }
 
-    // Pagination
+    // Pagination Calculation
     const from = (page - 1) * parseInt(limit);
     const to = from + parseInt(limit) - 1;
 
@@ -167,7 +175,7 @@ router.get('/', async (req, res) => {
 
     if (error) throw error;
 
-    // Map response
+    // Map response to camelCase
     const items = data.map(item => ({
       ...item,
       _id: item.id, // Frontend compatibility
