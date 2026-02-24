@@ -281,21 +281,72 @@ const searchItems = async (analysis) => {
 
 const buildDeterministicReply = (analysis, items) => {
     if (analysis.isGeneralChat) {
-        return "I can help you search both lost and found reports. Tell me what item you're looking for and where you last saw it.";
+        return [
+            'Answer:',
+            "I'm here to help with both general questions and lost-and-found support.",
+            '',
+            'Lost & Found Help:',
+            '- Tell me what item you lost/found, color, and location.',
+            '- I can search both lost and found reports for likely matches.'
+        ].join('\n');
     }
 
     if (!items || items.length === 0) {
-        return "I checked both lost and found reports but could not find a close match yet. Try adding color, location, or date details.";
+        return [
+            'Summary:',
+            'No close matches found across lost and found reports.',
+            '',
+            'Top Matches:',
+            'No close matches found.',
+            '',
+            'Next Steps:',
+            '1. Share more details (color, brand, exact location, date).',
+            '2. File a lost/found report and check back later.'
+        ].join('\n');
     }
 
     const foundCount = items.filter(i => i.status === 'found').length;
     const lostCount = items.filter(i => i.status === 'lost').length;
-    const preview = items
-        .slice(0, 3)
-        .map(i => `- ${i.title} (${i.status} at ${i.location || 'unknown location'})`)
-        .join('\n');
+    const preview = items.slice(0, 5).map((i, index) => {
+        return `${index + 1}. ${i.title} (${i.status}) - ${i.location || 'unknown location'}`;
+    });
 
-    return `I found ${items.length} possible matches across both lost and found reports (${foundCount} found, ${lostCount} lost).\n${preview}`;
+    return [
+        'Summary:',
+        `I found ${items.length} possible matches across both lost and found reports (${foundCount} found, ${lostCount} lost).`,
+        '',
+        'Top Matches:',
+        ...preview,
+        '',
+        'Next Steps:',
+        '1. Open a match card to view full details/contact info.',
+        '2. If none match well, file or update your report with more detail.'
+    ].join('\n');
+};
+
+const formatGeminiReply = (rawText, analysis, items) => {
+    const text = String(rawText || '').trim();
+    if (!text) return buildDeterministicReply(analysis, items);
+
+    if (analysis.isGeneralChat) {
+        if (/^answer:/i.test(text) && /lost\s*&\s*found help:/i.test(text)) {
+            return text;
+        }
+        return [
+            'Answer:',
+            text,
+            '',
+            'Lost & Found Help:',
+            '- Ask me to search by item, color, location, and date.',
+            '- I can search both lost and found reports.'
+        ].join('\n');
+    }
+
+    if (/^summary:/i.test(text) && /top matches:/i.test(text) && /next steps:/i.test(text)) {
+        return text;
+    }
+
+    return buildDeterministicReply(analysis, items);
 };
 
 exports.processQuery = async (userText) => {
@@ -369,7 +420,12 @@ exports.processQuery = async (userText) => {
       2. You ARE allowed to answer general-knowledge questions that are not about lost-and-found.
       3. Do not refuse only because the topic is outside lost-and-found.
       4. Keep it concise (2-6 sentences) unless the user asks for depth.
-      5. Optionally add one short line that you can also help with lost/found reports.
+      5. Output using this exact format:
+         Answer:
+         <direct answer>
+
+         Lost & Found Help:
+         - <one short line about lost/found assistance>
       6. Output plain text only (no JSON).
     `
             : `
@@ -390,10 +446,20 @@ exports.processQuery = async (userText) => {
       INSTRUCTIONS:
       1. The user is looking for an item.
       2. Mention that the matches come from both lost and found reports.
-      3. If text matches are found, summarize them naturally.
-      4. If NO matches, apologize and suggest filing a report or checking back later.
-      5. Keep the tone helpful, empathetic, and concise.
-      6. Output plain text only (no JSON).
+      3. Output using this exact format:
+         Summary:
+         <1-2 sentence summary>
+
+         Top Matches:
+         1. <title> (<status>) - <location>
+         2. ...
+         (If none, write: "No close matches found.")
+
+         Next Steps:
+         1. <action>
+         2. <action>
+      4. Keep the tone helpful, empathetic, and concise.
+      5. Output plain text only (no JSON).
     `;
 
         try {
@@ -403,7 +469,7 @@ exports.processQuery = async (userText) => {
                 extractionModel
             );
             generationModel = generationResponse.modelName;
-            botMessage = generationResponse.result.response.text();
+            botMessage = formatGeminiReply(generationResponse.result.response.text(), analysis, items);
             generationUsedDeterministicReply = false;
         } catch (e) {
             console.error("Gemini generation unavailable, using deterministic reply:", e.message);
