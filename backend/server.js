@@ -1,6 +1,7 @@
-// Load environment variables from .env.local if present, otherwise from .env
-require('dotenv').config({ path: '.env.local' });
-require('dotenv').config();
+// Load backend env files using absolute paths so this works from any cwd.
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '.env.local') });
+require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 const express = require('express');
 const cors = require('cors');

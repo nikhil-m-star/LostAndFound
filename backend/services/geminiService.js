@@ -10,9 +10,23 @@ const MODEL_CANDIDATES = [...new Set(
     [PRIMARY_MODEL, FALLBACK_MODEL, SECOND_FALLBACK_MODEL].filter(Boolean)
 )];
 
-const genAI = process.env.GEMINI_API_KEY
-    ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-    : null;
+let cachedGeminiKey = null;
+let cachedGeminiClient = null;
+
+const getGeminiClient = () => {
+    const key = process.env.GEMINI_API_KEY;
+    if (!key || !key.trim()) {
+        throw new Error("GEMINI_API_KEY is missing");
+    }
+
+    if (cachedGeminiClient && cachedGeminiKey === key) {
+        return cachedGeminiClient;
+    }
+
+    cachedGeminiKey = key;
+    cachedGeminiClient = new GoogleGenerativeAI(key);
+    return cachedGeminiClient;
+};
 
 const STOPWORDS = new Set([
     'a', 'an', 'the', 'and', 'or', 'to', 'for', 'of', 'on', 'in', 'at', 'by',
@@ -66,16 +80,12 @@ const getModelOrder = (preferredModel) => {
 };
 
 const generateContentWithFallback = async (prompt, label, preferredModel = null) => {
-    if (!genAI) {
-        throw new Error("GEMINI_API_KEY is missing");
-    }
-
     let lastError;
 
     for (const modelName of getModelOrder(preferredModel)) {
         try {
             console.log(`[Gemini] ${label} using model: ${modelName}`);
-            const model = genAI.getGenerativeModel({ model: modelName });
+            const model = getGeminiClient().getGenerativeModel({ model: modelName });
             const result = await model.generateContent(prompt);
             return { result, modelName };
         } catch (error) {
