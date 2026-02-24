@@ -59,7 +59,51 @@ const GENERAL_CHAT_PATTERNS = [
     /\bhow are you\b/i,
     /\bwho are you\b/i,
     /\bwhat can you do\b/i,
-    /\bwhat is this app\b/i
+    /\bwhat is this app\b/i,
+    /\btell me about yourself\b/i,
+    /\bthank(s| you)\b/i,
+    /\bgood (morning|afternoon|evening)\b/i
+];
+
+const HELP_PATTERNS = [
+    /\bhow (?:do|can) i (?:report|post|submit|claim)\b/i,
+    /\bwhere (?:do|can) i (?:report|post|submit|claim)\b/i,
+    /\bhow does this app work\b/i,
+    /\bhow to use\b/i,
+    /\bwhat should i do if i (?:lost|found)\b/i
+];
+
+const SEARCH_ACTION_PATTERNS = [
+    /\bfind\b/i,
+    /\bsearch\b/i,
+    /\blook(?:ing)? for\b/i,
+    /\bshow\b/i,
+    /\blist\b/i,
+    /\bcheck\b/i,
+    /\blocate\b/i,
+    /\bmatch(?:es)?\b/i
+];
+
+const ITEM_CONTEXT_PATTERNS = [
+    /\bitem(s)?\b/i,
+    /\breport(s)?\b/i,
+    /\bwallet\b/i,
+    /\bphone\b/i,
+    /\biphone\b/i,
+    /\bkeys?\b/i,
+    /\bbag\b/i,
+    /\bbackpack\b/i,
+    /\blaptop\b/i,
+    /\bcharger\b/i,
+    /\bwatch\b/i,
+    /\bcard\b/i,
+    /\bid\b/i,
+    /\bpassport\b/i,
+    /\bglasses\b/i,
+    /\bheadphones?\b/i,
+    /\bearbuds?\b/i,
+    /\bumbrella\b/i,
+    /\bbottle\b/i
 ];
 
 const isRetryableModelError = (error) => {
@@ -130,8 +174,14 @@ const heuristicAnalysis = (userText) => {
     const hasLostSignal = LOST_PATTERNS.some(pattern => pattern.test(userText));
     const hasFoundSignal = FOUND_PATTERNS.some(pattern => pattern.test(userText));
     const hasGeneralChatSignal = GENERAL_CHAT_PATTERNS.some(pattern => pattern.test(userText));
+    const hasHelpSignal = HELP_PATTERNS.some(pattern => pattern.test(userText));
+    const hasSearchActionSignal = SEARCH_ACTION_PATTERNS.some(pattern => pattern.test(userText));
+    const hasItemContextSignal = ITEM_CONTEXT_PATTERNS.some(pattern => pattern.test(userText));
 
-    const isGeneralChat = hasGeneralChatSignal && !hasLostSignal && !hasFoundSignal;
+    const isGeneralChat =
+        hasHelpSignal ||
+        (hasGeneralChatSignal && !hasLostSignal && !hasFoundSignal) ||
+        (!hasLostSignal && !hasFoundSignal && !hasSearchActionSignal && !hasItemContextSignal);
 
     let intent = 'chat';
     if (hasLostSignal && !hasFoundSignal) intent = 'lost';
@@ -171,6 +221,11 @@ const normalizeAnalysis = (rawAnalysis, fallbackAnalysis) => {
             ? rawAnalysis.date.trim()
             : null
     };
+
+    // If fallback clearly recognized this as chat/help, keep it as general chat.
+    if (fallbackAnalysis.isGeneralChat && normalized.intent === 'chat') {
+        normalized.isGeneralChat = true;
+    }
 
     return normalized;
 };
