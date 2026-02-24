@@ -358,7 +358,21 @@ exports.processQuery = async (userText) => {
         let generationModel = null;
         let generationUsedDeterministicReply = true;
 
-        const generationPrompt = `
+        const generationPrompt = analysis.isGeneralChat
+            ? `
+      You are "FoundIt AI", an assistant inside a university Lost & Found app.
+      
+      User Query: "${safeUserText}"
+
+      INSTRUCTIONS:
+      1. This is a general chat question. Answer it directly and helpfully.
+      2. You ARE allowed to answer general-knowledge questions that are not about lost-and-found.
+      3. Do not refuse only because the topic is outside lost-and-found.
+      4. Keep it concise (2-6 sentences) unless the user asks for depth.
+      5. Optionally add one short line that you can also help with lost/found reports.
+      6. Output plain text only (no JSON).
+    `
+            : `
       You are "FoundIt AI", a helpful assistant for a university Lost & Found portal.
       
       User Query: "${safeUserText}"
@@ -366,21 +380,20 @@ exports.processQuery = async (userText) => {
       
       Database Search Results (${items.length} items found):
       ${JSON.stringify(items.map(i => ({
-            title: i.title,
-            desc: i.description,
-            loc: i.location,
-            date: i.dateEvent,
-            contact: i.contactMethod
-        })))}
+                title: i.title,
+                desc: i.description,
+                loc: i.location,
+                date: i.dateEvent,
+                contact: i.contactMethod
+            })))}
 
       INSTRUCTIONS:
-      1. If the user asked a general question (e.g., "how are you?", "what is this app?"), answer it conversationally. You are a Lost & Found bot.
-      2. If the user is looking for an item:
-         - Mention that the matches come from both lost and found reports.
-         - If text matches are found, summarize them naturally (e.g., "I found a few matches! There is a black wallet found in the canteen...").
-         - If NO matches, apologize and suggest they file a report or check back later.
-      3. Keep the tone helpful, empathetic, and concise.
-      4. Do NOT output JSON. Output plain text (or markdown).
+      1. The user is looking for an item.
+      2. Mention that the matches come from both lost and found reports.
+      3. If text matches are found, summarize them naturally.
+      4. If NO matches, apologize and suggest filing a report or checking back later.
+      5. Keep the tone helpful, empathetic, and concise.
+      6. Output plain text only (no JSON).
     `;
 
         try {
