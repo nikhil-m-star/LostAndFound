@@ -2,19 +2,59 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const supabase = require('../config/supabase');
 
 // Initialize Gemini
-// Using the latest preview model as requested
-const MODEL_NAME = "gemini-3-flash-preview";
+const PRIMARY_MODEL = process.env.GEMINI_PRIMARY_MODEL || "gemini-2.5-flash-lite";
+const FALLBACK_MODEL = process.env.GEMINI_FALLBACK_MODEL || "gemini-2.5-flash";
+const SECOND_FALLBACK_MODEL = process.env.GEMINI_SECOND_FALLBACK_MODEL || "gemini-2.0-flash-lite";
+
+const MODEL_CANDIDATES = [...new Set(
+    [PRIMARY_MODEL, FALLBACK_MODEL, SECOND_FALLBACK_MODEL].filter(Boolean)
+)];
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+const isRetryableModelError = (error) => {
+    const message = (error?.message || '').toLowerCase();
+    return (
+        message.includes('429') ||
+        message.includes('too many requests') ||
+        message.includes('quota') ||
+        message.includes('rate limit') ||
+        message.includes('503') ||
+        message.includes('service unavailable') ||
+        message.includes('overloaded')
+    );
+};
+
+const getModelOrder = (preferredModel) => {
+    return [...new Set([preferredModel, ...MODEL_CANDIDATES].filter(Boolean))];
+};
+
+const generateContentWithFallback = async (prompt, label, preferredModel = null) => {
+    let lastError;
+
+    for (const modelName of getModelOrder(preferredModel)) {
+        try {
+            console.log(`[Gemini] ${label} using model: ${modelName}`);
+            const model = genAI.getGenerativeModel({ model: modelName });
+            const result = await model.generateContent(prompt);
+            return { result, modelName };
+        } catch (error) {
+            lastError = error;
+            console.error(`[Gemini] ${label} failed on ${modelName}: ${error.message}`);
+            if (!isRetryableModelError(error)) {
+                throw error;
+            }
+        }
+    }
+
+    throw lastError || new Error("All configured Gemini models failed");
+};
 
 exports.processQuery = async (userText) => {
     try {
         if (!process.env.GEMINI_API_KEY) {
             throw new Error("GEMINI_API_KEY is missing");
         }
-
-        console.log(`[Gemini] Using Model: ${MODEL_NAME}`);
-        const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
         // --- STEP 1: UNDERSTAND INTENT (Extraction) ---
         const extractionPrompt = `
@@ -30,7 +70,10 @@ exports.processQuery = async (userText) => {
       }
     `;
 
-        const extractionResult = await model.generateContent(extractionPrompt);
+        const {
+            result: extractionResult,
+            modelName: extractionModel
+        } = await generateContentWithFallback(extractionPrompt, 'Intent extraction');
         const extractionText = extractionResult.response.text().replace(/```json/g, '').replace(/```/g, '').trim();
         let analysis;
 
@@ -128,13 +171,16 @@ exports.processQuery = async (userText) => {
       4. Do NOT output JSON. Output plain text (or markdown).
     `;
 
-        const finalResult = await model.generateContent(generationPrompt);
+        const {
+            result: finalResult,
+            modelName: generationModel
+        } = await generateContentWithFallback(generationPrompt, 'Response generation', extractionModel);
         const botMessage = finalResult.response.text();
 
         return {
             message: botMessage,
             results: items, // Frontend might still want these to render cards
-            debug: { analysis, searchPerformed }
+            debug: { analysis, searchPerformed, extractionModel, generationModel }
         };
 
     } catch (error) {
