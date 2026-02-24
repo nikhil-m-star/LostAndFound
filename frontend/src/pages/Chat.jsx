@@ -12,6 +12,7 @@ export default function Chat() {
     const targetUserId = searchParams.get('userId')
     const targetUserName = searchParams.get('userName')
 
+    // --- State Management ---
     const [conversations, setConversations] = useState([])
     const [activeConversation, setActiveConversation] = useState(null)
     const [messages, setMessages] = useState([])
@@ -24,15 +25,20 @@ export default function Chat() {
     const [isSearching, setIsSearching] = useState(false)
 
     const messagesEndRef = useRef(null)
-
     const [currentSupabaseUser, setCurrentSupabaseUser] = useState(null)
 
-    // Initial load
+    // --- Effects ---
+
+    // Initial load: Get current user details and conversation list
     useEffect(() => {
         fetchCurrentUser()
         fetchConversations()
     }, [])
 
+    /**
+     * Fetches the current authenticated user's details from the backend
+     * Useful for determining 'sender' identity in messages
+     */
     const fetchCurrentUser = async () => {
         try {
             const token = await getToken()
@@ -49,7 +55,7 @@ export default function Chat() {
         }
     }
 
-    // If navigated with userId, try to start/open that conversation
+    // Handles direct navigation to chat with a specific user (via URL params)
     useEffect(() => {
         if (targetUserId) {
             const existing = conversations.find(c => c.user.id === targetUserId)
@@ -57,26 +63,21 @@ export default function Chat() {
                 console.log('DEBUG Found existing:', existing);
                 setActiveConversation(existing)
             } else {
-                // Determine if we are still loading conversations
-                // If we are loading, we might want to wait, BUT:
-                // If the list is truly empty, we need to fall into this block.
-                // The `conversations` dependency ensures this re-runs when they load.
-                // So it is safe to set a temporary placeholder here.
-
-                // Ideally we would fetch the user name here so it doesn't say "User"
-                // But for now enabling the chat is the priority.
+                // If conversation doesn't exist yet, create a temporary placeholder
+                // to allow immediate chatting
                 console.log('DEBUG setting placeholder for:', targetUserId);
                 setActiveConversation({ user: { id: targetUserId, name: targetUserName || 'User' }, messages: [] })
             }
         }
     }, [targetUserId, targetUserName, conversations])
 
+    // Polling logic for active conversation
+    // Fetches new messages every 5 seconds to keep chat updated
     useEffect(() => {
         let interval
         if (activeConversation) {
             fetchMessages(activeConversation.user.id)
             scrollBottom()
-            // Poll for new messages every 5 seconds
             interval = setInterval(() => {
                 fetchMessages(activeConversation.user.id, true)
             }, 5000)
@@ -84,6 +85,7 @@ export default function Chat() {
         return () => clearInterval(interval)
     }, [activeConversation?.user?.id])
 
+    // Auto-scroll to bottom when new messages arrive
     useEffect(() => {
         scrollBottom()
     }, [messages])
@@ -92,6 +94,9 @@ export default function Chat() {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
 
+    /**
+     * Fetches list of all conversations for the sidebar
+     */
     const fetchConversations = async () => {
         try {
             const token = await getToken()
@@ -110,6 +115,11 @@ export default function Chat() {
         }
     }
 
+    /**
+     * Fetches messages for a specific conversation
+     * @param {string} partnerId - ID of the user we are chatting with
+     * @param {boolean} isPolling - If true, this is a background update (don't mark read immediately)
+     */
     const fetchMessages = async (partnerId, isPolling = false) => {
         try {
             const token = await getToken()
@@ -120,8 +130,8 @@ export default function Chat() {
             if (res.ok) {
                 const data = await res.json()
                 setMessages(data)
+                // Mark messages as read if this is an explicit load (not just a poll)
                 if (!isPolling) {
-                    // Mark as read
                     await fetch(`${base}/chat/mark-read`, {
                         method: 'POST',
                         headers: {

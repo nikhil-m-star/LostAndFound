@@ -5,12 +5,14 @@ import { FiHome, FiCpu, FiMessageSquare, FiUsers, FiBox, FiSearch, FiPlusCircle 
 import UserMenu from './UserMenu'
 
 export default function Navbar() {
-    const { user, isSignedIn } = useUser() // Added isSignedIn
+    // Access Clerk user data for conditional rendering (Admins, logged-in state)
+    const { user, isSignedIn } = useUser()
     const isAdmin = user?.primaryEmailAddress?.emailAddress === 'nikhilm.cs24@bmsce.ac.in'
 
     return (
         <nav className="neo-navbar">
             <div className="neo-brand">Lost & Found</div>
+            {/* Desktop Navigation Links */}
             <div className="neo-nav-links" style={{ display: 'flex', gap: '16px' }}>
                 <NavLink to="/" end className={({ isActive }) => `neo-nav-link hover-red ${isActive ? 'active' : ''}`} title="Home">
                     <span>Home</span>

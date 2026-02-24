@@ -7,18 +7,25 @@ import { IoSend } from 'react-icons/io5'
 export default function Users() {
     const { getToken } = useAuth()
     const navigate = useNavigate()
+    // State for storing user list and UI status
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
+    // Fetch users on component mount
     useEffect(() => {
         fetchUsers()
     }, [])
 
+    /**
+     * Fetches the list of all registered users from the backend
+     * Requires authentication token
+     */
     const fetchUsers = async () => {
         try {
             const token = await getToken()
             const base = import.meta.env.VITE_API_BASE || '/api'
+            // Admin route to get all users
             const res = await fetch(`${base}/admin/users`, {
                 headers: { Authorization: `Bearer ${token}` }
             })

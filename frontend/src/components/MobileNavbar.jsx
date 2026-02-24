@@ -14,6 +14,7 @@ export default function MobileNavbar() {
     const toggleOpen = () => setIsOpen(!isOpen)
     const closeMenu = () => setIsOpen(false)
 
+    // Handle logout and close menu
     const handleLogout = () => {
         signOut(() => {
             closeMenu()

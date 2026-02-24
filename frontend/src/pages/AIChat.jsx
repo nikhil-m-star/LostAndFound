@@ -12,7 +12,7 @@ const DUMMY_ITEMS = [
 ]
 
 export default function AIChat() {
-    // Mode state: 'chat' or 'search'
+    // Mode state: 'chat' (AI conversation) or 'search' (Direct item filtering)
     const [mode, setMode] = useState('chat')
 
     // Chat states
@@ -29,16 +29,22 @@ export default function AIChat() {
 
     const navigate = useNavigate()
 
+    // Fetch items on mount (used for both search mode and potentially AI context)
     useEffect(() => {
         fetchItems()
     }, [])
 
+    // Auto-scroll logic for chat
     useEffect(() => {
         if (mode === 'chat') {
             bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
         }
     }, [messages, mode])
 
+    /**
+     * Fetches all items to be used in client-side filtering/search
+     * Populates with DUMMY_ITEMS on failure for demonstration purposes
+     */
     const fetchItems = async () => {
         try {
             setLoading(true)
